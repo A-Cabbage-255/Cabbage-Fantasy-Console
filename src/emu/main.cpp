@@ -4,7 +4,7 @@
 int main(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
 
-    SDL_Window* win = SDL_CreateWindow("Example", 1600, 900, SDL_WINDOW_HIGH_PIXEL_DENSITY);
+    SDL_Window* win = SDL_CreateWindow("title", 1600, 900, SDL_WINDOW_HIGH_PIXEL_DENSITY);
     SDL_Renderer* rend = SDL_CreateRenderer(win, NULL);
     
     SDL_Event e;
