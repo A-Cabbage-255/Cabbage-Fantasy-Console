@@ -8,8 +8,11 @@ enum class MemoryRegion {
 	Sprites,
 	SpriteFlags,
 	SpriteData,
-	Palette
+	Palette,
+	INVALID
 };
+
+MemoryRegion mapAddress(Uint32 a);
 
 class Memory {
 private:
@@ -38,9 +41,13 @@ public:
 		delete[] Palette;
 	}
 
+	std::function<Uint8(Uint32)> getter8();
+	std::function<Uint16(Uint32)> getter16();
+	std::function<void(Uint32, Uint8)> setter8();
+	std::function<void(Uint32, Uint16)> setter16();
+
 	std::function<Uint8(Uint32)> getter8(MemoryRegion region);
 	std::function<Uint16(Uint32)> getter16(MemoryRegion region);
-
 	std::function<void(Uint32, Uint8)> setter8(MemoryRegion region);
 	std::function<void(Uint32, Uint16)> setter16(MemoryRegion region);
 };

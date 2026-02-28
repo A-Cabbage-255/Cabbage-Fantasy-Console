@@ -1,7 +1,11 @@
 #include <iostream>
 #include <SDL3/SDL.h>
+#include "tests/tests.h"
 
 int main(int argc, char* argv[]) {
+    TEST_ALL();
+    return 0;
+
     SDL_Init(SDL_INIT_VIDEO);
 
     SDL_Window* win = SDL_CreateWindow("title", 1600, 900, SDL_WINDOW_HIGH_PIXEL_DENSITY);
