@@ -52,6 +52,7 @@ std::function<Uint8(Uint32)> Memory::getter8(MemoryRegion region) {
 	}
 
 #undef GETTER8_MAP
+	return nullptr;
 }
 
 std::function<Uint16(Uint32)> Memory::getter16(MemoryRegion region) {
@@ -72,6 +73,7 @@ std::function<Uint16(Uint32)> Memory::getter16(MemoryRegion region) {
 	}
 
 #undef GETTER16_MAP
+	return nullptr;
 }
 
 std::function<void(Uint32, Uint8)> Memory::setter8(MemoryRegion region) {
@@ -92,6 +94,7 @@ std::function<void(Uint32, Uint8)> Memory::setter8(MemoryRegion region) {
 	}
 
 #undef SETTER8_MAP
+	return nullptr;
 }
 
 std::function<void(Uint32, Uint16)> Memory::setter16(MemoryRegion region) {
@@ -113,4 +116,5 @@ std::function<void(Uint32, Uint16)> Memory::setter16(MemoryRegion region) {
 	}
 
 #undef SETTER16_MAP
+	return nullptr;
 }

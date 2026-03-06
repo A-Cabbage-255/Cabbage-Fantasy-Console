@@ -3,6 +3,7 @@
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <iostream>
+#include <functional>
 #include <string>
 
 using namespace std::literals::string_literals;
