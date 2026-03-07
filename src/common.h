@@ -1,10 +1,18 @@
 #pragma once
-#include <SDL3/SDL.h>
-#include <SDL3_image/SDL_image.h>
-#include <SDL3_ttf/SDL_ttf.h>
 #include <iostream>
 #include <functional>
 #include <string>
+#include <cassert>
+#include <cstdint>
+
+typedef std::uint8_t Uint8;
+typedef std::uint16_t Uint16;
+typedef std::uint32_t Uint32;
+typedef std::uint64_t Uint64;
+typedef std::int8_t int8;
+typedef std::int16_t int16;
+typedef std::int32_t int32;
+typedef std::int64_t int64;
 
 using namespace std::literals::string_literals;
 

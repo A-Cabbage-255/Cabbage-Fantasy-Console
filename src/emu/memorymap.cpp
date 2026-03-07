@@ -48,7 +48,7 @@ std::function<Uint8(Uint32)> Memory::getter8(MemoryRegion region) {
 		GETTER8_MAP(SpriteData,  SpriteData);
 		GETTER8_MAP(Palette,     Palette);
 	default:
-		SDL_assert(false);
+		assert(false);
 	}
 
 #undef GETTER8_MAP
@@ -69,7 +69,7 @@ std::function<Uint16(Uint32)> Memory::getter16(MemoryRegion region) {
 		GETTER16_MAP(SpriteData,  SpriteData);
 		GETTER16_MAP(Palette,     Palette);
 	default:
-		SDL_assert(false);
+		assert(false);
 	}
 
 #undef GETTER16_MAP
@@ -90,7 +90,7 @@ std::function<void(Uint32, Uint8)> Memory::setter8(MemoryRegion region) {
 		SETTER8_MAP(SpriteData,  SpriteData);
 		SETTER8_MAP(Palette,     Palette);
 	default:
-		SDL_assert(false);
+		assert(false);
 	}
 
 #undef SETTER8_MAP
@@ -112,7 +112,7 @@ std::function<void(Uint32, Uint16)> Memory::setter16(MemoryRegion region) {
 		SETTER16_MAP(SpriteData,  SpriteData);
 		SETTER16_MAP(Palette,     Palette);
 	default:
-		SDL_assert(false);
+		assert(false);
 	}
 
 #undef SETTER16_MAP
