@@ -42,7 +42,7 @@ void TEST_Memory_General(void* memObj) {
 		CONS_LogPercent(i + 5000, 10000);
 		Uint32 indx = randomIdx(gen);
 		Uint8 byte = randomByte(gen);
-		SDL_assert(mem->getter8()(indx) == byte);
+		assert(mem->getter8()(indx) == byte);
 	}
 	CONS_FinishPercent();
 
