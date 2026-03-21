@@ -1,31 +1,39 @@
 #include <iostream>
 #include "tests/tests.h"
-#include "graphics.h"
-#include <ctime>
+#include "screen.h"
+#include "memory.h"
 
 int main(int argc, char* argv[]) {
-    srand(time(0));
-
     TEST_ALL();
 
-    Window window("TEST", 1600, 900, 800, 450);
-    ModifiableTexture t(&window, 800, 450);
+    auto clr = [](Uint32 i) {
+        Uint8 x = i % 8;
+        Uint8 y = i / 8;
+        OUT_Log("I: " + std::to_string(i) + "\n");
+        OUT_Log("X: " + std::to_string(x) + "\n");
+        OUT_Log("Y: " + std::to_string(y) + "\n");
+        if ((x == 2 || x == 5) && (y == 1 || y == 2)) return (Uint8)255;
+        if (y == 5 && x != 0 && x != 7) return (Uint8)255;
+        if (y == 4 && (x == 0 && x == 7)) return (Uint8)255;
+        return (Uint8)0;
+    };
+    auto flg = [](Uint32 i) {
+        if (i == 0) {
+            return (Uint8)0b10000000;
+        }
+        return (Uint8)0b00000000;
+    };
+    auto dat = [](Uint32 i) {
+        return (Uint8)0b00000000;
+    };
+    auto pal = [](Uint32 i) {
+        return (Uint8)i;
+    };
 
-    t.modify({0, 0, 800, 450},
-        [](int x, int y) {return (x & 0xF) * 16;},
-        [](int x, int y) {return (y & 0xF) * 16;},
-        [](int x, int y) {return (Uint8)(rand() & 0xFF);}
-    );
+    Screen scr(clr, flg, dat, pal);
 
-    while (window.tick()) {
-        t.modify({33, 130, 32, 32},
-            [](int x, int y) {return (x & 0xF) * 16;},
-            [](int x, int y) {return (y & 0xF) * 16;},
-            [](int x, int y) {return (Uint8)(rand() & 0xFF);}
-        );
-
-        window.clear();
-        t.draw(0, 0);
+    while (scr.tick()) {
+        OUT_Log("--------------TICK\n");
     }
 
     return 0;

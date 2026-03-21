@@ -16,9 +16,22 @@ typedef std::int64_t int64;
 
 using namespace std::literals::string_literals;
 
+struct IntRect {
+	int x;
+	int y;
+	int w;
+	int h;
+};
+
+enum class ColorChannel {
+	red,
+	green,
+	blue
+};
+
 inline
 void CONS_Log(std::string s) {
-	std::cout << s;
+	std::clog << s;
 }
 
 inline
@@ -33,10 +46,15 @@ void CONS_LogPercent(long v, long max) {
 		}
 	}
 	line += "]";
-	std::cout << line << std::flush;
+	std::clog << line << std::flush;
 }
 
 inline
 void CONS_FinishPercent() {
-	std::cout << std::endl;
+	std::clog << std::endl;
+}
+
+inline
+void OUT_Log(std::string s) {
+	std::cout << s;
 }

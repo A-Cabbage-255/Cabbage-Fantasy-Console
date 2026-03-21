@@ -48,6 +48,13 @@ Window::~Window() {
 	}
 }
 
+void Window::setIcon(std::string p) {
+	SDL_Surface* i = IMG_Load(p.c_str());
+	nullcheck(i);
+
+	safe(SDL_SetWindowIcon((SDL_Window*)win, i));
+}
+
 bool Window::tick() {
 	safe(SDL_RenderPresent((SDL_Renderer*)rend));
 
@@ -101,16 +108,16 @@ void ModifiableTexture::unlock() {
 	SDL_UnlockTexture((SDL_Texture*)tex);
 }
 
-void ModifiableTexture::modify(TextureRegion reg, std::function<Uint8(int x, int y)> r, std::function<Uint8(int x, int y)> g, std::function<Uint8(int x, int y)> b) {
+void ModifiableTexture::modify(TextureRegion reg, std::function<Uint8(int x, int y, ColorChannel c)> col) {
 	int pitch = 0;
 	auto pix = lockRegion(reg, &pitch);
 
 	for (int y = 0; y < reg.h; y++) {
 		for (int x = 0; x < reg.w; x++) {
 			pix[y * pitch + x * 4] = 255;
-			pix[y * pitch + x * 4 + 1] = b(x, y);
-			pix[y * pitch + x * 4 + 2] = g(x, y);
-			pix[y * pitch + x * 4 + 3] = r(x, y);
+			pix[y * pitch + x * 4 + 1] = col(x, y, ColorChannel::blue);
+			pix[y * pitch + x * 4 + 2] = col(x, y, ColorChannel::green);
+			pix[y * pitch + x * 4 + 3] = col(x, y, ColorChannel::red);
 		}
 	}
 
