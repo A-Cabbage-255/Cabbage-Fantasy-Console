@@ -14,27 +14,32 @@ Screen::~Screen() {
 	delete (Window*)win;
 }
 
+void Screen::drawSprite(Uint8 tileX, Uint8 tileY, Uint16 destX, Uint16 destY) {
+	((ModifiableTexture*)screen)->modify(
+	{destX, destY, 8, 8},
+	[&](int x, int y, ColorChannel col) {
+			Uint32 srcx = tileX * 2 + x;
+			Uint32 srcy = tileY * 2 + y;
+			Uint8 c = getSpriteColor(srcx + srcy * 256 * 8);
+
+			return getPalette(c);
+		}
+	);
+}
+
 bool Screen::tick() {
 	for (unsigned i = 0; i < 8192; i++) {
 		Uint8 flags = getSpriteFlags(i);
 		if (flags >> 7 == 0) {
 			break;
 		}
-		Uint8 tileX = getSpriteFlags(i * 4);
-		Uint8 tileY = getSpriteFlags(i * 4 + 1);
+		Uint8 tileX = getSpriteData(i * 4);
+		Uint8 tileY = getSpriteData(i * 4 + 1);
 
-		Uint16 destX = getSpriteFlags(i * 4 + 2) | ((Uint16)(flags & 0b11) << 8);
-		Uint16 destY = getSpriteFlags(i * 4 + 3) | ((Uint16)((flags >> 6) & 0b1) << 8);
+		Uint16 destX = getSpriteData(i * 4 + 2) | ((Uint16)(flags & 0b11) << 8);
+		Uint16 destY = getSpriteData(i * 4 + 3) | ((Uint16)((flags >> 6) & 0b1) << 8);
 		
-		((ModifiableTexture*)screen)->modify({destX, destY, 8, 8},
-			[this, tileX, tileY](int x, int y, ColorChannel col) {
-				Uint32 srcx = tileX + x;
-				Uint32 srcy = tileY + y;
-				Uint8 c = getSpriteColor(tileX + tileY * 256 * 8);
-
-				return getPalette(c);
-			}
-		);
+		drawSprite(tileX, tileY, destX, destY);
 	}
 
 	((Window*)win)->clear(0, 0, 0);
