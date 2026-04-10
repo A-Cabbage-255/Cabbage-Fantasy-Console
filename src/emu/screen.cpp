@@ -18,11 +18,15 @@ void Screen::drawSprite(Uint8 tileX, Uint8 tileY, Uint16 destX, Uint16 destY) {
 	((ModifiableTexture*)screen)->modify(
 	{destX, destY, 8, 8},
 	[&](int x, int y, ColorChannel col) {
-			Uint32 srcx = tileX * 2 + x;
-			Uint32 srcy = tileY * 2 + y;
-			Uint8 c = getSpriteColor(srcx + srcy * 256 * 8);
+			Uint32 srcx = tileX * 8 + x;
+			Uint32 srcy = tileY * 8 + y;
+			Uint8 c = getSpriteColor(srcx + srcy * 2048);
 
-			return getPalette(c);
+			if (col == ColorChannel::blue) {
+				//OUT_Log("I: "s + std::to_string(((Uint32)c) * 3) + " ---- V: "s + std::to_string(getPalette(((Uint32)c) * 3 + colorChannelToOffset(col))) + "\n"s);
+			}
+
+			return getPalette(((Uint32)c) * 3 + colorChannelToOffset(col));
 		}
 	);
 }

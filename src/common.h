@@ -2,6 +2,7 @@
 #include <iostream>
 #include <functional>
 #include <string>
+#include <cstring>
 #include <cassert>
 #include <cstdint>
 
@@ -28,6 +29,19 @@ enum class ColorChannel {
 	green,
 	blue
 };
+
+inline
+int colorChannelToOffset(ColorChannel c) {
+	switch (c) {
+	case ColorChannel::red:
+		return 0;
+	case ColorChannel::green:
+		return 1;
+	case ColorChannel::blue:
+		return 2;
+	}
+	return -1;
+}
 
 inline
 void CONS_Log(std::string s) {

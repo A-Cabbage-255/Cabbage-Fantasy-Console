@@ -29,10 +29,22 @@ std::function<Uint8(Uint32)> Memory::getter8() {
 		return getter8(reg)(i);
 	};
 }
+std::function<Uint16(Uint32)> Memory::getter16() {
+	return [this](Uint32 i) -> Uint16 {
+		MemoryRegion reg = mapAddress(i, &i);
+		return getter16(reg)(i);
+	};
+}
 std::function<void(Uint32, Uint8)> Memory::setter8() {
 	return [this](Uint32 i, Uint8 v) -> void {
 		MemoryRegion reg = mapAddress(i, &i);
 		return setter8(reg)(i, v);
+	};
+}
+std::function<void(Uint32, Uint16)> Memory::setter16() {
+	return [this](Uint32 i, Uint16 v) -> void {
+		MemoryRegion reg = mapAddress(i, &i);
+		return setter16(reg)(i, v);
 	};
 }
 
@@ -117,4 +129,18 @@ std::function<void(Uint32, Uint16)> Memory::setter16(MemoryRegion region) {
 
 #undef SETTER16_MAP
 	return nullptr;
+}
+
+void Memory::copy(const void* src, size_t count, MemoryRegion region) {
+	switch (region) {
+	case MemoryRegion::General:
+		memcpy(generalRAM, src, count);
+		break;
+	case MemoryRegion::Sprites:
+		memcpy(SpriteMem, src, count);
+		break;
+	case MemoryRegion::Palette:
+		memcpy(Palette, src, count);
+		break;
+	}
 }
