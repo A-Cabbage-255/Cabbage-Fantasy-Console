@@ -19,6 +19,7 @@ MemoryRegion mapAddress(Uint32 a, Uint32* index_OUT = nullptr) {
 	} else if (a >> 24 == 0x32) {
 		return MemoryRegion::Palette;
 	} else {
+		std::cout << "MEM INVALID!, Attempted address" << std::hex << a << std::dec << "\n" << std::flush;
 		return MemoryRegion::INVALID;
 	}
 }
@@ -134,6 +135,7 @@ std::function<void(Uint32, Uint16)> Memory::setter16(MemoryRegion region) {
 void Memory::copy(const void* src, size_t count, MemoryRegion region) {
 	switch (region) {
 	case MemoryRegion::General:
+		std::cout << "COPYING MEMORY!\n" << std::flush;
 		memcpy(generalRAM, src, count);
 		break;
 	case MemoryRegion::Sprites:
@@ -143,4 +145,13 @@ void Memory::copy(const void* src, size_t count, MemoryRegion region) {
 		memcpy(Palette, src, count);
 		break;
 	}
+}
+
+void Memory::setInterrupt(Uint8 ind, Uint32 val) {
+	setter16()((1u << 28u) | ((Uint32)ind << 2), val >> 16u);
+	setter16()((1u << 28u) | ((Uint32)ind << 2) + 2, val & 0xFFFFu);
+}
+
+Uint32 Memory::getInterrupt(Uint8 ind) {
+	return ((Uint32)getter16()((1u << 28u) | ((Uint32)ind << 2)) << 16u) | (Uint32)getter16()(((1u << 28u) | ((Uint32)ind << 2)) + 2);
 }

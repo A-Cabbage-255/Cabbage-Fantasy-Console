@@ -51,4 +51,7 @@ public:
 	std::function<void(Uint32, Uint16)> setter16(MemoryRegion region);
 
 	void copy(const void* src, size_t count, MemoryRegion region);
+
+	void setInterrupt(Uint8 ind, Uint32 val);
+	Uint32 getInterrupt(Uint8 ind);
 };

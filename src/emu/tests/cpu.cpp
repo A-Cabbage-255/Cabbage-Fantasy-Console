@@ -4,7 +4,7 @@
 void TEST_CPU() {
 	CONS_Log("Beginning CPU Unit Test...\n");
 
-	CPU c(nullptr);
+	//CPU c(nullptr);
 
 	//TODO MAKE UNIT TEST
 
