@@ -3,7 +3,6 @@
 #include "SDL3/SDL.h"
 #include <map>
 
-//TODO COMPLETELY REFACTOR WITH TOKEN PARSING ETC.
 class Assembler {
 private:
 	SDL_IOStream* reading = nullptr;

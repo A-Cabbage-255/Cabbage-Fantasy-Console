@@ -73,3 +73,17 @@ inline
 void OUT_Log(std::string s) {
 	std::cout << s;
 }
+
+inline bool char_isWhitespace(char c) {
+	return std::isspace((unsigned char)c);
+}
+
+inline bool char_isAlphabeticalEx(char c) {
+	return std::isalpha((unsigned char)c) || c == '_' || c == '.';
+}
+inline bool char_isAlphaNumEx(char c) {
+	return std::isalnum((unsigned char)c) || c == '_' || c == '.';
+}
+inline bool char_isNumeric(char c) {
+	return std::isdigit((unsigned char)c);
+}
