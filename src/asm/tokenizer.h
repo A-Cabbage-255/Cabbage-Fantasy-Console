@@ -53,19 +53,19 @@ inline std::ostream& operator<<(std::ostream& s, const Token& t) {
 class Tokenizer {
 private:
 	char* file;
-	size_t filesize;
 
-	unsigned index = 0;
+	char* it;
 public:
-	bool eof = false;
 	//std::vector<Token> tokens;
 
 	Tokenizer(std::string filepath);
 	~Tokenizer();
 
-	bool match(char* c);
+	bool eof() {return (*it == '\0');}
+	bool match(char expected);
 	char get();
 	char peek();
+	void skipWhitespace();
 
 	Token parseToken();
 };

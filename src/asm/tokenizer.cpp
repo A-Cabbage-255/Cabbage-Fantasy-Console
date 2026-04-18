@@ -1,57 +1,58 @@
 #include "tokenizer.h"
 
 Tokenizer::Tokenizer(std::string fp) {
-	file = (char*)SDL_LoadFile(fp.c_str(), &filesize);
+	file = (char*)SDL_LoadFile(fp.c_str(), NULL);
+	if (file == NULL) {
+		std::cout << "ERROR Loading Assembly File!\n\tSDL: " << SDL_GetError() << "\n" << std::flush;
+		assert(false);
+	}
+	it = file;
 }
 
 Tokenizer::~Tokenizer() {
 	SDL_free(file);
 }
 
-bool Tokenizer::match(char* c) {
-	//TODO
+bool Tokenizer::match(char expected) {
+	if (eof()) return false;
+	if (*it == expected) {
+		it++;
+		return true;
+	}
+	return false;
 }
 
 char Tokenizer::get() {
-	index++;
-	if (index >= filesize) {
-		eof = true;
-	}
-	return file[index-1];
+	it++;
+	return *(it-1);
 }
 
 char Tokenizer::peek() {
-	return file[index];
+	return *it;
+}
+
+void Tokenizer::skipWhitespace() {
+	while (true) {
+		if (eof()) break;
+		if (char_isWhitespace(peek())) {
+			get();
+			continue;
+		} else if (match(';')) {
+			while (peek() != '\n' && peek() != '\r' && !eof()) {
+				get();
+			}
+			continue;
+		}
+		break;
+	}
 }
 
 Token Tokenizer::parseToken() {
-	if (eof) {
-		return token(TOKEN_EOF);
-	}
+	skipWhitespace();
+
+	if (eof()) return token(TOKEN_EOF);
 
 	char c = get();
-	while (char_isWhitespace(c)) {
-		if (eof) {
-			return token(TOKEN_EOF);
-		}
-		c = get();
-	}
-
-	if (c == ';') {
-		while (c != '\n' && c != '\r') {
-			if (eof) {
-				return token(TOKEN_EOF);
-			}
-			c = get();
-		}
-	}
-
-	while (char_isWhitespace(c)) {
-		if (eof) {
-			return token(TOKEN_EOF);
-		}
-		c = get();
-	}
 
 	switch (c) {
 	case ':':
@@ -61,23 +62,27 @@ Token Tokenizer::parseToken() {
 	}
 
 	if (char_isAlphabeticalEx(c)) {
-		std::string s = "";
-		while (char_isAlphaNumEx(c)) { //TODO REPLACE WITH MATCH
-			s += c;
-
-			if (eof) {
-				break;
-			}
-
+		std::string s(1, c);
+		while (char_isAlphaNumEx(peek()) && !eof()) {
 			c = get();
+			s += c;
 		}
 		return {TOKEN_IDENTIFIER, 0, s};
 	}
-	if (char_isNumeric(c)) { //TODO IMPLEMENT
-		if (c == '0' && peek() == 'x') {
-		} else {
+	if (char_isNumeric(c)) {
+		unsigned ret = 0;
+		if (c == '0' && match('x')) {
 
 		}
+		ret = (unsigned)c - (unsigned)'0';
+		while (char_isNumeric(peek())) {
+			c = get();
+			ret *= 10;
+			ret += (unsigned)c - (unsigned)'0';
+
+			if (eof()) break;
+		}
+		return {TOKEN_NUMBER, ret, ""};
 	}
 
 	return token(TOKEN_NULL);
