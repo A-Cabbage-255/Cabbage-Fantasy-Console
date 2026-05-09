@@ -9,6 +9,7 @@ typedef enum TokenType {
 	TOKEN_COMMA,
 	TOKEN_COLON,
 	TOKEN_NUMBER,
+	TOKEN_REGISTER,
 	TOKEN_STRING,
 	TOKEN_EOF,
 } TokenType;
@@ -21,6 +22,22 @@ typedef struct Token {
 
 inline Token token(TokenType t) {
 	return {t, 0, ""};
+}
+
+inline bool operator==(const Token& a, const Token& b) {
+	if (a.type != b.type) return false;
+
+	if (a.type == TOKEN_IDENTIFIER) {
+		return a.str == b.str;
+	} else if (a.type == TOKEN_STRING) {
+		return a.str == b.str;
+	} else if (a.type == TOKEN_NUMBER) {
+		return a.number == b.number;
+	} else if (a.type == TOKEN_REGISTER) {
+		return a.number == b.number;
+	} else {
+		return true;
+	}
 }
 
 inline std::ostream& operator<<(std::ostream& s, const Token& t) {
@@ -43,6 +60,9 @@ inline std::ostream& operator<<(std::ostream& s, const Token& t) {
 	case TOKEN_STRING:
 		s << "\"" << t.str << "\"";
 		break;
+	case TOKEN_REGISTER:
+		s << "Register " << t.number;
+		break;
 	case TOKEN_EOF:
 		s << "EOF";
 		break;
@@ -56,8 +76,6 @@ private:
 
 	char* it;
 public:
-	//std::vector<Token> tokens;
-
 	Tokenizer(std::string filepath);
 	~Tokenizer();
 
@@ -68,4 +86,6 @@ public:
 	void skipWhitespace();
 
 	Token parseToken();
+	void expectToken(const Token& t);
+	bool isToken(const Token& t);
 };

@@ -47,7 +47,7 @@ void Tokenizer::skipWhitespace() {
 	}
 }
 
-Token Tokenizer::parseToken() {
+Token Tokenizer::parseToken() { //TODO PARSE REGISTERS
 	skipWhitespace();
 
 	if (eof()) return token(TOKEN_EOF);
@@ -62,17 +62,24 @@ Token Tokenizer::parseToken() {
 	}
 
 	if (char_isAlphabeticalEx(c)) {
-		std::string s(1, c);
+		std::string s(1, toupper(c));
 		while (char_isAlphaNumEx(peek()) && !eof()) {
 			c = get();
-			s += c;
+			s += toupper(c);
 		}
 		return {TOKEN_IDENTIFIER, 0, s};
 	}
 	if (char_isNumeric(c)) {
 		unsigned ret = 0;
 		if (c == '0' && match('x')) {
+			while (char_isNumericHex(peek())) {
+				c = get();
+				ret *= 16;
+				ret += char_convertHex(c);
 
+				if (eof()) break;
+			}
+			return {TOKEN_NUMBER, ret, ""};
 		}
 		ret = (unsigned)c - (unsigned)'0';
 		while (char_isNumeric(peek())) {
@@ -86,4 +93,17 @@ Token Tokenizer::parseToken() {
 	}
 
 	return token(TOKEN_NULL);
+}
+
+void Tokenizer::expectToken(const Token& t) {
+	assert(parseToken() == t);
+}
+
+bool Tokenizer::isToken(const Token& t) {
+	auto previous = it;
+	if (parseToken() == t) {
+		return true;
+	}
+	it = previous;
+	return false;
 }

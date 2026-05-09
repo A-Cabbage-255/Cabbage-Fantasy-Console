@@ -84,6 +84,13 @@ inline bool char_isAlphabeticalEx(char c) {
 inline bool char_isAlphaNumEx(char c) {
 	return std::isalnum((unsigned char)c) || c == '_' || c == '.';
 }
+inline bool char_isNumericHex(char c) {
+	return std::isxdigit((unsigned char)c);
+}
 inline bool char_isNumeric(char c) {
 	return std::isdigit((unsigned char)c);
+}
+
+inline int char_convertHex(char c) {
+	return (c >= '0' && c <= '9') ? (c - '0') : ((c >= 'A' && c <= 'F') ? (c - 'A' + 10) : (c - 'a' + 10));
 }

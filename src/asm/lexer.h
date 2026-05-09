@@ -2,8 +2,8 @@
 #include "tokenizer.h"
 
 typedef enum OPCode {
-	OPC_NULL,
-	OPC_EOF,
+	OPC_NULL, //
+	OPC_EOF, //
 
 	OPC_ADD,
 	OPC_ADC,
@@ -26,27 +26,33 @@ typedef enum OPCode {
 	OPC_JNE1,
 	OPC_JNCF,
 
-	OPC_JDIR,
+	OPC_JDIR, //
 
-	OPC_STR,
-	OPC_GET,
+	OPC_STR, //
+	OPC_GET, //
 
-	OPC_STRL,
-	OPC_GETL,
+	OPC_STRL, //
+	OPC_GETL, //
 
-	OPC_INT,
+	OPC_INT, //
 
-	OPC_IMM,
-	OPC_LIMM,
+	OPC_IMM, // TODO REIMPLEMENT WITH LABEL (HOW TF WILL I DO TS??)
+	OPC_LIMM, // TODO SEE ABOVE
 
-	OPC_NOP,
-	OPC_PWR,
-	OPC_SCREEN
+	OPC_NOP, //
+	OPC_PWR, //
+	OPC_SCREEN, //
+
+	OPC_LABEL,
 } OPCode;
 
 typedef struct BasicInstruction {
 	OPCode code = OPC_NULL;
 } BasicInstruction;
+
+typedef struct LABLMetaInstruction : BasicInstruction {
+	std::string name = ""s;
+} LABLMetaInstruction;
 
 typedef struct ALUInstruction : BasicInstruction {
 	unsigned dest : 4;
@@ -73,16 +79,9 @@ typedef struct L_JMPInstruction : BasicInstruction {
 	unsigned low : 4;
 } L_JMPInstruction;
 
-typedef struct S_RAMInstruction : BasicInstruction {
-	bool wr;
+typedef struct RAMInstruction : BasicInstruction {
 	unsigned reg : 4;
-} S_RAMInstruction;
-
-typedef struct L_RAMInstruction : BasicInstruction {
-	bool wr;
-	unsigned lowReg : 4;
-	unsigned highReg : 4;
-} L_RAMInstruction;
+} RAMInstruction;
 
 typedef struct INTInstruction : BasicInstruction {
 	unsigned intID : 8;
@@ -91,7 +90,6 @@ typedef struct INTInstruction : BasicInstruction {
 typedef struct IMMInstruction : BasicInstruction {
 	unsigned reg : 4;
 	Uint16 value;
-	bool forcelong = false;
 } IMMInstruction;
 
 class Lexer {
