@@ -8,6 +8,7 @@ typedef enum TokenType {
 	TOKEN_IDENTIFIER,
 	TOKEN_COMMA,
 	TOKEN_COLON,
+	TOKEN_TILDE,
 	TOKEN_NUMBER,
 	TOKEN_REGISTER,
 	TOKEN_STRING,
@@ -54,6 +55,9 @@ inline std::ostream& operator<<(std::ostream& s, const Token& t) {
 	case TOKEN_COLON:
 		s << "Colon";
 		break;
+	case TOKEN_TILDE:
+		s << "Tilde";
+		break;
 	case TOKEN_NUMBER:
 		s << "Number (" << t.number << ")";
 		break;
@@ -78,6 +82,8 @@ private:
 public:
 	Tokenizer(std::string filepath);
 	~Tokenizer();
+
+	void reset() {it = file;}
 
 	bool eof() {return (*it == '\0');}
 	bool match(char expected);

@@ -2,18 +2,18 @@
 #include "tokenizer.h"
 
 typedef enum OPCode {
-	OPC_NULL, //
-	OPC_EOF, //
+	OPC_NULL = 0,
+	OPC_EOF = 1,
 
-	OPC_ADD,
-	OPC_ADC,
-	OPC_SWC,
-	OPC_SUB,
-	OPC_NAND,
-	OPC_SHL,
-	OPC_SHR,
+	OPC_ADD = 2,
+	OPC_ADC = 3,
+	OPC_SWC = 4,
+	OPC_SUB = 5,
+	OPC_NAND = 6,
+	OPC_SHL = 8,
+	OPC_SHR = 9,
 
-	OPC_MUL,
+	OPC_MUL = 7,
 
 	OPC_JEZ,
 	OPC_JGZ,
@@ -26,22 +26,22 @@ typedef enum OPCode {
 	OPC_JNE1,
 	OPC_JNCF,
 
-	OPC_JDIR, //
+	OPC_JDIR,
 
-	OPC_STR, //
-	OPC_GET, //
+	OPC_STR,
+	OPC_GET,
 
-	OPC_STRL, //
-	OPC_GETL, //
+	OPC_STRL,
+	OPC_GETL,
 
-	OPC_INT, //
+	OPC_INT,
 
-	OPC_IMM, // TODO REIMPLEMENT WITH LABEL (HOW TF WILL I DO TS??)
-	OPC_LIMM, // TODO SEE ABOVE
+	OPC_IMM,
+	OPC_LIMM,
 
-	OPC_NOP, //
-	OPC_PWR, //
-	OPC_SCREEN, //
+	OPC_NOP,
+	OPC_PWR,
+	OPC_SCREEN,
 
 	OPC_LABEL,
 } OPCode;
@@ -92,12 +92,32 @@ typedef struct IMMInstruction : BasicInstruction {
 	Uint16 value;
 } IMMInstruction;
 
+typedef struct UnparsedInstruction {
+	std::string name = ""s;
+	std::vector<Token> arguments;
+	bool label = false;
+	bool eof = false;
+} UnparsedInstruction;
+
 class Lexer {
 private:
 	Tokenizer* t;
 public:
+	std::map<std::string, unsigned> consts;
+
 	Lexer(Tokenizer* tok);
-	
+
 	//YOU must delete result
-	BasicInstruction* lex();
+	BasicInstruction* lex(const UnparsedInstruction& inst);
+	void scanLabels();
+	UnparsedInstruction nextInstruction();
+	
 };
+
+inline std::ostream& operator<<(std::ostream& s, const UnparsedInstruction& i) {
+	s << i.name << " ";
+	for (auto t : i.arguments) {
+		s << t << ", ";
+	}
+	return s;
+}

@@ -1,12 +1,14 @@
 #pragma once
-#include "tokenizer.h"
+#include "lexer.h"
 
 class Compiler {
 private:
-	Tokenizer* t;
-
 	SDL_IOStream* file;
+
+	void outIns_ALU(ALUInstruction* i);
 public:
-	Compiler(std::string outpath, Tokenizer* tok);
+	Compiler(std::string outpath);
 	~Compiler();
+
+	void outIns(BasicInstruction* i);
 };

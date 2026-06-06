@@ -59,6 +59,8 @@ Token Tokenizer::parseToken() { //TODO PARSE REGISTERS
 		return token(TOKEN_COLON);
 	case ',':
 		return token(TOKEN_COMMA);
+	case '~':
+		return token(TOKEN_TILDE);
 	}
 
 	if (char_isAlphabeticalEx(c)) {
