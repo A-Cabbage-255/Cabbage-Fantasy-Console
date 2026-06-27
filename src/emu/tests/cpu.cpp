@@ -6,7 +6,7 @@ void TEST_CPU() {
 
 	//CPU c(nullptr);
 
-	//TODO MAKE UNIT TEST
+	//TODO MAKE UNIT TESTS
 
 	CONS_Log("Finished CPU Unit Test.\n");
 }

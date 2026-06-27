@@ -5,6 +5,8 @@
 #include "compiler.h"
 
 int main(int argc, char* argv[]) {
+	std::cout << "START ASM\n";
+
 	Tokenizer a("assets/asm.asm");
 	Lexer l(&a);
 	Compiler c("assets/rom.bin");
@@ -22,5 +24,6 @@ int main(int argc, char* argv[]) {
 	}
 	delete i;
 
+	std::cout << "END ASM" << std::endl;
 	return 0;
 }

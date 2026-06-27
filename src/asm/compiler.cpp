@@ -10,8 +10,22 @@ Compiler::~Compiler() {
 
 void Compiler::outIns_ALU(ALUInstruction* i) {
 	Uint16 opc = i->code - OPC_ADD;
-	
+
 	SDL_WriteU16BE(file, (opc << 12) | (i->dest << 8) | (i->a << 4) | i->b);
+}
+
+void Compiler::outIns_JMP(JMPInstruction* i) {
+	Uint16 opc = i->code - OPC_JEZ;
+
+	SDL_WriteU16BE(file, 0x8000 | (i->userMode * 0x1000) | (opc << 8) | (i->check << 4) | i->offset);
+}
+
+void Compiler::outIns_INT(INTInstruction* i) {
+	SDL_WriteU16BE(file, 0xC800 | i->intID);
+}
+
+void Compiler::outIns_IMM(IMMInstruction* i) {
+	SDL_WriteU16BE(file, 0xE000 | (i->reg << 8) | i->value);
 }
 
 void Compiler::outIns(BasicInstruction* i) {
@@ -25,8 +39,26 @@ void Compiler::outIns(BasicInstruction* i) {
 		case OPC_SHR:
 			outIns_ALU((ALUInstruction*)i);
 			break;
+		case OPC_JEZ:
+		case OPC_JGZ:
+		case OPC_JLZ:
+		case OPC_JE1:
+		case OPC_JCF:
+		case OPC_JNEZ:
+		case OPC_JNGZ:
+		case OPC_JNLZ:
+		case OPC_JNE1:
+		case OPC_JNCF:
+			outIns_JMP((JMPInstruction*)i);
+			break;
+		case OPC_INT:
+			outIns_INT((INTInstruction*)i);
+			break;
+		case OPC_IMM:
+			outIns_IMM((IMMInstruction*)i);
+			break;
 		default:
-			std::cerr << "ERROR\n";
+			std::cerr << "ERROR" << std::endl;
 			break;
 	}
 }

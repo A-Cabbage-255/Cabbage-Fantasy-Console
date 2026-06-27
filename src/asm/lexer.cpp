@@ -57,9 +57,9 @@ BasicInstruction* Lexer::lex(const UnparsedInstruction& inst) {
 	if (inst.name == "NOP"s) {
 		return new BasicInstruction({OPC_NOP});
 	} else if (inst.name == "DRW"s) {
-		return new BasicInstruction({OPC_SCREEN});
+		return new INTInstruction({OPC_INT, 0xFE});
 	} else if (inst.name == "END"s) {
-		return new BasicInstruction({OPC_PWR});
+		return new INTInstruction({OPC_INT, 0x00});
 	} else if (inst.name == "IMM"s) {
 		Uint16 dest = inst.arguments[1].number;
 		if (inst.arguments[1].type == TOKEN_IDENTIFIER) {

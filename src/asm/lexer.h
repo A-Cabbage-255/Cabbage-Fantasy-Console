@@ -5,28 +5,28 @@ typedef enum OPCode {
 	OPC_NULL = 0,
 	OPC_EOF = 1,
 
-	OPC_ADD = 2,
-	OPC_ADC = 3,
-	OPC_SWC = 4,
-	OPC_SUB = 5,
-	OPC_NAND = 6,
-	OPC_SHL = 8,
-	OPC_SHR = 9,
+	OPC_ADD = 10,
+	OPC_ADC = 11,
+	OPC_SWC = 12,
+	OPC_SUB = 13,
+	OPC_NAND = 14,
+	OPC_MUL = 15,
+	OPC_SHL = 16,
+	OPC_SHR = 17,
 
-	OPC_MUL = 7,
 
-	OPC_JEZ,
-	OPC_JGZ,
-	OPC_JLZ,
-	OPC_JE1,
-	OPC_JCF,
-	OPC_JNEZ,
-	OPC_JNGZ,
-	OPC_JNLZ,
-	OPC_JNE1,
-	OPC_JNCF,
+	OPC_JEZ = 20,
+	OPC_JGZ = 21,
+	OPC_JLZ = 22,
+	OPC_JE1 = 23,
+	OPC_JCF = 24,
+	OPC_JNEZ = 28,
+	OPC_JNGZ = 29,
+	OPC_JNLZ = 30,
+	OPC_JNE1 = 31,
+	OPC_JNCF = 32,
 
-	OPC_JDIR,
+	OPC_JDIR = 40,
 
 	OPC_STR,
 	OPC_GET,
@@ -40,8 +40,6 @@ typedef enum OPCode {
 	OPC_LIMM,
 
 	OPC_NOP,
-	OPC_PWR,
-	OPC_SCREEN,
 
 	OPC_LABEL,
 } OPCode;
@@ -49,10 +47,6 @@ typedef enum OPCode {
 typedef struct BasicInstruction {
 	OPCode code = OPC_NULL;
 } BasicInstruction;
-
-typedef struct LABLMetaInstruction : BasicInstruction {
-	std::string name = ""s;
-} LABLMetaInstruction;
 
 typedef struct ALUInstruction : BasicInstruction {
 	unsigned dest : 4;

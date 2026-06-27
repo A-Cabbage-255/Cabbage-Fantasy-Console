@@ -103,6 +103,7 @@ void CPU::execALU(Uint16 i) {
 		registers[dest] = registers[a] >> registers[b];
 		break;
 	default:
+		std::cout << "ERR\n";
 		//BAD. SHOULDN'T HAPPEN.
 		break;
 	}
