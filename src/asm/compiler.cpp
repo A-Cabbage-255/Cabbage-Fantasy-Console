@@ -20,6 +20,10 @@ void Compiler::outIns_JMP(JMPInstruction* i) {
 	SDL_WriteU16BE(file, 0x8000 | (i->userMode * 0x1000) | (opc << 8) | (i->check << 4) | i->offset);
 }
 
+void Compiler::outIns_LJMP(L_JMPInstruction* i) {
+	SDL_WriteU16BE(file, 0xA000 | (i->userMode * 0x1000) | (i->high << 4) | i->low);
+}
+
 void Compiler::outIns_INT(INTInstruction* i) {
 	SDL_WriteU16BE(file, 0xC800 | i->intID);
 }
@@ -51,6 +55,8 @@ void Compiler::outIns(BasicInstruction* i) {
 		case OPC_JNCF:
 			outIns_JMP((JMPInstruction*)i);
 			break;
+		case OPC_JDIR:
+			outIns_LJMP((L_JMPInstruction*)i);
 		case OPC_INT:
 			outIns_INT((INTInstruction*)i);
 			break;

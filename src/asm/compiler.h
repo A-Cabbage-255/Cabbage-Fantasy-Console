@@ -7,6 +7,7 @@ private:
 
 	void outIns_ALU(ALUInstruction* i);
 	void outIns_JMP(JMPInstruction* i);
+	void outIns_LJMP(L_JMPInstruction* i);
 	void outIns_INT(INTInstruction* i);
 	void outIns_IMM(IMMInstruction* i);
 public:

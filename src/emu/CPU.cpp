@@ -1,4 +1,5 @@
 #include "CPU.h"
+#include <bitset>
 
 CPU::CPU(Memory* mem, std::function<void(void)> drawFrame) : m(mem), pauseToRender(drawFrame) {
 	registers = new Uint16[16];
@@ -68,19 +69,19 @@ void CPU::execALU(Uint16 i) {
 	switch (i >> 12) {
 	case 0b000: //ADD
 		registers[dest] = registers[a] + registers[b];
-		carryFlag = (((unsigned)registers[a] & 0xFF) + ((unsigned)registers[b] & 0xFF)) > 255;
+		carryFlag = (((unsigned)registers[a] & 0xFFFF) + ((unsigned)registers[b] & 0xFFFF)) > 65535;
 		break;
 	case 0b001: //ADD W CAR
 		registers[dest] = registers[a] + registers[b] + (carryFlag ? 1 : 0);
-		carryFlag = (((unsigned)registers[a] & 0xFF) + ((unsigned)registers[b] & 0xFF) + (carryFlag ? 1 : 0)) > 255;
+		carryFlag = (((unsigned)registers[a] & 0xFFFF) + ((unsigned)registers[b] & 0xFFFF) + (carryFlag ? 1 : 0)) > 65535;
 		break;
 	case 0b010: //SUB W CAR
 		registers[dest] = registers[a] - registers[b] - (carryFlag ? 1 : 0);
-		carryFlag = (((int)registers[a] & 0xFF) - ((int)registers[b] & 0xFF) - (carryFlag ? 1 : 0)) < 0;
+		carryFlag = (((int)registers[a] & 0xFFFF) - ((int)registers[b] & 0xFFFF) - (carryFlag ? 1 : 0)) < 0;
 		break;
 	case 0b011: //SUB
 		registers[dest] = registers[a] - registers[b];
-		carryFlag = (((int)registers[a] & 0xFF) - ((int)registers[b] & 0xFF)) < 0;
+		carryFlag = (((int)registers[a] & 0xFFFF) - ((int)registers[b] & 0xFFFF)) < 0;
 		break;
 	case 0b100: //NAND
 		registers[dest] = ~(registers[a] & registers[b]);

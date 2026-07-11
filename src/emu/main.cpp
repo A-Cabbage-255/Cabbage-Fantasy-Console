@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
 
     auto s = m->setter16(MemoryRegion::General);
 
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 200; i++) {
         Uint16 v = 0;
         SDL_ReadU16BE(file, &v);
         s(i * 2, v);
