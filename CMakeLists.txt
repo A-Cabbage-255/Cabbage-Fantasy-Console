@@ -4,10 +4,13 @@ project(Assembler)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_BUILD_TYPE Debug)
- 
-find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared) 
-find_package(SDL3_image REQUIRED) 
-find_package(SDL3_ttf REQUIRED) 
+
+set(SDLTTF_VENDORED ON)
+set(SDLIMAGE_VENDORED ON)
+
+add_subdirectory(vendored/SDL EXCLUDE_FROM_ALL)
+add_subdirectory(vendored/SDL_image EXCLUDE_FROM_ALL)
+add_subdirectory(vendored/SDL_ttf EXCLUDE_FROM_ALL)
  
 add_executable(Emulator src/emu/main.cpp src/emu/CPU.cpp src/emu/memorymap.cpp src/emu/screen.cpp src/emu/graphics_SDL.cpp src/emu/tests/memory.cpp src/emu/tests/cpu.cpp) 
 add_executable(Assembler src/asm/main.cpp src/asm/tokenizer.cpp src/asm/lexer.cpp src/asm/compiler.cpp)

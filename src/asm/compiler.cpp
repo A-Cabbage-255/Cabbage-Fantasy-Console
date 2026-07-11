@@ -29,7 +29,10 @@ void Compiler::outIns_INT(INTInstruction* i) {
 }
 
 void Compiler::outIns_IMM(IMMInstruction* i) {
-	SDL_WriteU16BE(file, 0xE000 | (i->reg << 8) | i->value);
+	SDL_WriteU16BE(file, 0xE000 | (0x1000 * (i->code == OPC_LIMM)) | (i->reg << 8) | (i->value & 0xFF));
+	if (i->code == OPC_LIMM) {
+		SDL_WriteU16BE(file, i->value);
+	}
 }
 
 void Compiler::outIns(BasicInstruction* i) {
@@ -60,6 +63,7 @@ void Compiler::outIns(BasicInstruction* i) {
 		case OPC_INT:
 			outIns_INT((INTInstruction*)i);
 			break;
+		case OPC_LIMM:
 		case OPC_IMM:
 			outIns_IMM((IMMInstruction*)i);
 			break;

@@ -159,10 +159,17 @@ void CPU::execJump(Uint16 i) {
 	}
 }
 
-//TODO LONG IMM
 void CPU::execIMM(Uint16 ins) {
-	auto dest = (ins >> 8) & 0xF;
-	auto val = ins & 0xFF;
+	if ((ins >> 12) & 0x1) {
+		auto dest = (ins >> 8) & 0xF;
+		instPntr += 2;
+		auto val = m->getter16()(instPntr);
 
-	registers[dest] = val;
+		registers[dest] = val;
+	} else {
+		auto dest = (ins >> 8) & 0xF;
+		auto val = ins & 0xFF;
+
+		registers[dest] = val;
+	}
 }

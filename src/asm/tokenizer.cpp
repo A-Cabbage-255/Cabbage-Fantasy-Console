@@ -47,7 +47,7 @@ void Tokenizer::skipWhitespace() {
 	}
 }
 
-Token Tokenizer::parseToken() { //TODO PARSE REGISTERS PROPERLY
+Token Tokenizer::parseToken() { //TODO PARSE REGISTERS PROPERLY + OFFSETS/COMPILE-TIME MATH
 	skipWhitespace();
 
 	if (eof()) return token(TOKEN_EOF);
