@@ -78,22 +78,27 @@ void Texture::draw(float x, float y) {
 	safe(SDL_RenderTexture((SDL_Renderer*)win->rend, (SDL_Texture*)tex, NULL, &r));
 }
 
-ModifiableTexture::ModifiableTexture(Window* parent, int width, int height) {
+ModifiablePalettedTexture::ModifiablePalettedTexture(Window* parent, int width, int height) {
 	win = parent;
-	tex = (void*)SDL_CreateTexture((SDL_Renderer*)win->rend, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, width, height);
+	tex = (void*)SDL_CreateTexture((SDL_Renderer*)win->rend, SDL_PIXELFORMAT_INDEX8, SDL_TEXTUREACCESS_STREAMING, width, height);
 	nullcheck(tex);
-	SDL_SetTextureBlendMode((SDL_Texture*)tex, SDL_BLENDMODE_NONE);
-	SDL_SetTextureScaleMode((SDL_Texture*)tex, SDL_SCALEMODE_NEAREST);
+	safe(SDL_SetTextureBlendMode((SDL_Texture*)tex, SDL_BLENDMODE_NONE));
+	safe(SDL_SetTextureScaleMode((SDL_Texture*)tex, SDL_SCALEMODE_NEAREST));
+
+	palette = (void*)SDL_CreatePalette(256);
+
+	safe(SDL_SetTexturePalette((SDL_Texture*)tex, (SDL_Palette*)palette));
 
 	w = width;
 	h = height;
 }
 
-ModifiableTexture::~ModifiableTexture() {
+ModifiablePalettedTexture::~ModifiablePalettedTexture() {
+	SDL_DestroyPalette((SDL_Palette*)palette);
 	SDL_DestroyTexture((SDL_Texture*)tex);
 }
 
-Uint8* ModifiableTexture::lockRegion(TextureRegion reg, int* pitch_OUT) {
+Uint8* ModifiablePalettedTexture::lockRegion(TextureRegion reg, int* pitch_OUT) {
 	Uint8* arr;
 	SDL_Rect r = {reg.x, reg.y, reg.w, reg.h};
 	int pitch;
@@ -104,22 +109,24 @@ Uint8* ModifiableTexture::lockRegion(TextureRegion reg, int* pitch_OUT) {
 	return arr;
 }
 
-void ModifiableTexture::unlock() {
+void ModifiablePalettedTexture::unlock() {
 	SDL_UnlockTexture((SDL_Texture*)tex);
 }
 
-void ModifiableTexture::modify(TextureRegion reg, std::function<Uint8(int x, int y, ColorChannel c)> col) {
+void ModifiablePalettedTexture::modify(TextureRegion reg, std::function<Uint8(int x, int y)> col) {
 	int pitch = 0;
 	auto pix = lockRegion(reg, &pitch);
 
 	for (int y = 0; y < reg.h; y++) {
 		for (int x = 0; x < reg.w; x++) {
-			pix[y * pitch + x * 4] = 255;
-			pix[y * pitch + x * 4 + 1] = col(x, y, ColorChannel::blue);
-			pix[y * pitch + x * 4 + 2] = col(x, y, ColorChannel::green);
-			pix[y * pitch + x * 4 + 3] = col(x, y, ColorChannel::red);
+			pix[y * pitch + x] = col(x, y);
 		}
 	}
 
 	unlock();
+}
+
+void ModifiablePalettedTexture::changePaletteColor(Uint8 idx, Uint8 r, Uint8 g, Uint8 b) {
+	SDL_Color c = {r, g, b, 255};
+	safe(SDL_SetPaletteColors((SDL_Palette*)palette, &c, idx, 1));
 }

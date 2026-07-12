@@ -135,7 +135,6 @@ std::function<void(Uint32, Uint16)> Memory::setter16(MemoryRegion region) {
 void Memory::copy(const void* src, size_t count, MemoryRegion region) {
 	switch (region) {
 	case MemoryRegion::General:
-		std::cout << "COPYING MEMORY!\n" << std::flush;
 		memcpy(generalRAM, src, count);
 		break;
 	case MemoryRegion::Sprites:

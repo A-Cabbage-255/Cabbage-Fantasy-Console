@@ -39,8 +39,6 @@ typedef enum OPCode {
 	OPC_IMM,
 	OPC_LIMM,
 
-	OPC_NOP,
-
 	OPC_LABEL,
 } OPCode;
 

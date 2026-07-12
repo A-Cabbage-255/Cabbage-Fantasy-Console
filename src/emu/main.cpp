@@ -1,24 +1,25 @@
 #include "tests/tests.h"
-#include "graphics.h"
+#include "screen.h"
 #include "memory.h"
 #include "CPU.h"
 #include <SDL3/SDL.h>
 
 Memory* m;
 CPU* c;
-Window* w;
+Screen* w;
+bool windowQuit = false;
 
-void printNumber() {
-    std::cout << c->registers[15] << "\n";
+void updWin() {
+    windowQuit = !w->tick();
 }
 
 int main(int argc, char* argv[]) {
     //TEST_ALL();
 
     m = new Memory();
-    c = new CPU(m, printNumber);
-    w = new Window("UNTITLED", 400, 300);
-    w->setIcon("assets/icon.png");
+    c = new CPU(m, updWin);
+    w = new Screen(m->getter8(MemoryRegion::Sprites), m->getter8(MemoryRegion::SpriteFlags), m->getter8(MemoryRegion::SpriteData), m->getter8(MemoryRegion::Palette));
+    //w->setIcon("assets/icon.png");
 
     auto file = SDL_IOFromFile("assets/rom.bin", "rb");
 
@@ -30,7 +31,6 @@ int main(int argc, char* argv[]) {
         s(i * 2, v);
     }
 
-    bool windowQuit = false;
     while (!c->finished && !windowQuit) {
         c->tick();
     }

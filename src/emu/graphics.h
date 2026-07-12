@@ -1,5 +1,6 @@
 #pragma once
 #include "../common.h"
+#include "memory.h"
 
 typedef struct IntRect TextureRegion;
 
@@ -20,7 +21,7 @@ public:
 	bool tick(); //returns true if you should continue runnning
 
 	friend class Texture;
-	friend class ModifiableTexture;
+	friend class ModifiablePalettedTexture;
 };
 
 class Texture {
@@ -33,14 +34,17 @@ public:
 	void draw(float x, float y);
 };
 
-//Pixel format ABGR 8888??
-class ModifiableTexture : public Texture {
+class ModifiablePalettedTexture : public Texture {
+protected:
+	void* palette;
 public:
-	ModifiableTexture(Window* parent, int w, int h);
-	~ModifiableTexture();
+	ModifiablePalettedTexture(Window* parent, int w, int h);
+	~ModifiablePalettedTexture();
 
 	Uint8* lockRegion(TextureRegion reg, int* pitch_OUT = nullptr);
 	void unlock();
 
-	void modify(TextureRegion reg, std::function<Uint8(int x, int y, ColorChannel c)> col);
+	void modify(TextureRegion reg, std::function<Uint8(int x, int y)> col);
+
+	void changePaletteColor(Uint8 idx, Uint8 r, Uint8 g, Uint8 b);
 };
