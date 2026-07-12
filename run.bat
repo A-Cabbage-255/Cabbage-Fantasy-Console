@@ -1,4 +1,4 @@
 @echo off 
-build\Assembler.exe
+build\Debug\Assembler.exe
 
-if %ERRORLEVEL% == 0 build\Emulator.exe
+if %ERRORLEVEL% == 0 build\Debug\Emulator.exe
