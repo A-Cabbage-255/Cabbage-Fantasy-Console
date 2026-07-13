@@ -45,14 +45,14 @@ void CPU::tick() {
 	instPntr+=2;
 }
 
-void CPU::execIns(Uint16 i) {
+void CPU::execIns(Uint16 i) { //TODO ADD RAM
 	if (!(i >> 15)) {
 		execALU(i);
 	} else if (!((i >> 14) & 0b1)) {
 		execJump(i);
 	} else if (!((i >> 13) & 0b1)) {
 		if (!((i >> 11) & 0b1)) {
-
+			execRAM(i);
 		} else {
 			interrupt(i & 0xFF);
 		}
@@ -171,5 +171,24 @@ void CPU::execIMM(Uint16 ins) {
 		auto val = ins & 0xFF;
 
 		registers[dest] = val;
+	}
+}
+
+void CPU::execRAM(Uint16 ins) {
+	auto reg = ins & 0xF;
+	unsigned addr = (((unsigned)registers[14]) << 16) | registers[15];
+
+	if (!((ins >> 12) & 1)) {
+		if (!((ins >> 10) & 1)) {
+			registers[reg] = m->getter16()(addr);
+		} else {
+			m->setter16()(addr, registers[reg]);
+		}
+	} else {
+		if (!((ins >> 10) & 1)) {
+			registers[reg] = m->getter8()(addr);
+		} else {
+			m->setter8()(addr, registers[reg]);
+		}
 	}
 }

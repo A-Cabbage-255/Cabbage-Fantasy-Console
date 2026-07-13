@@ -32,6 +32,7 @@ protected:
 	int h;
 public:
 	void draw(float x, float y);
+	void draw(FloatRect source, FloatRect dest);
 };
 
 class ModifiablePalettedTexture : public Texture {

@@ -24,6 +24,12 @@ struct IntRect {
 	int w;
 	int h;
 };
+struct FloatRect {
+	float x;
+	float y;
+	float w;
+	float h;
+};
 
 enum class ColorChannel {
 	red,

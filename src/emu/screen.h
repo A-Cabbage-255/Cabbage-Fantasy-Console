@@ -11,7 +11,7 @@ private:
 	std::function<Uint8(Uint32)> getSpriteData;
 	std::function<Uint8(Uint32)> getPalette;
 
-	void drawSprite(Uint8 tileX, Uint8 tileY, Uint16 destX, Uint16 destY);
+	void drawSprite(unsigned tileX, unsigned tileY, unsigned destX, unsigned destY);
 public:
 	Screen(std::function<Uint8(Uint32)> colorDat, std::function<Uint8(Uint32)> flagDat, std::function<Uint8(Uint32)> posDat, std::function<Uint8(Uint32)> palette);
 	~Screen();

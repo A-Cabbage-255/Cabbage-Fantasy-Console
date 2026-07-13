@@ -33,6 +33,7 @@ public:
 	void execALU(Uint16 ins);
 	void execJump(Uint16 ins);
 	void execIMM(Uint16 ins);
+	void execRAM(Uint16 ins);
 
 	void execIns(Uint16 ins);
 	void tick();

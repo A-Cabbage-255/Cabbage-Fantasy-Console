@@ -77,6 +77,11 @@ void Texture::draw(float x, float y) {
 	SDL_FRect r = {x, y, (float)w, (float)h};
 	safe(SDL_RenderTexture((SDL_Renderer*)win->rend, (SDL_Texture*)tex, NULL, &r));
 }
+void Texture::draw(FloatRect src, FloatRect dest) {
+	SDL_FRect sourceR = {src.x, src.y, src.w, src.h};
+	SDL_FRect destR = {dest.x, dest.y, dest.w, dest.h};
+	safe(SDL_RenderTexture((SDL_Renderer*)win->rend, (SDL_Texture*)tex, &sourceR, &destR));
+}
 
 ModifiablePalettedTexture::ModifiablePalettedTexture(Window* parent, int width, int height) {
 	win = parent;

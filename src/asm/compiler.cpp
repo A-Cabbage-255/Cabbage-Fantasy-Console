@@ -35,6 +35,10 @@ void Compiler::outIns_IMM(IMMInstruction* i) {
 	}
 }
 
+void Compiler::outIns_RAM(RAMInstruction* i) {
+	SDL_WriteU16BE(file, 0xC000 | (0x1000 * (i->code == OPC_GET || i->code == OPC_STR)) | (0x0400 * (i->code == OPC_STR || i->code == OPC_STRL)) | i->reg);
+}
+
 void Compiler::outIns(BasicInstruction* i) {
 	switch (i->code) {
 		case OPC_ADD:
@@ -66,6 +70,12 @@ void Compiler::outIns(BasicInstruction* i) {
 		case OPC_LIMM:
 		case OPC_IMM:
 			outIns_IMM((IMMInstruction*)i);
+			break;
+		case OPC_GET:
+		case OPC_GETL:
+		case OPC_STR:
+		case OPC_STRL:
+			outIns_RAM((RAMInstruction*)i);
 			break;
 		default:
 			std::cerr << "ERROR" << std::endl;
