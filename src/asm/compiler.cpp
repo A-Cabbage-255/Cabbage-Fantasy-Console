@@ -40,7 +40,7 @@ void Compiler::outIns_RAM(RAMInstruction* i) {
 }
 
 void Compiler::outIns(BasicInstruction* i) {
-	switch (i->code) {
+	switch (i->code) { //TODO MUL
 		case OPC_ADD:
 		case OPC_ADC:
 		case OPC_SUB:

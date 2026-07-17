@@ -21,6 +21,9 @@ private:
 	Uint8* SpriteFlags = nullptr;
 	Uint8* SpriteData = nullptr;
 	Uint8* Palette = nullptr;
+
+	std::function<void(void)> paletteUpdated; //TODO Deal with this dawg
+	std::function<void(void)> spriteDataUpdated;
 public:
 	Memory() {
 		generalRAM = new Uint8[0x10000000];

@@ -37,7 +37,7 @@ public:
 
 class ModifiablePalettedTexture : public Texture {
 protected:
-	void* palette;
+	void* palette; // TODO MULTIPLE PALETTES
 public:
 	ModifiablePalettedTexture(Window* parent, int w, int h);
 	~ModifiablePalettedTexture();

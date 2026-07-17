@@ -228,6 +228,8 @@ BasicInstruction* Lexer::lex(const UnparsedInstruction& inst) {
 		return new ALUInstruction({OPC_NAND, inst.arguments[0].number, inst.arguments[1].number, inst.arguments[2].number});
 	} else if (inst.name == "MUL"s) {
 		assert(inst.arguments.size() == 3);
+		assert(inst.arguments[0].number < 4);
+		assert(inst.arguments[1].number - 4 < 4);
 
 		return new MultInstruction({OPC_MUL, inst.arguments[0].number, inst.arguments[1].number, inst.arguments[2].number, inst.arguments[3].number});
 	} else if (inst.name == "SHL"s) {

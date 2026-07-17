@@ -45,7 +45,7 @@ void CPU::tick() {
 	instPntr+=2;
 }
 
-void CPU::execIns(Uint16 i) { //TODO ADD RAM
+void CPU::execIns(Uint16 i) {
 	if (!(i >> 15)) {
 		execALU(i);
 	} else if (!((i >> 14) & 0b1)) {
@@ -86,8 +86,8 @@ void CPU::execALU(Uint16 i) {
 	case 0b100: //NAND
 		registers[dest] = ~(registers[a] & registers[b]);
 		break;
-	case 0b101: { //MUL
-		auto highDest = (dest >> 2) | 0b100;
+	case 0b101: { //MUL //TODO CARRY FLAG BECOMES INDICATOR OF OVERFLOW INTO HIGH, OTHERWISE HIGH ISNT SET
+		auto highDest = (dest >> 2);
 		auto lowDest = (dest & 0b11) | 0b100;
 
 		Uint32 res = ((Uint32)registers[a] & 0xFFFFu) * ((Uint32)registers[b] & 0xFFFFu);
@@ -96,7 +96,7 @@ void CPU::execALU(Uint16 i) {
 		registers[lowDest] = res & 0xFFFF;
 		break;
 	}
-	//TODO SHIFT CARRY BIT IMPLEMENTATION
+	//TODO SHIFT CARRY BIT IMPLEMENTATION (bit first shifted off)
 	case 0b110: //SHL
 		registers[dest] = registers[a] << registers[b];
 		break;
