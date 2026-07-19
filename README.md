@@ -5,5 +5,5 @@
 ### has an unimplemented kernel mode system
 
 - [Hardware Instruction Set](ISA.md)
-- [Assembly Language](ASM.md)
-- [Architecture Information](Arch.md)
+- [Assembly Language](ASM.md) (unfinished)
+- [Architecture Information](Arch.md) (to be added)
