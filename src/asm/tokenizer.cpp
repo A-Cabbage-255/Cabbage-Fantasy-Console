@@ -93,6 +93,20 @@ Token Tokenizer::parseToken() { //TODO PARSE REGISTERS PROPERLY + OFFSETS/COMPIL
 		}
 		return {TOKEN_NUMBER, ret, ""};
 	}
+	if (c == '-') {
+		assert(char_isNumeric(peek()));
+
+		unsigned ret = 0;
+
+		while (char_isNumeric(peek())) {
+			c = get();
+			ret *= 10;
+			ret += (unsigned)c - (unsigned)'0';
+
+			if (eof()) break;
+		}
+		return {TOKEN_NUMBER, (0xFFFF ^ ret) + 1, ""};
+	}
 
 	return token(TOKEN_NULL);
 }

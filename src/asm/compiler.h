@@ -16,4 +16,6 @@ public:
 	~Compiler();
 
 	void outIns(BasicInstruction* i);
+
+	unsigned getPos();
 };

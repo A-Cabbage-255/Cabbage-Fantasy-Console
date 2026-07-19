@@ -8,6 +8,10 @@ Compiler::~Compiler() {
 	SDL_CloseIO(file);
 }
 
+unsigned Compiler::getPos() {
+	return SDL_TellIO(file);
+}
+
 void Compiler::outIns_ALU(ALUInstruction* i) {
 	Uint16 opc = i->code - OPC_ADD;
 
@@ -17,7 +21,8 @@ void Compiler::outIns_ALU(ALUInstruction* i) {
 void Compiler::outIns_JMP(JMPInstruction* i) {
 	Uint16 opc = i->code - OPC_JEZ;
 
-	SDL_WriteU16BE(file, 0x8000 | (i->userMode * 0x1000) | (opc << 8) | (i->check << 4) | i->offset);
+	SDL_WriteU16BE(file, 0x8000 | (i->userMode * 0x1000) | (opc << 8) | (i->check << 4));
+	SDL_WriteU16BE(file, i->offset);
 }
 
 void Compiler::outIns_LJMP(L_JMPInstruction* i) {

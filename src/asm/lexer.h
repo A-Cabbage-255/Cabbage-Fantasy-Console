@@ -61,7 +61,7 @@ typedef struct MultInstruction : BasicInstruction {
 
 typedef struct JMPInstruction : BasicInstruction {
 	bool userMode;
-	unsigned offset : 4;
+	unsigned int offset;
 	unsigned check : 4;
 } JMPInstruction;
 
@@ -100,7 +100,7 @@ public:
 	Lexer(Tokenizer* tok);
 
 	//YOU must delete result
-	BasicInstruction* lex(const UnparsedInstruction& inst);
+	BasicInstruction* lex(UnparsedInstruction inst, unsigned nextbytepos);
 	void scanLabels();
 	UnparsedInstruction nextInstruction();
 	

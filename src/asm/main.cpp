@@ -18,14 +18,14 @@ int main(int argc, char* argv[]) {
 
 	l.scanLabels();
 
-	auto i = l.lex(l.nextInstruction());
-	while (i == nullptr) i = l.lex(l.nextInstruction());
+	auto i = l.lex(l.nextInstruction(), c.getPos());
+	while (i == nullptr) i = l.lex(l.nextInstruction(), c.getPos());
 	while (i->code != OPC_EOF) {
 		c.outIns(i);
 
 		delete i;
-		i = l.lex(l.nextInstruction());
-		while (i == nullptr) i = l.lex(l.nextInstruction());
+		i = l.lex(l.nextInstruction(), c.getPos());
+		while (i == nullptr) i = l.lex(l.nextInstruction(), c.getPos());
 	}
 	delete i;
 

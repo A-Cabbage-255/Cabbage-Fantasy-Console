@@ -17,6 +17,8 @@ void Lexer::scanLabels() {
 
 		if (cur.name == "LIM"s || (cur.name == "IMM"s && cur.arguments[1].number > UINT8_MAX)) {
 			curbyte += 2;
+		} else if (cur.name[0] == 'J' && cur.name != "JMP"s) {
+			curbyte += 2;
 		}
 	}
 	t->reset();
@@ -49,7 +51,7 @@ UnparsedInstruction Lexer::nextInstruction() {
 	return ret;
 }
 
-BasicInstruction* Lexer::lex(const UnparsedInstruction& inst) {
+BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 	if (inst.eof) return new BasicInstruction({OPC_EOF});
 
 	if (inst.label) return nullptr;
@@ -119,6 +121,11 @@ BasicInstruction* Lexer::lex(const UnparsedInstruction& inst) {
 	} else if (inst.name == "JEZ"s) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
+		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
+			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos;
+			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
+		}
+
 		if (inst.arguments.size() > 2) {
 			assert(inst.arguments[2].str == "USR"s);
 			return new JMPInstruction({OPC_JEZ, true, inst.arguments[0].number, inst.arguments[1].number});
@@ -127,6 +134,11 @@ BasicInstruction* Lexer::lex(const UnparsedInstruction& inst) {
 		}
 	} else if (inst.name == "JGZ"s) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
+
+		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
+			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos;
+			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
+		}
 
 		if (inst.arguments.size() > 2) {
 			assert(inst.arguments[2].str == "USR"s);
@@ -137,6 +149,11 @@ BasicInstruction* Lexer::lex(const UnparsedInstruction& inst) {
 	} else if (inst.name == "JLZ"s) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
+		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
+			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos;
+			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
+		}
+
 		if (inst.arguments.size() > 2) {
 			assert(inst.arguments[2].str == "USR"s);
 			return new JMPInstruction({OPC_JLZ, true, inst.arguments[0].number, inst.arguments[1].number});
@@ -146,6 +163,11 @@ BasicInstruction* Lexer::lex(const UnparsedInstruction& inst) {
 	} else if (inst.name == "JE1"s) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
+		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
+			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos;
+			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
+		}
+
 		if (inst.arguments.size() > 2) {
 			assert(inst.arguments[2].str == "USR"s);
 			return new JMPInstruction({OPC_JE1, true, inst.arguments[0].number, inst.arguments[1].number});
@@ -153,7 +175,12 @@ BasicInstruction* Lexer::lex(const UnparsedInstruction& inst) {
 			return new JMPInstruction({OPC_JE1, false, inst.arguments[0].number, inst.arguments[1].number});
 		}
 	} else if (inst.name == "JCF"s) {
-		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
+		assert((inst.arguments.size() == 2) || (inst.arguments.size() == 1));
+
+		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
+			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos;
+			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
+		}
 
 		if (inst.arguments.size() > 1) {
 			assert(inst.arguments[1].str == "USR"s);
@@ -164,6 +191,11 @@ BasicInstruction* Lexer::lex(const UnparsedInstruction& inst) {
 	} else if (inst.name == "JNZ"s) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
+		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
+			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos;
+			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
+		}
+
 		if (inst.arguments.size() > 2) {
 			assert(inst.arguments[2].str == "USR"s);
 			return new JMPInstruction({OPC_JNEZ, true, inst.arguments[0].number, inst.arguments[1].number});
@@ -172,6 +204,11 @@ BasicInstruction* Lexer::lex(const UnparsedInstruction& inst) {
 		}
 	} else if (inst.name == "JLE"s) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
+
+		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
+			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos;
+			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
+		}
 
 		if (inst.arguments.size() > 2) {
 			assert(inst.arguments[2].str == "USR"s);
@@ -182,6 +219,11 @@ BasicInstruction* Lexer::lex(const UnparsedInstruction& inst) {
 	} else if (inst.name == "JGE"s) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
+		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
+			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos;
+			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
+		}
+
 		if (inst.arguments.size() > 2) {
 			assert(inst.arguments[2].str == "USR"s);
 			return new JMPInstruction({OPC_JNLZ, true, inst.arguments[0].number, inst.arguments[1].number});
@@ -191,6 +233,11 @@ BasicInstruction* Lexer::lex(const UnparsedInstruction& inst) {
 	} else if (inst.name == "JN1"s) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
+		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
+			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos;
+			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
+		}
+
 		if (inst.arguments.size() > 2) {
 			assert(inst.arguments[2].str == "USR"s);
 			return new JMPInstruction({OPC_JNE1, true, inst.arguments[0].number, inst.arguments[1].number});
@@ -198,7 +245,12 @@ BasicInstruction* Lexer::lex(const UnparsedInstruction& inst) {
 			return new JMPInstruction({OPC_JNE1, false, inst.arguments[0].number, inst.arguments[1].number});
 		}
 	} else if (inst.name == "JNC"s) {
-		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
+		assert((inst.arguments.size() == 2) || (inst.arguments.size() == 1));
+
+		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
+			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos;
+			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
+		}
 
 		if (inst.arguments.size() > 1) {
 			assert(inst.arguments[1].str == "USR"s);

@@ -92,7 +92,7 @@ void CPU::execALU(Uint16 i) {
 
 		Uint32 res = ((Uint32)registers[a] & 0xFFFFu) * ((Uint32)registers[b] & 0xFFFFu);
 
-		registers[highDest] = res >> 16;
+		if (res > 0xFFFF) registers[highDest] = res >> 16;
 		registers[lowDest] = res & 0xFFFF;
 		break;
 	}
@@ -121,7 +121,9 @@ void CPU::execJump(Uint16 i) {
 		instPntr -= 2;
 	} else {
 		Uint16 toCheck = registers[(i >> 4) & 0xF];
-		int16 change = reinterpret_cast<int16&>(registers[i & 0xF]);
+		instPntr += 2;
+		Uint16 change_unsigned = m->getter16()(instPntr);
+		int16 change = reinterpret_cast<int16&>(change_unsigned);
 
 		bool jmp = false;
 
