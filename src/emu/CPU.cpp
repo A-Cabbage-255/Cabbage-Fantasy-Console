@@ -188,7 +188,7 @@ void CPU::execRAM(Uint16 ins) {
 		}
 	} else {
 		if (!((ins >> 10) & 1)) {
-			registers[reg] = m->getter8()(addr);
+			registers[reg] = (registers[reg] & 0xFF00) | m->getter8()(addr);
 		} else {
 			m->setter8()(addr, registers[reg]);
 		}

@@ -4,4 +4,6 @@
 
 ### has an unimplemented kernel mode system
 
-Instruction set TBA
+- [Hardware Instruction Set](ISA.md)
+- [Assembly Language](ASM.md)
+- [Architecture Information](Arch.md)
