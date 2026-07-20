@@ -149,7 +149,7 @@ void CPU::execJump(Uint16 i) {
 
 		if (jmp) {
 			instPntr += change;
-			instPntr -= 2;
+			instPntr -= 4;
 		}
 	}
 	if ((i >> 12) & 1) {

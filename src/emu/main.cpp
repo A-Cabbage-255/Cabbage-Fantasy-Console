@@ -4,6 +4,8 @@
 #include "CPU.h"
 #include <SDL3/SDL.h>
 
+//#define STEPTHROUGH
+
 Memory* m;
 CPU* c;
 Screen* w;
@@ -32,6 +34,11 @@ int main(int argc, char* argv[]) {
     }
 
     while (!c->finished && !windowQuit) {
+#ifdef STEPTHROUGH
+        std::string input;
+        std::cout << std::hex << m->getter16()(c->instPntr) << std::dec  << " :: ";
+        std::cin >> input;
+#endif
         c->tick();
     }
 

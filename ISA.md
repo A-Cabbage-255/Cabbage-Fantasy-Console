@@ -35,11 +35,11 @@ immediately jumps to `rHHHH` : `rLLLL`
 
 ## Offset Jump Mode
 
-    100 U QQQQ CCCC DDDD
+    100 U QQQQ CCCC ---- VVVVVVVVVVVVVVVV
 
 **`U`:** If enabled, the jump will bring the CPU into user-mode, and after 200 clock ticks an `INT 0x01` will run
 
-jumps to current position + offset `rDDDD`, ***if*** the condition is met:
+jumps to current position + offset `V`, ***if*** the condition is met:
 
 | QQQQ | Condition |
 | - | - |
@@ -56,7 +56,7 @@ jumps to current position + offset `rDDDD`, ***if*** the condition is met:
 | `12` | `CF` is off (= 0) |
 | *13-15* | *unused* |
 
-> **NOTE:** both `rCCCC` and `rDDDD` are interpreted as signed with two's complement
+> **NOTE:** both `rCCCC` and `V` are interpreted as signed with two's complement
 >
 > **NOTE:** When `U` is enabled, this instruction can only be excuted in kernel mode
 
