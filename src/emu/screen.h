@@ -4,7 +4,8 @@
 class Screen {
 private:
 	void* win = nullptr;
-	void* spriteColorTex = nullptr;
+	void* spriteColorTex[4] = {nullptr};
+	void* pal = nullptr;
 
 	std::function<Uint8(Uint32)> getSpriteColor;
 	std::function<Uint8(Uint32)> getSpriteFlags;

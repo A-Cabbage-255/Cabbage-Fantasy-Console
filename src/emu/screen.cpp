@@ -4,14 +4,22 @@
 Screen::Screen(std::function<Uint8(Uint32)> colorDat, std::function<Uint8(Uint32)> flagDat, std::function<Uint8(Uint32)> posDat, std::function<Uint8(Uint32)> palette)
 : getSpriteColor(colorDat), getSpriteFlags(flagDat), getSpriteData(posDat), getPalette(palette) {
 	win = (void*)new Window("UNTITLED", 800, 450);
-	spriteColorTex = (void*)new ModifiablePalettedTexture((Window*)win, 2048, 2048);
+	spriteColorTex[0] = (void*)new ModifiablePalettedTexture((Window*)win, 2048, 2048);
+	spriteColorTex[1] = (void*)new ModifiablePalettedTexture((Window*)win, 2048, 2048);
+	spriteColorTex[2] = (void*)new ModifiablePalettedTexture((Window*)win, 2048, 2048);
+	spriteColorTex[3] = (void*)new ModifiablePalettedTexture((Window*)win, 2048, 2048);
+	pal = (void*)new Palette();
 	for (int i = 0; i < 256; i++) {
-		((ModifiablePalettedTexture*)spriteColorTex)->changePaletteColor(i, getPalette(0 + i * 3), getPalette(1 + i * 3), getPalette(2 + i * 3));
+		((Palette*)pal)->modify(i, getPalette(0 + i * 3), getPalette(1 + i * 3), getPalette(2 + i * 3));
 	}
 }
 
 Screen::~Screen() {
-	delete (ModifiablePalettedTexture*)spriteColorTex;
+	delete (Palette*)pal;
+	delete (ModifiablePalettedTexture*)spriteColorTex[0];
+	delete (ModifiablePalettedTexture*)spriteColorTex[1];
+	delete (ModifiablePalettedTexture*)spriteColorTex[2];
+	delete (ModifiablePalettedTexture*)spriteColorTex[3];
 	delete (Window*)win;
 }
 

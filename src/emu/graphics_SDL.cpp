@@ -73,6 +73,19 @@ void Window::clear(Uint8 r, Uint8 g, Uint8 b) {
 	safe(SDL_RenderClear((SDL_Renderer*)rend));
 }
 
+Palette::Palette() {
+	pal = (void*)SDL_CreatePalette(256);
+}
+
+Palette::~Palette() {
+	SDL_DestroyPalette((SDL_Palette*)pal);
+}
+
+void Palette::modify(Uint8 idx, Uint8 r, Uint8 g, Uint8 b) {
+	SDL_Color c = {r, g, b, 255};
+	safe(SDL_SetPaletteColors((SDL_Palette*)pal, &c, idx, 1));
+}
+
 void Texture::draw(float x, float y) {
 	SDL_FRect r = {x, y, (float)w, (float)h};
 	safe(SDL_RenderTexture((SDL_Renderer*)win->rend, (SDL_Texture*)tex, NULL, &r));
@@ -90,16 +103,11 @@ ModifiablePalettedTexture::ModifiablePalettedTexture(Window* parent, int width, 
 	safe(SDL_SetTextureBlendMode((SDL_Texture*)tex, SDL_BLENDMODE_NONE));
 	safe(SDL_SetTextureScaleMode((SDL_Texture*)tex, SDL_SCALEMODE_NEAREST));
 
-	palette = (void*)SDL_CreatePalette(256);
-
-	safe(SDL_SetTexturePalette((SDL_Texture*)tex, (SDL_Palette*)palette));
-
 	w = width;
 	h = height;
 }
 
 ModifiablePalettedTexture::~ModifiablePalettedTexture() {
-	SDL_DestroyPalette((SDL_Palette*)palette);
 	SDL_DestroyTexture((SDL_Texture*)tex);
 }
 
@@ -131,7 +139,6 @@ void ModifiablePalettedTexture::modify(TextureRegion reg, std::function<Uint8(in
 	unlock();
 }
 
-void ModifiablePalettedTexture::changePaletteColor(Uint8 idx, Uint8 r, Uint8 g, Uint8 b) {
-	SDL_Color c = {r, g, b, 255};
-	safe(SDL_SetPaletteColors((SDL_Palette*)palette, &c, idx, 1));
+void ModifiablePalettedTexture::setPalette(const Palette& p) {
+	safe(SDL_SetTexturePalette((SDL_Texture*)tex, (SDL_Palette*)p.pal));
 }

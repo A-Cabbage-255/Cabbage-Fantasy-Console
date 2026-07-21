@@ -24,6 +24,18 @@ public:
 	friend class ModifiablePalettedTexture;
 };
 
+class Palette {
+protected:
+	void* pal;
+public:
+	Palette();
+	~Palette();
+
+	void modify(Uint8 idx, Uint8 r, Uint8 g, Uint8 b);
+
+	friend class ModifiablePalettedTexture;
+};
+
 class Texture {
 protected:
 	void* tex;
@@ -36,8 +48,6 @@ public:
 };
 
 class ModifiablePalettedTexture : public Texture {
-protected:
-	void* palette; // TODO MULTIPLE PALETTES
 public:
 	ModifiablePalettedTexture(Window* parent, int w, int h);
 	~ModifiablePalettedTexture();
@@ -47,5 +57,5 @@ public:
 
 	void modify(TextureRegion reg, std::function<Uint8(int x, int y)> col);
 
-	void changePaletteColor(Uint8 idx, Uint8 r, Uint8 g, Uint8 b);
+	void setPalette(const Palette& p);
 };
