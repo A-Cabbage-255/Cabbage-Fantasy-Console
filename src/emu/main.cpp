@@ -23,6 +23,9 @@ int main(int argc, char* argv[]) {
     w = new Screen(m->getter8(MemoryRegion::Sprites), m->getter8(MemoryRegion::SpriteFlags), m->getter8(MemoryRegion::SpriteData), m->getter8(MemoryRegion::Palette));
     //w->setIcon("assets/icon.png");
 
+    m->spriteDataUpdated = [&](){w->reloadSpriteColor();};
+    m->paletteUpdated = [&]() {w->reloadPalette();};
+
     auto file = SDL_IOFromFile("assets/rom.bin", "rb");
 
     auto s = m->setter16(MemoryRegion::General);

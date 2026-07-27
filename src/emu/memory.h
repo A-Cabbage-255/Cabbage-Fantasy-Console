@@ -22,9 +22,10 @@ private:
 	Uint8* SpriteData = nullptr;
 	Uint8* Palette = nullptr;
 
-	std::function<void(void)> paletteUpdated; //TODO Deal with this dawg
-	std::function<void(void)> spriteDataUpdated;
 public:
+	std::function<void(void)> paletteUpdated;
+	std::function<void(void)> spriteDataUpdated;
+
 	Memory() {
 		generalRAM = new Uint8[0x10000000];
 		IVT = new Uint8[0x400];

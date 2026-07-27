@@ -21,7 +21,6 @@
 
 ## User Mode Instructions
 
-
 | Code | Operation |
 | - | - |
 | `NOP ~` | Does nothing, equivalent to `ADD 0, 0, 0` |

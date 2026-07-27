@@ -12,10 +12,13 @@ private:
 	std::function<Uint8(Uint32)> getSpriteData;
 	std::function<Uint8(Uint32)> getPalette;
 
-	void drawSprite(unsigned tileX, unsigned tileY, unsigned destX, unsigned destY);
+	void drawSprite(unsigned tileX, unsigned tileY, unsigned destX, unsigned destY, unsigned tileset);
 public:
 	Screen(std::function<Uint8(Uint32)> colorDat, std::function<Uint8(Uint32)> flagDat, std::function<Uint8(Uint32)> posDat, std::function<Uint8(Uint32)> palette);
 	~Screen();
 
 	bool tick();
+
+	void reloadSpriteColor();
+	void reloadPalette();
 };

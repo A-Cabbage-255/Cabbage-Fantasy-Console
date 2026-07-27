@@ -90,45 +90,76 @@ std::function<Uint16(Uint32)> Memory::getter16(MemoryRegion region) {
 }
 
 std::function<void(Uint32, Uint8)> Memory::setter8(MemoryRegion region) {
-#define SETTER8_MAP(x,y) case MemoryRegion::x: \
-							return [this](Uint32 i, Uint8 v) -> void { \
-								y[i] = v; \
-							}
-
 	switch (region) {
-		SETTER8_MAP(General,     generalRAM);
-		SETTER8_MAP(IVT,         IVT);
-		SETTER8_MAP(Sprites,     SpriteMem);
-		SETTER8_MAP(SpriteFlags, SpriteFlags);
-		SETTER8_MAP(SpriteData,  SpriteData);
-		SETTER8_MAP(Palette,     Palette);
-	default:
-		assert(false);
-	}
+    case MemoryRegion::General:
+    	return [this](Uint32 i, Uint8 v) -> void { generalRAM[i] = v; };
 
-#undef SETTER8_MAP
+    case MemoryRegion::IVT:
+      	return [this](Uint32 i, Uint8 v) -> void { IVT[i] = v; };
+
+    case MemoryRegion::Sprites:
+      	return [this](Uint32 i, Uint8 v) -> void { SpriteMem[i] = v; spriteDataUpdated(); };
+
+    case MemoryRegion::SpriteFlags:
+      	return [this](Uint32 i, Uint8 v) -> void { SpriteFlags[i] = v; };
+
+    case MemoryRegion::SpriteData:
+      	return [this](Uint32 i, Uint8 v) -> void { SpriteData[i] = v; };
+
+    case MemoryRegion::Palette:
+      	return [this](Uint32 i, Uint8 v) -> void { Palette[i] = v; paletteUpdated(); };
+
+    default:
+      assert(false);
+    }
+
 	return nullptr;
 }
 
 std::function<void(Uint32, Uint16)> Memory::setter16(MemoryRegion region) {
-#define SETTER16_MAP(x,y) case MemoryRegion::x: \
-							return [this](Uint32 i, Uint16 v) -> void { \
-								y[i] = v >> 8; \
-								y[i+1] = v & 0xFF; \
-							}
-
 	switch (region) {
-		SETTER16_MAP(General,     generalRAM);
-		SETTER16_MAP(IVT,         IVT);
-		SETTER16_MAP(Sprites,     SpriteMem);
-		SETTER16_MAP(SpriteFlags, SpriteFlags);
-		SETTER16_MAP(SpriteData,  SpriteData);
-		SETTER16_MAP(Palette,     Palette);
+	case MemoryRegion::General:
+		return [this](Uint32 i, Uint16 v) -> void {
+			generalRAM[i] = v >> 8;
+			generalRAM[i + 1] = v & 0xFF;
+		};
+
+	case MemoryRegion::IVT:
+		return [this](Uint32 i, Uint16 v) -> void {
+			IVT[i] = v >> 8;
+			IVT[i + 1] = v & 0xFF;
+		};
+
+	case MemoryRegion::Sprites:
+		return [this](Uint32 i, Uint16 v) -> void {
+			SpriteMem[i] = v >> 8;
+			SpriteMem[i + 1] = v & 0xFF;
+			spriteDataUpdated();
+		};
+
+	case MemoryRegion::SpriteFlags:
+		return [this](Uint32 i, Uint16 v) -> void {
+			SpriteFlags[i] = v >> 8;
+			SpriteFlags[i + 1] = v & 0xFF;
+		};
+
+	case MemoryRegion::SpriteData:
+		return [this](Uint32 i, Uint16 v) -> void {
+			SpriteData[i] = v >> 8;
+			SpriteData[i + 1] = v & 0xFF;
+		};
+
+	case MemoryRegion::Palette:
+		return [this](Uint32 i, Uint16 v) -> void {
+			Palette[i] = v >> 8;
+			Palette[i + 1] = v & 0xFF;
+			paletteUpdated();
+		};
+
 	default:
 		assert(false);
 	}
 
-#undef SETTER16_MAP
 	return nullptr;
 }
 
@@ -142,6 +173,8 @@ void Memory::copy(const void* src, size_t count, MemoryRegion region) {
 		break;
 	case MemoryRegion::Palette:
 		memcpy(Palette, src, count);
+		break;
+	default:
 		break;
 	}
 }
