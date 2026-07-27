@@ -65,6 +65,7 @@ bool Window::tick() {
 			return false;
 		}
 	}
+
 	return true;
 }
 

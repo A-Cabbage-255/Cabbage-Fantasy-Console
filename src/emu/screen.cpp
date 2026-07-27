@@ -33,6 +33,8 @@ void Screen::drawSprite(unsigned tileX, unsigned tileY, unsigned destX, unsigned
 }
 
 bool Screen::tick() {
+	((Window*)win)->clear();
+
 	for (unsigned i = 0; true; i++) {
 		Uint8 flags = getSpriteFlags(i);
 
