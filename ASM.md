@@ -23,7 +23,8 @@
 
 | Code | Operation |
 | - | - |
-| `NOP ~` | Does nothing, equivalent to `ADD 0, 0, 0` |
+| `CCF ~` | Sets the carry flag to 0, equivalent to `ADD 0, 0, 0` |
+| `SCF ~` | Sets the carry flag to 1, equivalent to `NND 0, 0, 0` |
 | `MOV #d, #a` | Copies the value from register #a to register #d, equivalent to `ADD #d, #a, 0` |
 | `ADD #d, #a, #b` | Adds the values in #a and #b and stores the result in #d |
 | `ADC #d, #a, #b` | Adds the values in #a and #b, +1 if the carry bit is set, and stores the result #d |
@@ -53,3 +54,4 @@
 | `INT #n` | For most values, a software interrupt with ID #n & changes processor to kernel mode |
 | `DRW ~` | Causes the processor to stop as the screen is rendered, equivalent to `INT 0xFE` |
 | `END ~` | Causes the console to shut down, equivalent to `INT 0x00` |
+| `PSH #r` | __ |

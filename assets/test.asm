@@ -36,3 +36,9 @@ set r1
 
 imm lsp, LOOP
 jmp zr, lsp
+
+PUSH: ; TODO FINISH PUSH INSTR
+get #r
+scf ~
+swc lsp, lsp, 0
+swc usp, usp, 0

@@ -51,15 +51,19 @@ UnparsedInstruction Lexer::nextInstruction() {
 	return ret;
 }
 
-BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
+BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) { //TODO PUSH INSTRUCTION AND ALLAT
 	if (inst.eof) return new BasicInstruction({OPC_EOF});
 
 	if (inst.label) return nullptr;
 
-	if (inst.name == "NOP"s) {
+	if (inst.name == "CCF"s) {
 		assert(inst.arguments.size() == 0);
 
 		return new ALUInstruction({OPC_ADD, 0, 0, 0});
+	} else if (inst.name == "SCF"s) {
+		assert(inst.arguments.size() == 0);
+
+		return new ALUInstruction({OPC_NAND, 0, 0, 0});
 	} else if (inst.name == "DRW"s) {
 		assert(inst.arguments.size() == 0);
 

@@ -85,6 +85,7 @@ void CPU::execALU(Uint16 i) {
 		break;
 	case 0b100: //NAND
 		registers[dest] = ~(registers[a] & registers[b]);
+		carryFlag = true;
 		break;
 	case 0b101: { //MUL //TODO CARRY FLAG BECOMES INDICATOR OF OVERFLOW INTO HIGH, OTHERWISE HIGH ISNT SET
 		auto highDest = (dest >> 2);
@@ -95,8 +96,7 @@ void CPU::execALU(Uint16 i) {
 		if (res > 0xFFFF) registers[highDest] = res >> 16;
 		registers[lowDest] = res & 0xFFFF;
 		break;
-	}
-	//TODO SHIFT CARRY BIT IMPLEMENTATION (bit first shifted off)
+		}
 	case 0b110: //SHL
 		registers[dest] = registers[a] << registers[b];
 		break;

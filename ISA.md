@@ -18,10 +18,15 @@
 | `6` | shift left | `rD` = `rA` << `rB` |
 | `7` | shift right | `rD` = `rA` >> `rB` |
 
-**MULTIPLY** is a special operation, as the result is a 32-bit number. The instruction is interpreted as such:  
-`0 QQQ HH LL AAAA BBBB`, where desination is split and the highest/lowest 16 bits are stored in `0HH`/`1LL`
+for the first four instructions, the carry flag is enabled if there is an unsigned overflow & disabled otherwise  
+for bitwise nand, the carry flag is always enabled  
+shift left/right will not change the carry flag  
 
-> **NOTE:** if the destination is 0, the operation will be discarded, rendering the instruction as a `NOOP`
+**MULTIPLY** is a special operation, as the result is a 32-bit number. The instruction is interpreted as such:  
+`0 QQQ HH LL AAAA BBBB`, where desination is split and the highest/lowest 16 bits are stored in `0HH`/`1LL` (the higher bits aren't stored if the result can fit in 16 bits)  
+the carry flag is only enabled if the result has to use more than the lower 16 bits, otherwise disabled
+
+> **NOTE:** if the destination is 0, the operation will be discarded but carry flag will still be set
 
 ## Long Jump Mode
 
@@ -62,10 +67,12 @@ jumps to current position + offset `V`, ***if*** the condition is met:
 
 ## RAM Mode
 
-    110 L 0 P ------ RRRR
+    110 L 0 P ----- S RRRR
 
 **`L`:** when off, operate with all 16-bits; when on, operate with the lower 8-bits  
-with 16-bits, the upper 8 bits are in `r14` : `r15` and the lower 8 bits are in the adress right after
+with 16-bits, the upper 8 bits are in the directed address and the lower 8 bits are in the adress right after  
+
+**`S`:** when off, use the regular `r14` : `r15` as the memory address. When on, use `r10` : `r11`  
 
 **`P`:**
 
