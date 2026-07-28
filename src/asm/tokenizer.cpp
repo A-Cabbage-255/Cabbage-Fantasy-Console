@@ -69,6 +69,41 @@ Token Tokenizer::parseToken() { //TODO PARSE REGISTERS PROPERLY + OFFSETS/COMPIL
 			c = get();
 			s += toupper(c);
 		}
+
+		if (s == "R0"s || s == "ZR"s) {
+			return {TOKEN_REGISTER, 0, ""};
+		} else if (s == "R1"s) {
+			return {TOKEN_REGISTER, 1, ""};
+		} else if (s == "R2"s) {
+			return {TOKEN_REGISTER, 2, ""};
+		} else if (s == "R3"s) {
+			return {TOKEN_REGISTER, 3, ""};
+		} else if (s == "R4"s) {
+			return {TOKEN_REGISTER, 4, ""};
+		} else if (s == "R5"s) {
+			return {TOKEN_REGISTER, 5, ""};
+		} else if (s == "R6"s) {
+			return {TOKEN_REGISTER, 6, ""};
+		} else if (s == "R7"s) {
+			return {TOKEN_REGISTER, 7, ""};
+		} else if (s == "R8"s) {
+			return {TOKEN_REGISTER, 8, ""};
+		} else if (s == "R9"s) {
+			return {TOKEN_REGISTER, 9, ""};
+		} else if (s == "R10"s || s == "USP"s) {
+			return {TOKEN_REGISTER, 10, ""};
+		} else if (s == "R11"s || s == "LSP"s) {
+			return {TOKEN_REGISTER, 11, ""};
+		} else if (s == "R12"s || s == "URA"s) {
+			return {TOKEN_REGISTER, 12, ""};
+		} else if (s == "R13"s || s == "LRA"s) {
+			return {TOKEN_REGISTER, 13, ""};
+		} else if (s == "R14"s || s == "UMA"s) {
+			return {TOKEN_REGISTER, 14, ""};
+		} else if (s == "R15"s || s == "LMA"s) {
+			return {TOKEN_REGISTER, 15, ""};
+		}
+
 		return {TOKEN_IDENTIFIER, 0, s};
 	}
 	if (char_isNumeric(c)) {

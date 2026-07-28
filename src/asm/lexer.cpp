@@ -75,6 +75,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		if (inst.arguments[1].type == TOKEN_IDENTIFIER) {
 			value = consts[inst.arguments[1].str];
 		}
+		
 		if (inst.arguments[1].number > UINT8_MAX) {
 			return new IMMInstruction({OPC_LIMM, inst.arguments[0].number, value});
 		} else {
