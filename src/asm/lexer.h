@@ -34,6 +34,9 @@ typedef enum OPCode {
 	OPC_STRL,
 	OPC_GETL,
 
+	OPC_PUSH,
+	OPC_POP,
+
 	OPC_INT,
 
 	OPC_IMM,

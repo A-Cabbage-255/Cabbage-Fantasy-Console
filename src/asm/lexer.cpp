@@ -13,11 +13,13 @@ void Lexer::scanLabels() {
 			continue;
 		}
 
-		curbyte += 2;
-
 		if (cur.name == "LIM"s || (cur.name == "IMM"s && cur.arguments[1].number > UINT8_MAX)) {
-			curbyte += 2;
+			curbyte += 4;
 		} else if (cur.name[0] == 'J' && cur.name != "JMP"s) {
+			curbyte += 4;
+		} else if (cur.name == "PSH"s || cur.name == "POP"s) {
+			curbyte += 8;
+		} else {
 			curbyte += 2;
 		}
 	}
@@ -114,6 +116,14 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) { /
 		assert(inst.arguments.size() == 1);
 
 		return new RAMInstruction({OPC_GETL, inst.arguments[0].number});
+	} else if (inst.name == "PSH"s) {
+		assert(inst.arguments.size() == 1);
+
+		return new RAMInstruction({OPC_PUSH, inst.arguments[0].number});
+	} else if (inst.name == "POP"s) {
+		assert(inst.arguments.size() == 1);
+
+		return new RAMInstruction({OPC_POP, inst.arguments[0].number});
 	} else if (inst.name == "JMP"s) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 

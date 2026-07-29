@@ -179,6 +179,9 @@ void CPU::execIMM(Uint16 ins) {
 void CPU::execRAM(Uint16 ins) {
 	auto reg = ins & 0xF;
 	unsigned addr = (((unsigned)registers[14]) << 16) | registers[15];
+	if ((ins >> 4) & 1) {
+		addr = (((unsigned)registers[10]) << 16) | registers[11];
+	}
 
 	if (!((ins >> 12) & 1)) {
 		if (!((ins >> 10) & 1)) {

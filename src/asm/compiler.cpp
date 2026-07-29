@@ -44,6 +44,17 @@ void Compiler::outIns_RAM(RAMInstruction* i) {
 	SDL_WriteU16BE(file, 0xC000 | (0x1000 * (i->code == OPC_GET || i->code == OPC_STR)) | (0x0400 * (i->code == OPC_STR || i->code == OPC_STRL)) | i->reg);
 }
 
+void Compiler::outIns_STACK(RAMInstruction* i) {
+	if (i->code == OPC_PUSH) {
+		SDL_WriteU16BE(file, 0xD410 | i->reg); // set #r (except w stack as the addr)
+		SDL_WriteU16BE(file, 0x4000); // carry flag ON
+		SDL_WriteU16BE(file, 0x2BB0); // swc lsp, lsp, 0
+		SDL_WriteU16BE(file, 0x2AA0); // swc lsp, lsp, 0
+	} else if (i->code == OPC_POP) {
+		
+	}
+}
+
 void Compiler::outIns(BasicInstruction* i) {
 	switch (i->code) { //TODO MUL
 		case OPC_ADD:
@@ -81,6 +92,10 @@ void Compiler::outIns(BasicInstruction* i) {
 		case OPC_STR:
 		case OPC_STRL:
 			outIns_RAM((RAMInstruction*)i);
+			break;
+		case OPC_PUSH:
+		case OPC_POP:
+			outIns_STACK((RAMInstruction*)i);
 			break;
 		default:
 			std::cerr << "ERROR" << std::endl;
