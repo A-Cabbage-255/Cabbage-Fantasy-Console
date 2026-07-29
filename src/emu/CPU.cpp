@@ -65,43 +65,45 @@ void CPU::execALU(Uint16 i) {
 	auto dest = (i >> 8) & 0b1111;
 	auto a = (i >> 4) & 0b1111;
 	auto b = i & 0b1111;
+	auto aval = registers[a];
+	auto bval = registers[b];
 
 	switch (i >> 12) {
 	case 0b000: //ADD
-		registers[dest] = registers[a] + registers[b];
-		carryFlag = (((unsigned)registers[a] & 0xFFFF) + ((unsigned)registers[b] & 0xFFFF)) > 65535;
+		registers[dest] = aval + bval;
+		carryFlag = (((unsigned)aval & 0xFFFF) + ((unsigned)bval & 0xFFFF)) > 65535;
 		break;
 	case 0b001: //ADD W CAR
-		registers[dest] = registers[a] + registers[b] + (carryFlag ? 1 : 0);
-		carryFlag = (((unsigned)registers[a] & 0xFFFF) + ((unsigned)registers[b] & 0xFFFF) + (carryFlag ? 1 : 0)) > 65535;
+		registers[dest] = aval + bval + (carryFlag ? 1 : 0);
+		carryFlag = (((unsigned)aval & 0xFFFF) + ((unsigned)bval & 0xFFFF) + (carryFlag ? 1 : 0)) > 65535;
 		break;
 	case 0b010: //SUB W CAR
-		registers[dest] = registers[a] - registers[b] - (carryFlag ? 1 : 0);
-		carryFlag = (((int)registers[a] & 0xFFFF) - ((int)registers[b] & 0xFFFF) - (carryFlag ? 1 : 0)) < 0;
+		registers[dest] = aval - bval - (carryFlag ? 1 : 0);
+		carryFlag = (((int)aval & 0xFFFF) - ((int)bval & 0xFFFF) - (carryFlag ? 1 : 0)) < 0;
 		break;
 	case 0b011: //SUB
-		registers[dest] = registers[a] - registers[b];
-		carryFlag = (((int)registers[a] & 0xFFFF) - ((int)registers[b] & 0xFFFF)) < 0;
+		registers[dest] = aval - bval;
+		carryFlag = (((int)aval & 0xFFFF) - ((int)bval & 0xFFFF)) < 0;
 		break;
 	case 0b100: //NAND
-		registers[dest] = ~(registers[a] & registers[b]);
+		registers[dest] = ~(aval & bval);
 		carryFlag = true;
 		break;
 	case 0b101: { //MUL //TODO CARRY FLAG BECOMES INDICATOR OF OVERFLOW INTO HIGH, OTHERWISE HIGH ISNT SET
 		auto highDest = (dest >> 2);
 		auto lowDest = (dest & 0b11) | 0b100;
 
-		Uint32 res = ((Uint32)registers[a] & 0xFFFFu) * ((Uint32)registers[b] & 0xFFFFu);
+		Uint32 res = ((Uint32)aval & 0xFFFFu) * ((Uint32)bval & 0xFFFFu);
 
 		if (res > 0xFFFF) registers[highDest] = res >> 16;
 		registers[lowDest] = res & 0xFFFF;
 		break;
 		}
 	case 0b110: //SHL
-		registers[dest] = registers[a] << registers[b];
+		registers[dest] = aval << bval;
 		break;
 	case 0b111: //SHR
-		registers[dest] = registers[a] >> registers[b];
+		registers[dest] = aval >> bval;
 		break;
 	default:
 		std::cout << "ERR\n";

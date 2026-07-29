@@ -4,7 +4,7 @@
 #include "CPU.h"
 #include <SDL3/SDL.h>
 
-//#define STEPTHROUGH
+#define STEPTHROUGH
 
 Memory* m;
 CPU* c;
@@ -38,9 +38,24 @@ int main(int argc, char* argv[]) {
 
     while (!c->finished && !windowQuit) {
 #ifdef STEPTHROUGH
-        std::string input;
         std::cout << std::hex << m->getter16()(c->instPntr) << std::dec  << " :: ";
+
+        std::string input;
+
         std::cin >> input;
+        while (input != "n"s) {
+            if (input == "r"s) {
+                for (int i = 0; i < 16; i++) {
+                    std::cout << "r" << i << " -> " << c->registers[i] << "\n";
+                }
+            } else if (input == "q"s) {
+                windowQuit = true;
+                break;
+            }
+
+            std::cout << " :: ";
+            std::cin >> input;
+        }
 #endif
         c->tick();
     }

@@ -3,4 +3,6 @@ imm lsp, 0xFFFF
 
 imm r2, 57
 psh r2
+
+pop r3
 end ~

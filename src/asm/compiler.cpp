@@ -51,7 +51,10 @@ void Compiler::outIns_STACK(RAMInstruction* i) {
 		SDL_WriteU16BE(file, 0x2BB0); // swc lsp, lsp, 0
 		SDL_WriteU16BE(file, 0x2AA0); // swc lsp, lsp, 0
 	} else if (i->code == OPC_POP) {
-		
+		SDL_WriteU16BE(file, 0x4000); // carry flag ON
+		SDL_WriteU16BE(file, 0x1BB0); // adc lsp, lsp, 0
+		SDL_WriteU16BE(file, 0x1AA0); // adc lsp, lsp, 0
+		SDL_WriteU16BE(file, 0xD010 | i->reg); // get #r (except w stack as the addr)
 	}
 }
 
