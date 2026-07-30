@@ -5,11 +5,11 @@ Compiler::Compiler(std::string path) {
 
 	SDL_WriteU32BE(file, 0);
 	SDL_WriteU32BE(file, 0);
-	curRegionStart = getPos();
+	curRegionStart = getFilePos();
 }
 
 Compiler::~Compiler() {
-	Uint32 cur = getPos();
+	Uint32 cur = getFilePos();
 	auto size = cur - curRegionStart;
 
 	SDL_SeekIO(file, curRegionStart - 4, SDL_IO_SEEK_SET);
@@ -19,12 +19,16 @@ Compiler::~Compiler() {
 	SDL_CloseIO(file);
 }
 
-unsigned Compiler::getPos() {
+unsigned Compiler::getFilePos() {
 	return SDL_TellIO(file);
 }
 
+unsigned Compiler::getPos() {
+	return outputtedLoc;
+}
+
 void Compiler::beginRegion(Uint32 strt) {
-	Uint32 cur = getPos();
+	Uint32 cur = getFilePos();
 	auto size = cur - curRegionStart;
 
 	SDL_SeekIO(file, curRegionStart - 4, SDL_IO_SEEK_SET);
@@ -32,13 +36,17 @@ void Compiler::beginRegion(Uint32 strt) {
 	SDL_SeekIO(file, cur, SDL_IO_SEEK_SET);
 	SDL_WriteU32BE(file, strt);
 	SDL_WriteU32BE(file, 0);
-	curRegionStart = getPos();
+	curRegionStart = getFilePos();
+
+	outputtedLoc = strt;
 }
 
 void Compiler::outIns_ALU(ALUInstruction* i) {
 	Uint16 opc = i->code - OPC_ADD;
 
 	SDL_WriteU16BE(file, (opc << 12) | (i->dest << 8) | (i->a << 4) | i->b);
+
+	outputtedLoc += 2;
 }
 
 void Compiler::outIns_JMP(JMPInstruction* i) {
@@ -46,25 +54,37 @@ void Compiler::outIns_JMP(JMPInstruction* i) {
 
 	SDL_WriteU16BE(file, 0x8000 | (i->userMode * 0x1000) | (opc << 8) | (i->check << 4));
 	SDL_WriteU16BE(file, i->offset);
+
+	outputtedLoc += 4;
 }
 
 void Compiler::outIns_LJMP(L_JMPInstruction* i) {
 	SDL_WriteU16BE(file, 0xA000 | (i->userMode * 0x1000) | (i->high << 4) | i->low);
+
+	outputtedLoc += 2;
 }
 
 void Compiler::outIns_INT(INTInstruction* i) {
 	SDL_WriteU16BE(file, 0xC800 | i->intID);
+
+	outputtedLoc += 2;
 }
 
 void Compiler::outIns_IMM(IMMInstruction* i) {
 	SDL_WriteU16BE(file, 0xE000 | (0x1000 * (i->code == OPC_LIMM)) | (i->reg << 8) | (i->value & 0xFF));
 	if (i->code == OPC_LIMM) {
 		SDL_WriteU16BE(file, i->value);
+
+		outputtedLoc += 2;
 	}
+
+	outputtedLoc += 2;
 }
 
 void Compiler::outIns_RAM(RAMInstruction* i) {
 	SDL_WriteU16BE(file, 0xC000 | (0x1000 * (i->code == OPC_GET || i->code == OPC_STR)) | (0x0400 * (i->code == OPC_STR || i->code == OPC_STRL)) | i->reg);
+
+	outputtedLoc += 2;
 }
 
 void Compiler::outIns_STACK(RAMInstruction* i) {
@@ -73,15 +93,20 @@ void Compiler::outIns_STACK(RAMInstruction* i) {
 		SDL_WriteU16BE(file, 0x4000); // carry flag ON
 		SDL_WriteU16BE(file, 0x2BB0); // swc lsp, lsp, 0
 		SDL_WriteU16BE(file, 0x2AA0); // swc lsp, lsp, 0
+
+		outputtedLoc += 8;
 	} else if (i->code == OPC_POP) {
 		SDL_WriteU16BE(file, 0x4000); // carry flag ON
 		SDL_WriteU16BE(file, 0x1BB0); // adc lsp, lsp, 0
 		SDL_WriteU16BE(file, 0x1AA0); // adc lsp, lsp, 0
 		SDL_WriteU16BE(file, 0xD010 | i->reg); // get #r (except w stack as the addr)
+
+		outputtedLoc += 8;
 	}
 }
 
 void Compiler::outIns(BasicInstruction* i) {
+	std::cout << " -- " << outputtedLoc << "\n";
 	switch (i->code) { //TODO MUL
 		case OPC_ADD:
 		case OPC_ADC:

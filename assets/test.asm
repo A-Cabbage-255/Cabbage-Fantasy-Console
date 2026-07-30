@@ -7,7 +7,7 @@ imm r4, 1
 ccf ~
 jnc PUSHES
 
-.0xFFFF
+.0x1000
 
 POPS:
 pop r7

@@ -95,7 +95,9 @@ void CPU::execALU(Uint16 i) {
 
 		Uint32 res = ((Uint32)aval & 0xFFFFu) * ((Uint32)bval & 0xFFFFu);
 
+		carryFlag = res > 0xFFFF;
 		if (res > 0xFFFF) registers[highDest] = res >> 16;
+		
 		registers[lowDest] = res & 0xFFFF;
 		break;
 		}

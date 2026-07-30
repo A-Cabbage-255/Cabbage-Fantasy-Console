@@ -30,10 +30,18 @@ int main(int argc, char* argv[]) {
 
     auto s = m->setter16(MemoryRegion::General);
 
-    for (int i = 0; i < 200; i++) {
-        Uint16 v = 0;
-        SDL_ReadU16BE(file, &v);
-        s(i * 2, v);
+    unsigned idx = 0;
+    while (SDL_ReadU32BE(file, &idx)) {
+        
+        unsigned count = 0;
+        SDL_ReadU32BE(file, &count);
+        count += idx;
+
+        for (; idx < count; idx+=2) {
+            Uint16 v;
+            SDL_ReadU16BE(file, &v);
+            s(idx, v);
+        }
     }
 
     while (!c->finished && !windowQuit) {
@@ -48,6 +56,7 @@ int main(int argc, char* argv[]) {
                 for (int i = 0; i < 16; i++) {
                     std::cout << "r" << i << " -> " << c->registers[i] << "\n";
                 }
+                std::cout << "CF -> " << ((c->carryFlag) ? "True"s : "False"s) << "\n";
             } else if (input == "q"s) {
                 windowQuit = true;
                 break;

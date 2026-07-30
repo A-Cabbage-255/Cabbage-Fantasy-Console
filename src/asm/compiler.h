@@ -14,6 +14,7 @@ private:
 	void outIns_STACK(RAMInstruction* i);
 
 	size_t curRegionStart = 0;
+	size_t outputtedLoc = 0;
 public:
 	Compiler(std::string outpath);
 	~Compiler();
@@ -23,4 +24,5 @@ public:
 	void beginRegion(Uint32 startPos);
 
 	unsigned getPos();
+	unsigned getFilePos();
 };
