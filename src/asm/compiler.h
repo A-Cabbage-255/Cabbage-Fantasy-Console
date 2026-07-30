@@ -12,11 +12,15 @@ private:
 	void outIns_IMM(IMMInstruction* i);
 	void outIns_RAM(RAMInstruction* i);
 	void outIns_STACK(RAMInstruction* i);
+
+	size_t curRegionStart = 0;
 public:
 	Compiler(std::string outpath);
 	~Compiler();
 
 	void outIns(BasicInstruction* i);
+
+	void beginRegion(Uint32 startPos);
 
 	unsigned getPos();
 };

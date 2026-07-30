@@ -7,8 +7,8 @@ Lexer::Lexer(Tokenizer* tok) {
 void Lexer::scanLabels() {
 	UnparsedInstruction cur;
 	unsigned curbyte = 0;
-	while (!(cur = nextInstruction()).eof) {
-		if (cur.label) {
+	while ((cur = nextInstruction()).type != ExpressionType::EndOfFile) {
+		if (cur.type == ExpressionType::Label) {
 			consts.insert({cur.name, curbyte});
 			continue;
 		}
@@ -30,8 +30,17 @@ UnparsedInstruction Lexer::nextInstruction() {
 	UnparsedInstruction ret;
 	Token cur = t->parseToken();
 	if (cur.type == TOKEN_EOF) {
-		return {"", {}, false, true};
+		return {"", {}, ExpressionType::EndOfFile};
 	}
+
+	if (cur.type == TOKEN_PERIOD) {
+		cur = t->parseToken();
+		assert(cur.type == TOKEN_NUMBER);
+		ret.arguments.push_back(cur);
+		ret.type = ExpressionType::AddressChange;
+		return ret;
+	}
+
 	assert(cur.type == TOKEN_IDENTIFIER);
 
 	ret.name = cur.str;
@@ -39,7 +48,7 @@ UnparsedInstruction Lexer::nextInstruction() {
 	if (t->isToken(token(TokenType::TOKEN_TILDE))) {
 		return ret;
 	} else if (t->isToken(token(TokenType::TOKEN_COLON))) {
-		ret.label = true;
+		ret.type = ExpressionType::Label;
 		return ret;
 	}
 
@@ -54,9 +63,13 @@ UnparsedInstruction Lexer::nextInstruction() {
 }
 
 BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) { //TODO PUSH INSTRUCTION AND ALLAT
-	if (inst.eof) return new BasicInstruction({OPC_EOF});
+	if (inst.type == ExpressionType::EndOfFile) return new BasicInstruction({OPC_EOF});
 
-	if (inst.label) return nullptr;
+	if (inst.type == ExpressionType::Label) return nullptr;
+
+	if (inst.type == ExpressionType::AddressChange) {
+		return new ADDRChangeMetaInstruction({OPC_META_ADDRCHANGE, inst.arguments[0].number});
+	}
 
 	if (inst.name == "CCF"s) {
 		assert(inst.arguments.size() == 0);
@@ -293,7 +306,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) { /
 		assert(inst.arguments.size() == 3);
 
 		return new ALUInstruction({OPC_NAND, inst.arguments[0].number, inst.arguments[1].number, inst.arguments[2].number});
-	} else if (inst.name == "MUL"s) {
+	} else if (inst.name == "MUL"s) { // FIXME
 		assert(inst.arguments.size() == 3);
 		assert(inst.arguments[0].number < 4);
 		assert(inst.arguments[1].number - 4 < 4);

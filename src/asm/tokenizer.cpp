@@ -61,6 +61,8 @@ Token Tokenizer::parseToken() {
 		return token(TOKEN_COMMA);
 	case '~':
 		return token(TOKEN_TILDE);
+	case '.':
+		return token(TOKEN_PERIOD);
 	}
 
 	if (char_isAlphabeticalEx(c)) {

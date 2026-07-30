@@ -42,7 +42,7 @@ typedef enum OPCode {
 	OPC_IMM,
 	OPC_LIMM,
 
-	OPC_LABEL,
+	OPC_META_ADDRCHANGE,
 } OPCode;
 
 typedef struct BasicInstruction {
@@ -87,11 +87,21 @@ typedef struct IMMInstruction : BasicInstruction {
 	Uint16 value;
 } IMMInstruction;
 
+typedef struct ADDRChangeMetaInstruction : BasicInstruction {
+	unsigned location;
+} ADDRChangeMetaInstruction;
+
+enum class ExpressionType {
+	Instruction,
+	Label,
+	AddressChange,
+	EndOfFile
+};
+
 typedef struct UnparsedInstruction {
 	std::string name = ""s;
 	std::vector<Token> arguments;
-	bool label = false;
-	bool eof = false;
+	ExpressionType type = ExpressionType::Instruction;
 } UnparsedInstruction;
 
 class Lexer {

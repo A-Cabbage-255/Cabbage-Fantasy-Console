@@ -2,14 +2,37 @@
 
 Compiler::Compiler(std::string path) {
 	file = SDL_IOFromFile(path.c_str(), "wb");
+
+	SDL_WriteU32BE(file, 0);
+	SDL_WriteU32BE(file, 0);
+	curRegionStart = getPos();
 }
 
 Compiler::~Compiler() {
+	Uint32 cur = getPos();
+	auto size = cur - curRegionStart;
+
+	SDL_SeekIO(file, curRegionStart - 4, SDL_IO_SEEK_SET);
+	SDL_WriteU32BE(file, size);
+	SDL_SeekIO(file, cur, SDL_IO_SEEK_SET);
+
 	SDL_CloseIO(file);
 }
 
 unsigned Compiler::getPos() {
 	return SDL_TellIO(file);
+}
+
+void Compiler::beginRegion(Uint32 strt) {
+	Uint32 cur = getPos();
+	auto size = cur - curRegionStart;
+
+	SDL_SeekIO(file, curRegionStart - 4, SDL_IO_SEEK_SET);
+	SDL_WriteU32BE(file, size);
+	SDL_SeekIO(file, cur, SDL_IO_SEEK_SET);
+	SDL_WriteU32BE(file, strt);
+	SDL_WriteU32BE(file, 0);
+	curRegionStart = getPos();
 }
 
 void Compiler::outIns_ALU(ALUInstruction* i) {
@@ -99,6 +122,9 @@ void Compiler::outIns(BasicInstruction* i) {
 		case OPC_PUSH:
 		case OPC_POP:
 			outIns_STACK((RAMInstruction*)i);
+			break;
+		case OPC_META_ADDRCHANGE:
+			beginRegion(((ADDRChangeMetaInstruction*)i)->location);
 			break;
 		default:
 			std::cerr << "ERROR" << std::endl;
