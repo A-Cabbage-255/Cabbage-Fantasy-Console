@@ -7,6 +7,7 @@ typedef enum TokenType {
 	TOKEN_NULL,
 	TOKEN_IDENTIFIER,
 	TOKEN_COMMA,
+	TOKEN_DOLLAR,
 	TOKEN_PERIOD,
 	TOKEN_COLON,
 	TOKEN_TILDE,
@@ -60,7 +61,10 @@ inline std::ostream& operator<<(std::ostream& s, const Token& t) {
 		s << "Tilde";
 		break;
 	case TOKEN_PERIOD:
-		s << "PERIOD";
+		s << "Period";
+		break;
+	case TOKEN_DOLLAR:
+		s << "Dollar";
 		break;
 	case TOKEN_NUMBER:
 		s << "Number (" << t.number << ")";

@@ -106,7 +106,6 @@ void Compiler::outIns_STACK(RAMInstruction* i) {
 }
 
 void Compiler::outIns(BasicInstruction* i) {
-	std::cout << " -- " << outputtedLoc << "\n";
 	switch (i->code) { //TODO MUL
 		case OPC_ADD:
 		case OPC_ADC:
@@ -150,6 +149,12 @@ void Compiler::outIns(BasicInstruction* i) {
 			break;
 		case OPC_META_ADDRCHANGE:
 			beginRegion(((ADDRChangeMetaInstruction*)i)->location);
+			break;
+		case OPC_META_DATA:
+			if (((DirectDataMetaInstruction*)i)->size == 2) {
+				SDL_WriteU16BE(file, ((DirectDataMetaInstruction*)i)->value);
+				outputtedLoc += 2;
+			}
 			break;
 		default:
 			std::cerr << "ERROR" << std::endl;

@@ -4,7 +4,7 @@
 #include "CPU.h"
 #include <SDL3/SDL.h>
 
-#define STEPTHROUGH
+//#define STEPTHROUGH
 
 Memory* m;
 CPU* c;
@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 
     auto file = SDL_IOFromFile("assets/rom.bin", "rb");
 
-    auto s = m->setter16(MemoryRegion::General);
+    //auto s = m->setter16(MemoryRegion::General);
 
     unsigned idx = 0;
     while (SDL_ReadU32BE(file, &idx)) {
@@ -37,12 +37,15 @@ int main(int argc, char* argv[]) {
         SDL_ReadU32BE(file, &count);
         count += idx;
 
+        std::cout << count << '\n';
         for (; idx < count; idx+=2) {
             Uint16 v;
             SDL_ReadU16BE(file, &v);
-            s(idx, v);
+            m->setter16()(idx, v);
         }
     }
+
+    std::cout << "finished\n";
 
     while (!c->finished && !windowQuit) {
 #ifdef STEPTHROUGH

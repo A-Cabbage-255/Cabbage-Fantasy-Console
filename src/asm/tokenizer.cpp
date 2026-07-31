@@ -63,6 +63,8 @@ Token Tokenizer::parseToken() {
 		return token(TOKEN_TILDE);
 	case '.':
 		return token(TOKEN_PERIOD);
+	case '$':
+		return token(TOKEN_DOLLAR);
 	}
 
 	if (char_isAlphabeticalEx(c)) {

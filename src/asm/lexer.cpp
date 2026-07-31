@@ -14,6 +14,9 @@ void Lexer::scanLabels() {
 		} else if (cur.type == ExpressionType::AddressChange) {
 			curbyte = cur.arguments[0].number;
 			continue;
+		} else if (cur.type == ExpressionType::Direct) {
+			curbyte += cur.arguments[1].number;
+			continue;
 		}
 
 		if (cur.name == "LIM"s || (cur.name == "IMM"s && cur.arguments[1].number > UINT8_MAX)) {
@@ -44,6 +47,15 @@ UnparsedInstruction Lexer::nextInstruction() {
 		return ret;
 	}
 
+	if (cur.type == TOKEN_DOLLAR) {
+		cur = t->parseToken();
+		assert(cur.type == TOKEN_NUMBER);
+		ret.arguments.push_back(cur);
+		ret.arguments.push_back({TOKEN_NUMBER, 2, ""});
+		ret.type = ExpressionType::Direct;
+		return ret;
+	}
+
 	assert(cur.type == TOKEN_IDENTIFIER);
 
 	ret.name = cur.str;
@@ -65,13 +77,17 @@ UnparsedInstruction Lexer::nextInstruction() {
 	return ret;
 }
 
-BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) { //TODO PUSH INSTRUCTION AND ALLAT
+BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 	if (inst.type == ExpressionType::EndOfFile) return new BasicInstruction({OPC_EOF});
 
 	if (inst.type == ExpressionType::Label) return nullptr;
 
 	if (inst.type == ExpressionType::AddressChange) {
 		return new ADDRChangeMetaInstruction({OPC_META_ADDRCHANGE, inst.arguments[0].number});
+	}
+
+	if (inst.type == ExpressionType::Direct) {
+		return new DirectDataMetaInstruction({OPC_META_DATA, inst.arguments[0].number, inst.arguments[1].number});
 	}
 
 	if (inst.name == "CCF"s) {
@@ -108,7 +124,6 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) { /
 		
 		Uint16 value = inst.arguments[1].number;
 		if (inst.arguments[1].type == TOKEN_IDENTIFIER) {
-			std::cout << "Collapsing label " << inst.arguments[1].str << " to " << consts[inst.arguments[1].str] << "\n"; //??
 			value = consts[inst.arguments[1].str];
 		}
 		return new IMMInstruction({OPC_LIMM, inst.arguments[0].number, value});

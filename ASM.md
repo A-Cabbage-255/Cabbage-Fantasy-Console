@@ -1,5 +1,7 @@
 # Assembly
 
+*[back to readme](readme.md)*
+
 *the following specification uses these shorthands **when describing instructions**:*  
 *#n = register n*  
 *[n] = memory at address n*  
@@ -18,6 +20,14 @@
 ### Comment
 
 `;<comment>` - A semicolon specifies a comment which continues until the end of the line. The compiler ignores everything in the comment. There are no multiline/inline comments.
+
+### Change output address
+
+`.<number>` - Everything that follows (until the next address change) is outputted starting at address \<number>
+
+### Direct Data
+
+`$<number>` - Puts the inputted 16 bits directly into the output executable
 
 ## User Mode Instructions
 

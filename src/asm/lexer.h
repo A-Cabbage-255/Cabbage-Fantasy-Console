@@ -43,6 +43,7 @@ typedef enum OPCode {
 	OPC_LIMM,
 
 	OPC_META_ADDRCHANGE,
+	OPC_META_DATA
 } OPCode;
 
 typedef struct BasicInstruction {
@@ -91,11 +92,17 @@ typedef struct ADDRChangeMetaInstruction : BasicInstruction {
 	unsigned location;
 } ADDRChangeMetaInstruction;
 
+typedef struct DirectDataMetaInstruction : BasicInstruction {
+	unsigned value;
+	unsigned size;
+} DirectDataMetaInstruction;
+
 enum class ExpressionType {
 	Instruction,
 	Label,
 	AddressChange,
-	EndOfFile
+	EndOfFile,
+	Direct
 };
 
 typedef struct UnparsedInstruction {

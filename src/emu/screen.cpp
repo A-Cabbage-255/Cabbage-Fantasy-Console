@@ -54,7 +54,7 @@ bool Screen::tick() {
 	return ((Window*)win)->tick();
 }
 
-void Screen::reloadSpriteColor() {
+void Screen::reloadSpriteColor() { // TODO OPTIMIZE HEAVILY
 	for (int i = 0; i < 4; i++) {
 		auto cur = ((ModifiablePalettedTexture**)spriteColorTex)[i];
 		cur->modify({0, 0, 2048, 2048}, [this, i](int x, int y) {

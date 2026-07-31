@@ -1,5 +1,7 @@
 # Architecture Information
 
+*[back to readme](readme.md)*
+
 ## Registers
 
 There are 16 registers, numbered [0, 15]\
