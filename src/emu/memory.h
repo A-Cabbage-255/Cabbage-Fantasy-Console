@@ -24,7 +24,7 @@ private:
 
 public:
 	std::function<void(void)> paletteUpdated;
-	std::function<void(void)> spriteDataUpdated;
+	std::function<void(unsigned, bool)> spriteDataUpdated;
 
 	Memory() {
 		generalRAM = new Uint8[0x10000000];

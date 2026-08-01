@@ -133,7 +133,7 @@ void ModifiablePalettedTexture::modify(TextureRegion reg, std::function<Uint8(in
 
 	for (int y = 0; y < reg.h; y++) {
 		for (int x = 0; x < reg.w; x++) {
-			pix[y * pitch + x] = col(x, y);
+			pix[y * pitch + x] = col(x + reg.x, y + reg.y);
 		}
 	}
 

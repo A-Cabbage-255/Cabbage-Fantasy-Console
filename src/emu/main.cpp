@@ -23,7 +23,9 @@ int main(int argc, char* argv[]) {
     w = new Screen(m->getter8(MemoryRegion::Sprites), m->getter8(MemoryRegion::SpriteFlags), m->getter8(MemoryRegion::SpriteData), m->getter8(MemoryRegion::Palette));
     //w->setIcon("assets/icon.png");
 
-    m->spriteDataUpdated = [&](){w->reloadSpriteColor();};
+    m->spriteDataUpdated = [&](unsigned addr, bool l){
+        w->reloadSpriteColor((0b11 << 22) & addr, {(int)(addr & 2047), (int)((addr & (2047 << 11)) >> 11), l ? 2 : 1, 1});
+    };
     m->paletteUpdated = [&]() {w->reloadPalette();};
 
     auto file = SDL_IOFromFile("assets/rom.bin", "rb");
@@ -32,20 +34,16 @@ int main(int argc, char* argv[]) {
 
     unsigned idx = 0;
     while (SDL_ReadU32BE(file, &idx)) {
-        
         unsigned count = 0;
         SDL_ReadU32BE(file, &count);
         count += idx;
 
-        std::cout << count << '\n';
         for (; idx < count; idx+=2) {
             Uint16 v;
             SDL_ReadU16BE(file, &v);
             m->setter16()(idx, v);
         }
     }
-
-    std::cout << "finished\n";
 
     while (!c->finished && !windowQuit) {
 #ifdef STEPTHROUGH

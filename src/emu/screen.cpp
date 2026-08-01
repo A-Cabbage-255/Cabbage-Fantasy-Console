@@ -9,7 +9,10 @@ Screen::Screen(std::function<Uint8(Uint32)> colorDat, std::function<Uint8(Uint32
 		spriteColorTex[i] = (void*)new ModifiablePalettedTexture((Window*)win, 2048, 2048);
 		((ModifiablePalettedTexture*)spriteColorTex[i])->setPalette(*(Palette*)pal);
 	}
-	reloadSpriteColor();
+	reloadSpriteColor(0, {0, 0, 2048, 2048});
+	reloadSpriteColor(1, {0, 0, 2048, 2048});
+	reloadSpriteColor(2, {0, 0, 2048, 2048});
+	reloadSpriteColor(3, {0, 0, 2048, 2048});
 }
 
 Screen::~Screen() {
@@ -54,13 +57,11 @@ bool Screen::tick() {
 	return ((Window*)win)->tick();
 }
 
-void Screen::reloadSpriteColor() { // TODO OPTIMIZE HEAVILY
-	for (int i = 0; i < 4; i++) {
-		auto cur = ((ModifiablePalettedTexture**)spriteColorTex)[i];
-		cur->modify({0, 0, 2048, 2048}, [this, i](int x, int y) {
-			return getSpriteColor(y * 2048 + x + 0x400000 * i);
-		});
-	}
+void Screen::reloadSpriteColor(int i, IntRect r) {
+	auto cur = ((ModifiablePalettedTexture**)spriteColorTex)[i];
+	cur->modify(r, [this, i](int x, int y) {
+		return getSpriteColor(y * 2048 + x + 0x400000 * i);
+	});
 }
 
 void Screen::reloadPalette() {

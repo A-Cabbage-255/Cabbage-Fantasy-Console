@@ -98,7 +98,7 @@ std::function<void(Uint32, Uint8)> Memory::setter8(MemoryRegion region) {
       	return [this](Uint32 i, Uint8 v) -> void { IVT[i] = v; };
 
     case MemoryRegion::Sprites:
-      	return [this](Uint32 i, Uint8 v) -> void { SpriteMem[i] = v; spriteDataUpdated(); };
+      	return [this](Uint32 i, Uint8 v) -> void { SpriteMem[i] = v; spriteDataUpdated(i, false); };
 
     case MemoryRegion::SpriteFlags:
       	return [this](Uint32 i, Uint8 v) -> void { SpriteFlags[i] = v; };
@@ -134,7 +134,7 @@ std::function<void(Uint32, Uint16)> Memory::setter16(MemoryRegion region) {
 		return [this](Uint32 i, Uint16 v) -> void {
 			SpriteMem[i] = v >> 8;
 			SpriteMem[i + 1] = v & 0xFF;
-			spriteDataUpdated();
+			spriteDataUpdated(i, true);
 		};
 
 	case MemoryRegion::SpriteFlags:

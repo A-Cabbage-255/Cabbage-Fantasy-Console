@@ -19,6 +19,6 @@ public:
 
 	bool tick();
 
-	void reloadSpriteColor();
+	void reloadSpriteColor(int idx, IntRect r);
 	void reloadPalette();
 };
