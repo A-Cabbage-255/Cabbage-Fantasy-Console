@@ -295,9 +295,6 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
 			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos;
-			std::cout << "offset thingy is " << ofst << "\n";
-			std::cout << "lbl at " << consts[inst.arguments[0].str] << "\n";
-			std::cout << "cur at " << nextbytepos << "\n";
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 

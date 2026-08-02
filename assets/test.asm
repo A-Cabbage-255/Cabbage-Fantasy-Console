@@ -1,19 +1,35 @@
+imm uma, 0x3100
+imm lma, 0x0002
+
+imm r1, 2
+imm r9, LOOP
+
 LOOP:
+set r1
+scf ~
+adc r1, r1, r0
+
 drw ~
-imm r1, LOOP
-jmp r0, r1
+
+imm r8, 30000
+STALL:
+scf ~
+swc r8, r8, r0
+jnc STALL
+
+jmp r0, r9
 
 
-. 0x30000000
+. 0x30000000 ; draw 1 sprite & stop
 $ 0x8000
 
-. 0x31000000
-$ 0x0000 $ 0x0000
+. 0x31000000 ; tile & pos
+$ 0x0000 $ 0x0202
 
-. 0x32000000
+. 0x32000000 ; palette colors
 $ 0x0000 $ 0x00FF $ 0xFF00
 
-. 0x20000000
+. 0x20000000 ;smiley face
 $ 0x0001 $ 0x0101 $ 0x0101 $ 0x0100
 . 0x20000800
 $ 0x0101 $ 0x0101 $ 0x0101 $ 0x0101

@@ -3,7 +3,7 @@
 
 Screen::Screen(std::function<Uint8(Uint32)> colorDat, std::function<Uint8(Uint32)> flagDat, std::function<Uint8(Uint32)> posDat, std::function<Uint8(Uint32)> palette)
 : getSpriteColor(colorDat), getSpriteFlags(flagDat), getSpriteData(posDat), getPalette(palette) {
-	win = (void*)new Window("UNTITLED", 800, 450);
+	win = (void*)new Window("UNTITLED", 1600, 900, 800, 450);
 	pal = (void*)new Palette();
 	for (int i = 0; i < 4; i++) {
 		spriteColorTex[i] = (void*)new ModifiablePalettedTexture((Window*)win, 2048, 2048);
