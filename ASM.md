@@ -61,6 +61,7 @@
 | `G16 #v` | Gets the memory value at [#14:#15] & [#14:#15+1] and stores it in #v (big-endian) |
 | `IMM #r, #v` | Sets register #r to value `v` |
 | `LIM #r, #v` | Sets register #r to value `v`, guaruntees the long 32-bit version of the instruction |
+| `QIM #h, #l, #v` | Sets registers #h:#l to value `v`, equivalent to 2 `LIM` instructions |
 | `INT #n` | For most values, a software interrupt with ID #n & changes processor to kernel mode |
 | `DRW ~` | Causes the processor to stop as the screen is rendered, equivalent to `INT 0xFE` |
 | `END ~` | Causes the console to shut down, equivalent to `INT 0x00` |

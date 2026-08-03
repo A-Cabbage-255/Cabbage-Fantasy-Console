@@ -21,6 +21,8 @@ void Lexer::scanLabels() {
 
 		if (cur.name == "LIM"s || (cur.name == "IMM"s && cur.arguments[1].number > UINT8_MAX)) {
 			curbyte += 4;
+		} else if (cur.name == "QIM"s) {
+			curbyte += 8;
 		} else if (cur.name[0] == 'J' && cur.name != "JMP"s) {
 			curbyte += 4;
 		} else if (cur.name == "PSH"s || cur.name == "POP"s) {
@@ -127,6 +129,14 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 			value = consts[inst.arguments[1].str];
 		}
 		return new IMMInstruction({OPC_LIMM, inst.arguments[0].number, value});
+	} else if (inst.name == "QIM"s) {
+		assert(inst.arguments.size() == 3);
+		
+		Uint32 value = inst.arguments[2].number;
+		if (inst.arguments[2].type == TOKEN_IDENTIFIER) {
+			value = consts[inst.arguments[2].str];
+		}
+		return new Q_IMMInstruction({OPC_QIMM, inst.arguments[0].number, inst.arguments[1].number, value});
 	} else if (inst.name == "INT"s) {
 		assert(inst.arguments.size() == 1);
 

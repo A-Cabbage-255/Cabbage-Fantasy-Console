@@ -41,6 +41,7 @@ typedef enum OPCode {
 
 	OPC_IMM,
 	OPC_LIMM,
+	OPC_QIMM,
 
 	OPC_META_ADDRCHANGE,
 	OPC_META_DATA
@@ -87,6 +88,12 @@ typedef struct IMMInstruction : BasicInstruction {
 	unsigned reg : 4;
 	Uint16 value;
 } IMMInstruction;
+
+typedef struct Q_IMMInstruction : BasicInstruction {
+	unsigned regh : 4;
+	unsigned regl : 4;
+	Uint32 value;
+} Q_IMMInstruction;
 
 typedef struct ADDRChangeMetaInstruction : BasicInstruction {
 	unsigned location;

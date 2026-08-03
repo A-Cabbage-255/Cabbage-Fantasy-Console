@@ -10,6 +10,7 @@ private:
 	void outIns_LJMP(L_JMPInstruction* i);
 	void outIns_INT(INTInstruction* i);
 	void outIns_IMM(IMMInstruction* i);
+	void outIns_QIMM(Q_IMMInstruction* i);
 	void outIns_RAM(RAMInstruction* i);
 	void outIns_STACK(RAMInstruction* i);
 

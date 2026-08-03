@@ -1,4 +1,4 @@
-#include "compiler.h"
+#include "compiler.h" //TODO CALL AND RET ASM INSTRUCTIONS
 
 Compiler::Compiler(std::string path) {
 	file = SDL_IOFromFile(path.c_str(), "wb");
@@ -81,6 +81,15 @@ void Compiler::outIns_IMM(IMMInstruction* i) {
 	outputtedLoc += 2;
 }
 
+void Compiler::outIns_QIMM(Q_IMMInstruction* i) {
+	SDL_WriteU16BE(file, 0xF000 | (i->regh << 8));
+	SDL_WriteU16BE(file, i->value >> 16);
+	SDL_WriteU16BE(file, 0xF000 | (i->regl << 8));
+	SDL_WriteU16BE(file, i->value & 0xFFFF);
+
+	outputtedLoc += 8;
+}
+
 void Compiler::outIns_RAM(RAMInstruction* i) {
 	SDL_WriteU16BE(file, 0xC000 | (0x1000 * (i->code == OPC_GET || i->code == OPC_STR)) | (0x0400 * (i->code == OPC_STR || i->code == OPC_STRL)) | i->reg);
 
@@ -130,12 +139,16 @@ void Compiler::outIns(BasicInstruction* i) {
 			break;
 		case OPC_JDIR:
 			outIns_LJMP((L_JMPInstruction*)i);
+			break;
 		case OPC_INT:
 			outIns_INT((INTInstruction*)i);
 			break;
 		case OPC_LIMM:
 		case OPC_IMM:
 			outIns_IMM((IMMInstruction*)i);
+			break;
+		case OPC_QIMM:
+			outIns_QIMM((Q_IMMInstruction*)i);
 			break;
 		case OPC_GET:
 		case OPC_GETL:

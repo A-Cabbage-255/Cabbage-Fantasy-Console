@@ -89,7 +89,7 @@ void CPU::execALU(Uint16 i) {
 		registers[dest] = ~(aval & bval);
 		carryFlag = true;
 		break;
-	case 0b101: { //MUL //TODO CARRY FLAG BECOMES INDICATOR OF OVERFLOW INTO HIGH, OTHERWISE HIGH ISNT SET
+	case 0b101: { //MUL
 		auto highDest = (dest >> 2);
 		auto lowDest = (dest & 0b11) | 0b100;
 
