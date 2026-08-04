@@ -27,6 +27,8 @@ void Lexer::scanLabels() {
 			curbyte += 4;
 		} else if (cur.name == "PSH"s || cur.name == "POP"s) {
 			curbyte += 8;
+		} else if (cur.name == "CLS"s) {
+			curbyte += 14;
 		} else {
 			curbyte += 2;
 		}
@@ -108,6 +110,10 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert(inst.arguments.size() == 0);
 		
 		return new INTInstruction({OPC_INT, 0x00});
+	} else if (inst.name == "RET"s) {
+		assert(inst.arguments.size() == 0);
+		
+		return new L_JMPInstruction({OPC_JDIR, false, 12, 13});
 	} else if (inst.name == "IMM"s) {
 		assert(inst.arguments.size() == 2);
 
@@ -313,6 +319,20 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 			return new JMPInstruction({OPC_JNCF, true, inst.arguments[0].number, 0});
 		} else {
 			return new JMPInstruction({OPC_JNCF, false, inst.arguments[0].number, 0});
+		}
+	} else if (inst.name == "CLS"s) {
+		assert((inst.arguments.size() == 2) || (inst.arguments.size() == 1));
+
+		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
+			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos - 10;
+			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
+		}
+
+		if (inst.arguments.size() > 1) {
+			assert(inst.arguments[1].str == "USR"s);
+			return new REL_CallInstruction({OPC_CALLR, true, inst.arguments[0].number});
+		} else {
+			return new REL_CallInstruction({OPC_CALLR, false, inst.arguments[0].number});
 		}
 	} else if (inst.name == "ADD"s) {
 		assert(inst.arguments.size() == 3);

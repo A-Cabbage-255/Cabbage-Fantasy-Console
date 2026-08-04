@@ -114,6 +114,21 @@ void Compiler::outIns_STACK(RAMInstruction* i) {
 	}
 }
 
+void Compiler::outIns_RELCALL(REL_CallInstruction* i) {
+	Uint32 value = getPos() + 14;
+	SDL_WriteU16BE(file, 0xFC00);
+	SDL_WriteU16BE(file, value >> 16);
+	SDL_WriteU16BE(file, 0xFD00);
+	SDL_WriteU16BE(file, value & 0xFFFF); //qim
+
+	SDL_WriteU16BE(file, 0x4000); //scf
+
+	SDL_WriteU16BE(file, 0x8400 | (i->userMode * 0x1000)); //jcf
+	SDL_WriteU16BE(file, i->offset);
+
+	outputtedLoc += 14;
+}
+
 void Compiler::outIns(BasicInstruction* i) {
 	switch (i->code) { //TODO MUL
 		case OPC_ADD:
@@ -159,6 +174,9 @@ void Compiler::outIns(BasicInstruction* i) {
 		case OPC_PUSH:
 		case OPC_POP:
 			outIns_STACK((RAMInstruction*)i);
+			break;
+		case OPC_CALLR:
+			outIns_RELCALL((REL_CallInstruction*)i);
 			break;
 		case OPC_META_ADDRCHANGE:
 			beginRegion(((ADDRChangeMetaInstruction*)i)->location);

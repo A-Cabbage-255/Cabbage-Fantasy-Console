@@ -8,6 +8,7 @@ MEMCPY:
 	qim r3, r4, 0x00010000
 	qim r5, r6, 0x20000000
 	
+	MEMCPY_OUTLOOP:
 	MEMCPY_LOOP:
 	mov uma, r3
 	mov lma, r4
@@ -22,11 +23,24 @@ MEMCPY:
 	scf ~
 	adc r6, r6, zr
 
+	imm r1, 0xFF
+	nnd r1, r1, r6
+	nnd r1, r1, r1
+
 	imm r2, 8
-	sub r2, r6, r2
+	sub r2, r2, r1
 	jnz MEMCPY_LOOP, r2
+
+	imm r2, 8
+	imm r1, 0x800
+	sub r6, r6, r2
+	add r6, r6, r1
+
+	imm r2, 0x4000
+	sub r2, r2, r6
+	jnz MEMCPY_OUTLOOP, r2
 	
-	ret
+	ret ~
 
 LOOP:
 	qim uma, lma, 0x31000002
@@ -43,18 +57,6 @@ LOOP:
 	;	jnc STALL
 
 	jmp r0, r9
-
-;CLL #a, #b:
-;	qim ura, lra, cur+10
-;	jmp #a, #b
-
-;CLS #a:
-;	qim ura, lra, cur+14
-;	scf ~
-;	jcf #a
-
-;RET:
-;	jmp ura, lra
 
 . 0x30000000 ; draw 1 sprite & stop
 $ 0x8000

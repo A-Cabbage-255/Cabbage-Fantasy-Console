@@ -37,6 +37,9 @@ typedef enum OPCode {
 	OPC_PUSH,
 	OPC_POP,
 
+	OPC_CALLR,
+	OPC_CALLDIR,
+
 	OPC_INT,
 
 	OPC_IMM,
@@ -75,6 +78,11 @@ typedef struct L_JMPInstruction : BasicInstruction {
 	unsigned high : 4;
 	unsigned low : 4;
 } L_JMPInstruction;
+
+typedef struct REL_CallInstruction : BasicInstruction {
+	bool userMode;
+	unsigned int offset;
+} REL_CallInstruction;
 
 typedef struct RAMInstruction : BasicInstruction {
 	unsigned reg : 4;

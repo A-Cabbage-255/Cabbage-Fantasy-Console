@@ -65,4 +65,5 @@
 | `INT #n` | For most values, a software interrupt with ID #n & changes processor to kernel mode |
 | `DRW ~` | Causes the processor to stop as the screen is rendered, equivalent to `INT 0xFE` |
 | `END ~` | Causes the console to shut down, equivalent to `INT 0x00` |
-| `PSH #r` | __ |
+| `PSH #r` | Pushes low 8 bits of reg #r onto stack, equivalent to `TODO` |
+| `POP #r` | Pops 8 bits off stack and puts them into #r, equivalent to `TODO` |

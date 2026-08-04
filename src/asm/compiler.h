@@ -13,6 +13,7 @@ private:
 	void outIns_QIMM(Q_IMMInstruction* i);
 	void outIns_RAM(RAMInstruction* i);
 	void outIns_STACK(RAMInstruction* i);
+	void outIns_RELCALL(REL_CallInstruction* i);
 
 	size_t curRegionStart = 0;
 	size_t outputtedLoc = 0;
