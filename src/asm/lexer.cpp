@@ -53,6 +53,18 @@ UnparsedInstruction Lexer::nextInstruction() {
 
 	if (cur.type == TOKEN_DOLLAR) {
 		cur = t->parseToken();
+		if (cur.type == TOKEN_DOLLAR) {
+			cur = t->parseToken();
+			assert(cur.type == TOKEN_STRING);
+			ret.arguments.push_back(cur);
+			cur = t->parseToken();
+			assert(cur.type == TOKEN_COMMA);
+			cur = t->parseToken();
+			assert(cur.type == TOKEN_NUMBER);
+			ret.arguments.push_back(cur);
+			ret.type = ExpressionType::DirectImage;
+			return ret;
+		}
 		assert(cur.type == TOKEN_NUMBER);
 		ret.arguments.push_back(cur);
 		ret.arguments.push_back({TOKEN_NUMBER, 2, ""});
@@ -92,6 +104,9 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 
 	if (inst.type == ExpressionType::Direct) {
 		return new DirectDataMetaInstruction({OPC_META_DATA, inst.arguments[0].number, inst.arguments[1].number});
+	}
+	if (inst.type == ExpressionType::DirectImage) {
+		return new DirectImageMetaInstruction({OPC_META_IMAGE, inst.arguments[0].str, inst.arguments[1].number});
 	}
 
 	if (inst.name == "CCF"s) {
@@ -377,5 +392,5 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 	std::cerr << "ERROR UNKNOWN INSTRUCTION: " << inst.name << "\n";
 
 	assert(false);
-	return nullptr; //Execution never reaches this, line is here to prevent warnings
+	return nullptr;
 }

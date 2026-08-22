@@ -146,6 +146,13 @@ Token Tokenizer::parseToken() {
 		}
 		return {TOKEN_NUMBER, (0xFFFF ^ ret) + 1, ""};
 	}
+	if (c == '"') {
+		std::string s = "";
+		while ((c = get()) != '"' && !eof()) {
+			s += c;
+		}
+		return {TOKEN_STRING, 0, s};
+	}
 
 	return token(TOKEN_NULL);
 }

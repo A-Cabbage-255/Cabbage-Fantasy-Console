@@ -47,7 +47,8 @@ typedef enum OPCode {
 	OPC_QIMM,
 
 	OPC_META_ADDRCHANGE,
-	OPC_META_DATA
+	OPC_META_DATA,
+	OPC_META_IMAGE
 } OPCode;
 
 typedef struct BasicInstruction {
@@ -112,12 +113,18 @@ typedef struct DirectDataMetaInstruction : BasicInstruction {
 	unsigned size;
 } DirectDataMetaInstruction;
 
+typedef struct DirectImageMetaInstruction : BasicInstruction {
+	std::string path;
+	unsigned index;
+} DirectImageMetaInstruction;
+
 enum class ExpressionType {
 	Instruction,
 	Label,
 	AddressChange,
 	EndOfFile,
-	Direct
+	Direct,
+	DirectImage
 };
 
 typedef struct UnparsedInstruction {

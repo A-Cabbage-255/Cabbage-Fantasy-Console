@@ -15,6 +15,8 @@ private:
 	void outIns_STACK(RAMInstruction* i);
 	void outIns_RELCALL(REL_CallInstruction* i);
 
+	void outImg(DirectImageMetaInstruction* i);
+
 	size_t curRegionStart = 0;
 	size_t outputtedLoc = 0;
 public:

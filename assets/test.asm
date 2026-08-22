@@ -1,3 +1,5 @@
+qim USP, LSP, 0x00FFFFFF
+
 cls MEMCPY
 
 imm r1, 2

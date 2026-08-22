@@ -1,4 +1,5 @@
-#include "compiler.h" //TODO CALL AND RET ASM INSTRUCTIONS
+#include "compiler.h"
+#include <SDL3_image/SDL_image.h>
 
 Compiler::Compiler(std::string path) {
 	file = SDL_IOFromFile(path.c_str(), "wb");
@@ -129,6 +130,24 @@ void Compiler::outIns_RELCALL(REL_CallInstruction* i) {
 	outputtedLoc += 14;
 }
 
+void Compiler::outImg(DirectImageMetaInstruction* i) {
+	unsigned startRow = 0x20000000 + i->index * 0x400000; //unsure if this is correct
+
+	SDL_Surface* surf = IMG_Load(i->path.c_str());
+
+	for (unsigned j = 0; j < surf->h; j++) {
+		beginRegion(startRow);
+
+		for (unsigned i = 0; i < surf->w; i++) {
+			//TODO FINISH, ALSO CONSIDER PALETTE!
+		}
+
+		startRow += 0x800;
+	}
+
+	SDL_DestroySurface(surf);
+}
+
 void Compiler::outIns(BasicInstruction* i) {
 	switch (i->code) { //TODO MUL
 		case OPC_ADD:
@@ -186,6 +205,9 @@ void Compiler::outIns(BasicInstruction* i) {
 				SDL_WriteU16BE(file, ((DirectDataMetaInstruction*)i)->value);
 				outputtedLoc += 2;
 			}
+			break;
+		case OPC_META_IMAGE:
+			outImg((DirectImageMetaInstruction*)i);
 			break;
 		default:
 			std::cerr << "ERROR" << std::endl;

@@ -6,4 +6,4 @@
 
 - [Hardware Instruction Set](ISA.md)
 - [Assembly Language](ASM.md) (unfinished)
-- [Architecture Information](Arch.md) (to be added)
+- [Architecture Information](Arch.md) (unfinished)

@@ -1,6 +1,6 @@
 # Instruction Set
 
-*[back to readme](readme.md)*
+*[back to readme](README.md)*
 
 `r#` means "Register [#]"  
 `CF` means Carry Flag

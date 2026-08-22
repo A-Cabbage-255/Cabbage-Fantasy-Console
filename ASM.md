@@ -1,6 +1,6 @@
 # Assembly
 
-*[back to readme](readme.md)*
+*[back to readme](README.md)*
 
 *the following specification uses these shorthands **when describing instructions**:*  
 *#n = register n*  
@@ -27,7 +27,8 @@
 
 ### Direct Data
 
-`$<number>` - Puts the inputted 16 bits directly into the output executable
+`$<number>` - Puts the inputted 16 bits directly into the output executable  
+`$$"<string>", <idx>` - Puts an image file (`string`) in palette `idx`
 
 ## User Mode Instructions
 
