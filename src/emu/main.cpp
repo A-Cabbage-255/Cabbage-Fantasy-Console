@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
     //w->setIcon("assets/icon.png");
 
     m->spriteDataUpdated = [&](unsigned addr, bool l){
-        w->reloadSpriteColor((0b11 << 22) & addr, {(int)(addr & 2047), (int)((addr & (2047 << 11)) >> 11), l ? 2 : 1, 1});
+        w->reloadSpriteColor(((0b11 << 22) & addr) >> 22, {(int)(addr & 2047), (int)((addr & (2047 << 11)) >> 11), l ? 2 : 1, 1});
     };
     m->paletteUpdated = [&]() {w->reloadPalette();};
 

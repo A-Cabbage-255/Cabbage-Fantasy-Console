@@ -139,7 +139,10 @@ void Compiler::outImg(DirectImageMetaInstruction* i) {
 		beginRegion(startRow);
 
 		for (unsigned i = 0; i < surf->w; i++) {
-			//TODO FINISH, ALSO CONSIDER PALETTE!
+			Uint8 r = 0,g = 0,b = 0,a = 0;
+			SDL_ReadSurfacePixel(surf, i, j, &r, &g, &b, &a);
+			Uint8 avg = ((unsigned)r + (unsigned)g + (unsigned)b) / 3;
+			SDL_WriteU8(file, avg);
 		}
 
 		startRow += 0x800;

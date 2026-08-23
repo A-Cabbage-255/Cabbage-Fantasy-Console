@@ -38,7 +38,7 @@ void Screen::drawSprite(unsigned tileX, unsigned tileY, unsigned destX, unsigned
 bool Screen::tick() {
 	((Window*)win)->clear();
 
-	for (unsigned i = 0; true; i++) {
+	for (unsigned i = 0; i < 8192; i++) {
 		Uint8 flags = getSpriteFlags(i);
 
 		if (!(flags & 0b10000000)) {
