@@ -4,7 +4,7 @@
 #include "CPU.h"
 #include <SDL3/SDL.h>
 
-//#define STEPTHROUGH
+#define STEPTHROUGH
 
 Memory* m;
 CPU* c;

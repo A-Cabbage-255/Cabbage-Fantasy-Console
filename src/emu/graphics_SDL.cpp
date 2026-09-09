@@ -35,6 +35,7 @@ Window::Window(std::string title, int w, int h, int logicalw, int logicalh) {
 	rend = (void*)SDL_CreateRenderer((SDL_Window*)win, NULL);
 	nullcheck(rend);
 
+	safe(SDL_SetRenderDrawBlendMode((SDL_Renderer*)rend, SDL_BLENDMODE_BLEND));
 	safe(SDL_SetRenderLogicalPresentation((SDL_Renderer*)rend, logicalw, logicalh, SDL_LOGICAL_PRESENTATION_INTEGER_SCALE));
 }
 
@@ -83,7 +84,10 @@ Palette::~Palette() {
 }
 
 void Palette::modify(Uint8 idx, Uint8 r, Uint8 g, Uint8 b) {
-	SDL_Color c = {r, g, b, 255};
+	SDL_Color c = {r, g, b, 255}; 
+	if (idx == 0) {//technically bad code, should put index check at a higher level
+		c.a = 0;
+	}
 	safe(SDL_SetPaletteColors((SDL_Palette*)pal, &c, idx, 1));
 }
 
@@ -101,7 +105,7 @@ ModifiablePalettedTexture::ModifiablePalettedTexture(Window* parent, int width, 
 	win = parent;
 	tex = (void*)SDL_CreateTexture((SDL_Renderer*)win->rend, SDL_PIXELFORMAT_INDEX8, SDL_TEXTUREACCESS_STREAMING, width, height);
 	nullcheck(tex);
-	safe(SDL_SetTextureBlendMode((SDL_Texture*)tex, SDL_BLENDMODE_NONE));
+	safe(SDL_SetTextureBlendMode((SDL_Texture*)tex, SDL_BLENDMODE_BLEND));
 	safe(SDL_SetTextureScaleMode((SDL_Texture*)tex, SDL_SCALEMODE_NEAREST));
 
 	w = width;
