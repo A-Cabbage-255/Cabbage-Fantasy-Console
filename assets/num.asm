@@ -1,15 +1,16 @@
 qim USP, LSP, 0x00FFFFFF
 
+imm r8, 4500
+cls DRAWNUM
+
 lim r1, LOOP
 LOOP:
-	imm r8, 351
-	cls DIVIDE10
 	drw ~
 	jmp zr, r1
 
 ;input r8
 ;modifies r1-r3
-;output r1
+;output r1 (result), r2 (remainder)
 DIVIDE10:
 	imm r1, 1
 	imm r2, 2
@@ -39,11 +40,54 @@ DIVIDE10:
 	add r1, r1, r3
 	
 	DIVIDE10_FINISH:
+
+	imm r3, 2
+	shl r2, r1, r3
+	add r2, r1, r2
+	imm r3, 1
+	shl r2, r2, r3 ;r2 = r1 * 10
+
+	sub r2, r8, r2
+
 	ret ~
 
-; input r9
-; uses r1-r4
+; input r8
+; modifies r1-r4, r8
+; no output
 DRAWNUM:
+	imm r4, 5
+
+	DRAWNUM_DIGITGEN:
+	psh URA
+	psh LRA
+	cls DIVIDE10
+	pop LRA
+	pop URA
+
+	imm r3, 0x30
+	add r2, r2, r3
+	psh r2
+
+	mov r8, r1
+
+	imm r2, 1
+	sub r4, r4, r2
+	jnz DRAWNUM_DIGITGEN, r4
+
+	imm r4, 5
+	qim UMA, LMA, 0x31000000
+
+	DRAWNUM_DRAW:
+	pop r1
+	set r1
+	
+	imm r2, 4
+	add LMA, LMA, r2
+
+	imm r2, 1
+	sub r4, r4, r2
+	jnz DRAWNUM_DRAW, r4
+
 
 	ret ~
 
@@ -57,7 +101,7 @@ $ 0x8080
 $ 0x0000
 
 . 0x31000000 ; tile & pos
-$ 0x0000 $ 0x0005
+$ 0x0000 $ 0x0000
 $ 0x0000 $ 0x0800
 $ 0x0000 $ 0x1000
 $ 0x0000 $ 0x1800

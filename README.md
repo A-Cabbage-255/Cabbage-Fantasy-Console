@@ -7,3 +7,5 @@
 - [Hardware Instruction Set](ISA.md)
 - [Assembly Language](ASM.md) (unfinished)
 - [Architecture Information](Arch.md) (unfinished)
+
+*everything in the `assets/` folder is examples*

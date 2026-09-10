@@ -136,10 +136,10 @@ void CPU::execJump(Uint16 i) {
 			jmp = toCheck == 0;
 			break;
 		case 0x1:
-			jmp = toCheck < 0b1000000000000000;
+			jmp = toCheck < 0b1000000000000000; //FIXME broken?
 			break;
 		case 0x2:
-			jmp = toCheck >= 0b1000000000000000;
+			jmp = toCheck > 0b1000000000000000;
 			break;
 		case 0x3:
 			jmp = toCheck == registers[1];
