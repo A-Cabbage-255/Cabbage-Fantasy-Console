@@ -161,7 +161,6 @@ void CPU::execJump(Uint16 i) {
 			interrupt(INT_USER_ILL_ATT);
 		}
 		kernelMode = false;
-		timer = 200;
 	}
 }
 
