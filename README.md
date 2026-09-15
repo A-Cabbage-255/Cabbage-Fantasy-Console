@@ -1,11 +1,9 @@
 # 16-bit fantasy console
 
-### w/ 32-bit memory addresses
-
-### has an unimplemented kernel mode system
+### w/ 32-bit memory addresses, interrupt-driven, user/kernel modes
 
 - [Hardware Instruction Set](ISA.md)
 - [Assembly Language](ASM.md) (unfinished)
 - [Architecture Information](Arch.md) (unfinished)
 
-*everything in the `assets/` folder is examples*
+*`assets/` folder contains examples*

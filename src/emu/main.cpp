@@ -30,8 +30,6 @@ int main(int argc, char* argv[]) {
 
     auto file = SDL_IOFromFile("assets/rom.bin", "rb");
 
-    //auto s = m->setter16(MemoryRegion::General);
-
     unsigned idx = 0;
     while (SDL_ReadU32BE(file, &idx)) {
         unsigned count = 0;

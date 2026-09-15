@@ -34,7 +34,7 @@ the carry flag is only enabled if the result has to use more than the lower 16 b
 
     101 U ---- HHHH LLLL
 
-**`U`:** If enabled, the jump will bring the CPU into user-mode, and after 200 clock ticks an `INT 0x01` will run
+**`U`:** If enabled, the jump will bring the CPU into user-mode  
 
 immediately jumps to `rHHHH` : `rLLLL`
 
@@ -44,7 +44,7 @@ immediately jumps to `rHHHH` : `rLLLL`
 
     100 U QQQQ CCCC ---- VVVVVVVVVVVVVVVV
 
-**`U`:** If enabled, the jump will bring the CPU into user-mode, and after 200 clock ticks an `INT 0x01` will run
+**`U`:** If enabled, the jump will bring the CPU into user-mode
 
 jumps to current position + offset `V`, ***if*** the condition is met:
 

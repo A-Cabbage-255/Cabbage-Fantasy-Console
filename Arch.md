@@ -23,19 +23,23 @@ Technically, registers 1-13 are general purpose, but the convention is layed out
 ## Interrupts
 
 \* = not an interrupt; cpu doesn't jump when called but rather performs a special operation  
-! = not an interrupt; if called, cpu will instead do int 0xFF
+! = not an interrupt; if called, cpu will instead do int 0xFD
 
 | ID(hex) | Purpose                                          |
 | -       | -                                                |
-| 0 *     | Halt cpu/shutoff                                 |
-| 1       | normal interrupt                                 |
-| *...*   | normal interrupt                                 |
-| DF      | normal interrupt                                 |
+| 00 *    | Halt cpu/shutoff                                 |
+| 01      | Exception                                        |
+| 02      | Timer expired                                    |
+| 03      | Breakpoint                                       |
+| 04      | Keyboard device connected                        |
+| 05      | Keyboard device disconnected                     |
+| *...*   | reserved                                         |
+| 30      | Keyboard device input                            |
+| *...*   | reserved                                         |
 | E0 !    | usr mem access low bound                         |
 | E1 !    | usr mem access high bound                        |
-| E2 !    | Sets the keyboard input address                  |
-| E3      | reserved                                         |
+| E2 !    | Sets the i/o input address                       |
 | *...*   | reserved                                         |
-| FD      | reserved                                         |
+| FD      | called when illegal interrupt is attempted       |
 | FE *    | instructs computer to draw next frame            |
 | FF      | called when kernel action is attemped in usr mode|
