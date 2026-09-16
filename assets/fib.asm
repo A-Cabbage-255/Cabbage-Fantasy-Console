@@ -1,4 +1,4 @@
-;NOTE: DOES NOT FUNCTION. Currently, the console cannot output to the terminal.
+;NOTE: DOES NOT FUNCTION. Currently, the program cannot output to the terminal.
 ;runs the fibonacci sequence, ends when it can no longer it in 16 bits
 
 ;imm 15, 1

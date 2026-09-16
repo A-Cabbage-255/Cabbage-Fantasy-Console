@@ -73,52 +73,21 @@ void CPU::execALU(Uint16 i) {
 	auto dest = (i >> 8) & 0b1111;
 	auto a = (i >> 4) & 0b1111;
 	auto b = i & 0b1111;
-	auto aval = registers[a];
-	auto bval = registers[b];
+	Uint16 aval = registers[a];
+	Uint16 bval = registers[b];
 
-	switch (i >> 12) {
-	case 0b000: //ADD
-		registers[dest] = aval + bval;
-		carryFlag = (((unsigned)aval & 0xFFFF) + ((unsigned)bval & 0xFFFF)) > 65535;
-		break;
-	case 0b001: //ADD W CAR
-		registers[dest] = aval + bval + (carryFlag ? 1 : 0);
-		carryFlag = (((unsigned)aval & 0xFFFF) + ((unsigned)bval & 0xFFFF) + (carryFlag ? 1 : 0)) > 65535;
-		break;
-	case 0b010: //SUB W CAR
-		registers[dest] = aval - bval - (carryFlag ? 1 : 0);
-		carryFlag = (((int)aval & 0xFFFF) - ((int)bval & 0xFFFF) - (carryFlag ? 1 : 0)) < 0;
-		break;
-	case 0b011: //SUB
-		registers[dest] = aval - bval;
-		carryFlag = (((int)aval & 0xFFFF) - ((int)bval & 0xFFFF)) < 0;
-		break;
-	case 0b100: //NAND
-		registers[dest] = ~(aval & bval);
-		carryFlag = true;
-		break;
-	case 0b101: { //MUL
+	
+	auto res = alu.execute((ALU::Operation)(i >> 12), registers[a], registers[b]);
+
+	if (std::holds_alternative<Uint32>(res)) {
 		auto highDest = (dest >> 2);
 		auto lowDest = (dest & 0b11) | 0b100;
-
-		Uint32 res = ((Uint32)aval & 0xFFFFu) * ((Uint32)bval & 0xFFFFu);
-
-		carryFlag = res > 0xFFFF;
-		if (res > 0xFFFF) registers[highDest] = res >> 16;
 		
-		registers[lowDest] = res & 0xFFFF;
-		break;
-		}
-	case 0b110: //SHL
-		registers[dest] = aval << bval;
-		break;
-	case 0b111: //SHR
-		registers[dest] = aval >> bval;
-		break;
-	default:
-		std::cout << "ERR\n";
-		//BAD. SHOULDN'T HAPPEN.
-		break;
+		if (alu.carry) registers[highDest] = std::get<Uint32>(res) >> 16;
+
+		registers[lowDest] = std::get<Uint32>(res) & 0xFFFF;
+	} else {
+		registers[dest] = std::get<Uint16>(res);
 	}
 
 	registers[0] = 0;
@@ -153,7 +122,7 @@ void CPU::execJump(Uint16 i) {
 			jmp = toCheck == registers[1];
 			break;
 		case 0x4:
-			jmp = carryFlag;
+			jmp = alu.carry;
 			break;
 		}
 

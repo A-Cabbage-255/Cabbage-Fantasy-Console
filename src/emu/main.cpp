@@ -16,8 +16,6 @@ void updWin() {
 }
 
 int main(int argc, char* argv[]) {
-    //TEST_ALL();
-
     m = new Memory();
     c = new CPU(m, updWin);
     w = new Screen(m->getter8(MemoryRegion::Sprites), m->getter8(MemoryRegion::SpriteFlags), m->getter8(MemoryRegion::SpriteData), m->getter8(MemoryRegion::Palette));
@@ -55,7 +53,6 @@ int main(int argc, char* argv[]) {
                 for (int i = 0; i < 16; i++) {
                     std::cout << "r" << i << " -> " << c->registers[i] << "\n";
                 }
-                std::cout << "CF -> " << ((c->carryFlag) ? "True"s : "False"s) << "\n";
             } else if (input == "q"s) {
                 windowQuit = true;
                 break;

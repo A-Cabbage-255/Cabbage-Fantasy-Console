@@ -1,11 +1,13 @@
 #pragma once
 #include "memory.h"
+#include "ALU.h"
 #include "../common.h"
 #include "interrupts.h"
 
 class CPU {
 private:
 	Memory* m = nullptr;
+	ALU alu;
 
 	std::function<void(void)> pauseToRender;
 public:
@@ -16,7 +18,6 @@ public:
 	int timer = 0;
 
 	Uint16* registers;
-	bool carryFlag;
 
 	bool kernelMode = true;
 

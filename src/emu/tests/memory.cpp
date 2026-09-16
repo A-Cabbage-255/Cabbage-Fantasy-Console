@@ -3,9 +3,6 @@
 #include <random>
 #include <chrono>
 
-std::random_device dev;
-std::mt19937 gen(dev());
-
 void TEST_Memory() {
 	CONS_Log("Beginning Memory Unit Test...\n");
 
@@ -19,6 +16,9 @@ void TEST_Memory() {
 }
 
 void TEST_Memory_General(void* memObj) {
+	std::random_device dev;
+	std::mt19937 gen(dev());
+
 	CONS_Log("Testing General Memory...\n");
 
 	unsigned long ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();

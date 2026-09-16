@@ -15,7 +15,7 @@ add_subdirectory(vendored/SDL EXCLUDE_FROM_ALL)
 add_subdirectory(vendored/SDL_image EXCLUDE_FROM_ALL)
 add_subdirectory(vendored/SDL_ttf EXCLUDE_FROM_ALL)
  
-add_executable(Emulator src/emu/main.cpp src/emu/CPU.cpp src/emu/memorymap.cpp src/emu/screen.cpp src/emu/graphics_SDL.cpp src/emu/tests/memory.cpp src/emu/tests/cpu.cpp) 
+add_executable(Emulator src/emu/main.cpp src/emu/CPU.cpp src/emu/memorymap.cpp src/emu/screen.cpp src/emu/graphics_SDL.cpp src/emu/ALU.cpp src/emu/tests/memory.cpp src/emu/tests/cpu.cpp src/emu/tests/alu.cpp) 
 add_executable(Assembler src/asm/main.cpp src/asm/tokenizer.cpp src/asm/lexer.cpp src/asm/compiler.cpp)
  
 target_link_libraries(Emulator PRIVATE SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf) 
