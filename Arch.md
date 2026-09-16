@@ -31,8 +31,10 @@ Technically, registers 1-13 are general purpose, but the convention is layed out
 | 01      | Exception                                        |
 | 02      | Timer expired                                    |
 | 03      | Breakpoint                                       |
-| 04      | Keyboard device connected                        |
-| 05      | Keyboard device disconnected                     |
+| *...*   | reserved                                         |
+| 10      | Keyboard device connected                        |
+| *...*   | reserved                                         |
+| 20      | Keyboard device disconnected                     |
 | *...*   | reserved                                         |
 | 30      | Keyboard device input                            |
 | *...*   | reserved                                         |

@@ -1,12 +1,7 @@
 #pragma once
 #include "memory.h"
 #include "../common.h"
-
-constexpr unsigned INT_QUIT = 0x00;
-constexpr unsigned INT_LOWER_USER_BOUND = 0xE0;
-constexpr unsigned INT_UPPER_USER_BOUND = 0xE1;
-constexpr unsigned INT_PAUSE_TO_RENDER = 0xFE;
-constexpr unsigned INT_USER_ILL_ATT = 0xFF;
+#include "interrupts.h"
 
 class CPU {
 private:
@@ -29,6 +24,7 @@ public:
 	~CPU();
 
 	void interrupt(Uint8 id);
+	void interrupt(IntID id) {interrupt(std::to_underlying(id));}
 
 	void execALU(Uint16 ins);
 	void execJump(Uint16 ins);

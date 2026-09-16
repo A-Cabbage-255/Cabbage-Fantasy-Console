@@ -12,12 +12,20 @@ CPU::~CPU() {
 }
 
 void CPU::interrupt(Uint8 id) {
-	if (id == INT_QUIT) {
+	switch ((IntID)id) {
+	case IntID::Power:
 		finished = true;
 		return;
-	} else if (id == INT_PAUSE_TO_RENDER) {
+	case IntID::Draw:
 		pauseToRender();
 		return;
+	case IntID::Addr_Keyb_Input:
+	case IntID::Addr_Usr_Mem_Higher:
+	case IntID::Addr_Usr_Mem_Lower:
+		interrupt(IntID::Ill_Interrupt);
+		return;
+	default:
+		break;
 	}
 
 	kernelMode = true;
@@ -31,8 +39,8 @@ void CPU::tick() {
 	Uint16 inst = m->getter16()(instPntr);
 	execIns(inst);
 
-	if (!kernelMode && (instPntr >= m->getInterrupt(INT_UPPER_USER_BOUND) || instPntr < m->getInterrupt(INT_LOWER_USER_BOUND))) {
-		interrupt(INT_USER_ILL_ATT);
+	if (!kernelMode && (instPntr >= m->getInterrupt(std::to_underlying(IntID::Addr_Usr_Mem_Higher)) || instPntr < m->getInterrupt(std::to_underlying(IntID::Addr_Usr_Mem_Lower)) ) ) {
+		interrupt(IntID::Ill_Command);
 	}
 
 	if (timer > 0) {
@@ -158,7 +166,7 @@ void CPU::execJump(Uint16 i) {
 	}
 	if ((i >> 12) & 1) {
 		if (!kernelMode) {
-			interrupt(INT_USER_ILL_ATT);
+			interrupt(IntID::Ill_Command);
 		}
 		kernelMode = false;
 	}
