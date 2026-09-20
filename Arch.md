@@ -5,7 +5,7 @@
 ## Registers
 
 There are 16 registers, numbered [0, 15]\
-Technically, registers 1-13 are general purpose, but the convention is layed out as follows:
+Technically, registers 1-13 are general purpose, however:
 
 | ID     | Purpose                 |
 | --     | -------                 |
@@ -19,6 +19,9 @@ Technically, registers 1-13 are general purpose, but the convention is layed out
 | r13/lra| Lower **Return** Addr   |
 | r14/uma| Upper **Memory** Addr   |
 | r15/lma| Lower **Memory** Addr   |
+
+Additionally, there is a hidden 32-bit Interrupt Return register &  
+a three-bit flags register: Carry flag, kernel mode, interrupt return kernel mode
 
 ## Interrupts
 

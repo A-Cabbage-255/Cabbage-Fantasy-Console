@@ -2,6 +2,7 @@
 #include "screen.h"
 #include "memory.h"
 #include "CPU.h"
+#include "PIC.h"
 #include <SDL3/SDL.h>
 
 //#define STEPTHROUGH

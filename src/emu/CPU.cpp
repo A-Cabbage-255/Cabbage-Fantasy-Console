@@ -28,14 +28,18 @@ void CPU::interrupt(Uint8 id) {
 		break;
 	}
 
-	kernelMode = true;
+	intReturn = instPntr + 2;
+	intWasKernel = kernelMode;
 	
 	Uint32 destination = m->getInterrupt(id);
 
 	instPntr = destination - 2;
+	kernelMode = true;
 }
 
 void CPU::tick() {
+	intackline = false;
+	
 	Uint16 inst = m->getter16()(instPntr);
 	execIns(inst);
 
@@ -46,7 +50,7 @@ void CPU::tick() {
 	if (timer > 0) {
 		timer--;
 		if (timer == 0) {
-			interrupt(0x01);
+			interrupt(IntID::Timer);
 		}
 	}
 
@@ -95,6 +99,16 @@ void CPU::execALU(Uint16 i) {
 
 void CPU::execJump(Uint16 i) {
 	if ((i >> 13) & 1) {
+		if ((i >> 8) & 1) {
+			intackline = true;
+
+			if ((i >> 12) & 1) {
+				instPntr = intReturn;
+				instPntr -= 2;
+				kernelMode = intWasKernel;
+			}
+			return;
+		}
 		Uint16 highWord = registers[(i >> 4) & 0xF];
 		Uint16 lowWord = registers[i & 0xF];
 

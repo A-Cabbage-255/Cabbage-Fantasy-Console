@@ -18,6 +18,10 @@ public:
 	int timer = 0;
 
 	Uint16* registers;
+	Uint32 intReturn = 0;
+	bool intWasKernel = false;
+
+	bool intackline = false;
 
 	bool kernelMode = true;
 

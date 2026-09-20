@@ -16,6 +16,8 @@ private:
 	bool* intLines[numLines] = {nullptr};
 
 	bool checkLine(int lineid);
+
+	int busy = 0; //indicates line being worked on if non-0
 public:
 	InterruptController(std::function<void(IntID)> interruptCPU);
 

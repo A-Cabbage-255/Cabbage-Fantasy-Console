@@ -32,13 +32,23 @@ the carry flag is only enabled if the result has to use more than the lower 16 b
 
 ## Long Jump Mode
 
-    101 U ---- HHHH LLLL
+    101 U --- 0 HHHH LLLL
 
 **`U`:** If enabled, the jump will bring the CPU into user-mode  
 
 immediately jumps to `rHHHH` : `rLLLL`
 
 > **NOTE:** When `U` is enabled, this instruction can only be excuted in kernel mode
+
+## Acknowledge interrupt
+
+    101 J --- 1 ---- ----
+
+**`J`:** If enabled, acknowledges & jumps to the 32-bit interrupt return register
+
+Acknowledges whichever interrupt is currently being processed
+
+> **NOTE:** Automatically sets user-mode if jumping
 
 ## Offset Jump Mode
 
