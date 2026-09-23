@@ -64,6 +64,9 @@ bool Window::tick() {
 		switch (e.type) {
 		case SDL_EVENT_QUIT:
 			return false;
+		case SDL_EVENT_KEY_DOWN:
+			keyPressed();
+			break;
 		}
 	}
 

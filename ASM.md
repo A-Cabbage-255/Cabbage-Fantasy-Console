@@ -71,7 +71,7 @@
 | `CLS #o` | Calls a subroutine, equivalent to `TODO` |
 | `RET ~` | Returns from subroutine, equivalent to `JMP ura, lra` |
 
-> NOTE: If any write/read is attempted on addresses outside of INTE0:INTE1, cpu will INTFF instead
+> NOTE: If any write/read is attempted on addresses outside of INTE0:INTE1, cpu will `int 0xFF` instead
 
 ## Kernel Mode Instructions
 
@@ -92,5 +92,5 @@ if a kernel mode instruction is attempted in user mode, int 0xFF
 | `JNC #o, usr` | Jumps to immediate signed offset `o` if the carry flag is off & switches to user-mode |
 | `JMP #h, #l, usr` | Unconditionally jumps to #h:#l & switches to user-mode |
 | `CLS #o, usr` | Calls a subroutine & switches to user-mode, equivalent to `TODO` |
-| `ACK ~` | Acknowledges the interrupt being processed, allowing another to occur |
+| `AKI ~` | Acknowledges the interrupt being processed, allowing another to occur |
 | `RTI ~` | Jumps to the 32-bit Interrupt Return register & acknowladges the interrupt being processed |

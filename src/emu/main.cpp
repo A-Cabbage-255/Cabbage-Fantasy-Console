@@ -5,12 +5,17 @@
 #include "PIC.h"
 #include <SDL3/SDL.h>
 
-//#define STEPTHROUGH
+#define STEPTHROUGH
 
 Memory* m;
 CPU* c;
 Screen* w;
 bool windowQuit = false;
+
+void keyPressed_(void) {
+    c->interrupt(IntID::Input_Keyboard);
+}
+std::function<void(void)> keyPressed = keyPressed_;
 
 void updWin() {
     windowQuit = !w->tick();

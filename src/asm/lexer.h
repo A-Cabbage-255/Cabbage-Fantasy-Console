@@ -41,6 +41,8 @@ typedef enum OPCode {
 	OPC_CALLDIR,
 
 	OPC_INT,
+	OPC_INTACK,
+	OPC_INTRET,
 
 	OPC_IMM,
 	OPC_LIMM,

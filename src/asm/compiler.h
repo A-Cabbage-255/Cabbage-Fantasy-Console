@@ -14,6 +14,7 @@ private:
 	void outIns_RAM(RAMInstruction* i);
 	void outIns_STACK(RAMInstruction* i);
 	void outIns_RELCALL(REL_CallInstruction* i);
+	void outIns_Direct(Uint16 word);
 
 	void outImg(DirectImageMetaInstruction* i);
 

@@ -1,12 +1,25 @@
 qim USP, LSP, 0x00FFFFFF
 
-imm r8, 4500
-cls DRAWNUM
+qim UMA, LMA, 0x100000C0
+qim r1, r2, INTROUTINE
+s16 r1
+lim LMA, 0x00C2
+s16 r2
 
+imm r8, 35
 lim r1, LOOP
 LOOP:
+	psh r1
+	psh r8
+	cls DRAWNUM
+	pop r8
+	pop r1
 	drw ~
 	jmp zr, r1
+
+INTROUTINE:
+	imm r8, 59
+	rti ~
 
 ;input r8
 ;modifies r1-r3
@@ -52,7 +65,7 @@ DIVIDE10:
 	ret ~
 
 ; input r8
-; modifies r1-r4, r8
+; modifies r1-r5, r8
 ; no output
 DRAWNUM:
 	imm r4, 5
@@ -77,8 +90,23 @@ DRAWNUM:
 	imm r4, 5
 	qim UMA, LMA, 0x31000000
 
+	imm r5, 0
+
 	DRAWNUM_DRAW:
 	pop r1
+
+	imm r2, 0x30
+	sub r2, r1, r2
+
+	jnz DRAWNUM_NOSKIP, r2
+	jnz DRAWNUM_NOSKIP, r5
+	imm r2, 1
+	sub r4, r4, r2
+	ccf ~
+	jnc DRAWNUM_DRAW
+	DRAWNUM_NOSKIP:
+
+	imm r5, 1
 	set r1
 	
 	imm r2, 4

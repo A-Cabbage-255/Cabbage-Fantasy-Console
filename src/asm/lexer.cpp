@@ -162,6 +162,14 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert(inst.arguments.size() == 1);
 
 		return new INTInstruction({OPC_INT, inst.arguments[0].number});
+	} else if (inst.name == "AKI"s) {
+		assert(inst.arguments.size() == 0);
+
+		return new BasicInstruction({OPC_INTACK});
+	} else if (inst.name == "RTI"s) {
+		assert(inst.arguments.size() == 0);
+
+		return new BasicInstruction({OPC_INTRET});
 	} else if (inst.name == "SET"s) {
 		assert(inst.arguments.size() == 1);
 

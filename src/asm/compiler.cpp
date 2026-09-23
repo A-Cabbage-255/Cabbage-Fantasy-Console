@@ -151,6 +151,11 @@ void Compiler::outImg(DirectImageMetaInstruction* i) {
 	SDL_DestroySurface(surf);
 }
 
+void Compiler::outIns_Direct(Uint16 d) {
+	SDL_WriteU16BE(file, d);
+	outputtedLoc += 2;
+}
+
 void Compiler::outIns(BasicInstruction* i) {
 	switch (i->code) { //TODO MUL
 		case OPC_ADD:
@@ -180,6 +185,12 @@ void Compiler::outIns(BasicInstruction* i) {
 		case OPC_INT:
 			outIns_INT((INTInstruction*)i);
 			break;
+		case OPC_INTACK:
+			outIns_Direct(0xA100);
+			break;
+		case OPC_INTRET:
+			outIns_Direct(0xB100);
+			break;
 		case OPC_LIMM:
 		case OPC_IMM:
 			outIns_IMM((IMMInstruction*)i);
@@ -205,8 +216,7 @@ void Compiler::outIns(BasicInstruction* i) {
 			break;
 		case OPC_META_DATA:
 			if (((DirectDataMetaInstruction*)i)->size == 2) {
-				SDL_WriteU16BE(file, ((DirectDataMetaInstruction*)i)->value);
-				outputtedLoc += 2;
+				outIns_Direct(((DirectDataMetaInstruction*)i)->value);
 			}
 			break;
 		case OPC_META_IMAGE:

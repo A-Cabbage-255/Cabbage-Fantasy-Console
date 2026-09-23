@@ -2,6 +2,8 @@
 #include "../common.h"
 #include "memory.h"
 
+extern std::function<void(void)> keyPressed;
+
 typedef struct IntRect TextureRegion;
 
 class Window {
