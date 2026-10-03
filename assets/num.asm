@@ -6,7 +6,7 @@ s16 r1
 lim LMA, 0x00C2
 s16 r2
 
-imm r8, 35
+imm r8, 59
 lim r1, LOOP
 LOOP:
 	psh r1
@@ -18,13 +18,15 @@ LOOP:
 	jmp zr, r1
 
 INTROUTINE:
-	imm r8, 59
+	scf ~
+	adc r8, r8, zr
 	rti ~
 
 ;input r8
 ;modifies r1-r3
 ;output r1 (result), r2 (remainder)
 DIVIDE10:
+	ccf ~
 	imm r1, 1
 	imm r2, 2
 	shr r1, r8, r1
@@ -47,12 +49,15 @@ DIVIDE10:
 	sub r2, r8, r2
 	imm r3, 9
 	sub r2, r2, r3
+	ccf ~
 	jle DIVIDE10_FINISH, r2
 	
-	imm r3, 1
+	imm r3, 1 ; changing to 0 fixes the x9 case?? but breaks everything else?? this is much broken, i'm afraid. Prolly in the above jump determination logic. Good Luck, me!
 	add r1, r1, r3
 	
 	DIVIDE10_FINISH:
+
+	ccf ~
 
 	imm r3, 2
 	shl r2, r1, r3
@@ -62,6 +67,7 @@ DIVIDE10:
 
 	sub r2, r8, r2
 
+	ccf ~
 	ret ~
 
 ; input r8

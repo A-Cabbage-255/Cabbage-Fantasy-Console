@@ -65,7 +65,7 @@ bool Window::tick() {
 		case SDL_EVENT_QUIT:
 			return false;
 		case SDL_EVENT_KEY_DOWN:
-			keyPressed();
+			if (e.key.repeat == false) keyPressed();
 			break;
 		}
 	}
