@@ -6,7 +6,7 @@ s16 r1
 lim LMA, 0x00C2
 s16 r2
 
-imm r8, 59
+imm r8, 0
 lim r1, LOOP
 LOOP:
 	psh r1
@@ -52,7 +52,7 @@ DIVIDE10:
 	ccf ~
 	jle DIVIDE10_FINISH, r2
 	
-	imm r3, 1 ; changing to 0 fixes the x9 case?? but breaks everything else?? this is much broken, i'm afraid. Prolly in the above jump determination logic. Good Luck, me!
+	imm r3, 1
 	add r1, r1, r3
 	
 	DIVIDE10_FINISH:

@@ -28,12 +28,12 @@ void CPU::interrupt(Uint8 id) {
 		break;
 	}
 
-	intReturn = instPntr + 2;
+	intReturn = instPntr;
 	intWasKernel = kernelMode;
 	
 	Uint32 destination = m->getInterrupt(id);
 
-	instPntr = destination - 2;
+	instPntr = destination;
 	kernelMode = true;
 }
 
@@ -41,6 +41,7 @@ void CPU::tick() {
 	intackline = false;
 	
 	Uint16 inst = m->getter16()(instPntr);
+	instPntr += 2;
 	execIns(inst);
 
 	if (!kernelMode && (instPntr >= m->getInterrupt(std::to_underlying(IntID::Addr_Usr_Mem_Higher)) || instPntr < m->getInterrupt(std::to_underlying(IntID::Addr_Usr_Mem_Lower)) ) ) {
@@ -53,8 +54,6 @@ void CPU::tick() {
 			interrupt(IntID::Timer);
 		}
 	}
-
-	instPntr+=2;
 }
 
 void CPU::execIns(Uint16 i) {
@@ -79,7 +78,6 @@ void CPU::execALU(Uint16 i) {
 	auto b = i & 0b1111;
 	Uint16 aval = registers[a];
 	Uint16 bval = registers[b];
-
 	
 	auto res = alu.execute((ALU::Operation)(i >> 12), registers[a], registers[b]);
 
@@ -104,7 +102,6 @@ void CPU::execJump(Uint16 i) {
 
 			if ((i >> 12) & 1) {
 				instPntr = intReturn;
-				instPntr -= 2;
 				kernelMode = intWasKernel;
 			}
 			return;
@@ -113,11 +110,10 @@ void CPU::execJump(Uint16 i) {
 		Uint16 lowWord = registers[i & 0xF];
 
 		instPntr = ((Uint32)highWord << 16) | (Uint32)lowWord;
-		instPntr -= 2;
 	} else {
 		Uint16 toCheck = registers[(i >> 4) & 0xF];
-		instPntr += 2;
 		Uint16 change_unsigned = m->getter16()(instPntr);
+		instPntr += 2;
 		int16 change = reinterpret_cast<int16&>(change_unsigned);
 
 		bool jmp = false;
@@ -158,8 +154,8 @@ void CPU::execJump(Uint16 i) {
 void CPU::execIMM(Uint16 ins) {
 	if ((ins >> 12) & 0x1) {
 		auto dest = (ins >> 8) & 0xF;
-		instPntr += 2;
 		auto val = m->getter16()(instPntr);
+		instPntr += 2;
 
 		registers[dest] = val;
 	} else {

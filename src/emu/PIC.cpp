@@ -17,7 +17,7 @@ void InterruptController::connect(int lineid, bool* line) {
 
 void InterruptController::tick() {
 	if (checkLine(0)) {
-		intLines[busy] = 0;
+		*intLines[busy] = false;
 		busy = 0;
 	}
 	if (busy > 0) return;

@@ -10,10 +10,16 @@
 Memory* m;
 CPU* c;
 Screen* w;
+InterruptController* pic;
+bool keyIntLine = false;
 bool windowQuit = false;
+#ifdef STEPTHROUGH
+    bool cont = false;
+#endif
 
 void keyPressed_(void) {
-    c->interrupt(IntID::Input_Keyboard);
+    //c->interrupt(IntID::Input_Keyboard);
+    keyIntLine = true;
 }
 std::function<void(void)> keyPressed = keyPressed_;
 
@@ -25,6 +31,14 @@ int main(int argc, char* argv[]) {
     m = new Memory();
     c = new CPU(m, updWin);
     w = new Screen(m->getter8(MemoryRegion::Sprites), m->getter8(MemoryRegion::SpriteFlags), m->getter8(MemoryRegion::SpriteData), m->getter8(MemoryRegion::Palette));
+    pic = new InterruptController([&](IntID v) {
+        c->interrupt(v);
+        #ifdef STEPTHROUGH
+        cont = false;
+        #endif
+    });
+    pic->connect(0, &c->intackline);
+    pic->connect(1, &keyIntLine);
     //w->setIcon("assets/icon.png");
 
     m->spriteDataUpdated = [&](unsigned addr, bool l){
@@ -49,28 +63,35 @@ int main(int argc, char* argv[]) {
 
     while (!c->finished && !windowQuit) {
 #ifdef STEPTHROUGH
-        std::cout << std::hex << m->getter16()(c->instPntr) << std::dec  << " :: ";
+        if (!cont) {
+            std::cout << ":" << c->instPntr << " - " << std::hex << m->getter16()(c->instPntr) << std::dec  << " :: ";
 
-        std::string input;
+            std::string input;
 
-        std::cin >> input;
-        while (input != "n"s) {
-            if (input == "r"s) {
-                for (int i = 0; i < 16; i++) {
-                    std::cout << "r" << i << " -> " << c->registers[i] << "\n";
-                }
-            } else if (input == "q"s) {
-                windowQuit = true;
-                break;
-            }
-
-            std::cout << " :: ";
             std::cin >> input;
+            while (input != "n"s) {
+                if (input == "r"s) {
+                    for (int i = 0; i < 16; i++) {
+                        std::cout << "r" << i << " -> " << c->registers[i] << "\n";
+                    }
+                } else if (input == "q"s) {
+                    windowQuit = true;
+                    break;
+                } else if (input == "c"s) {
+                    cont = true;
+                    break;
+                }
+
+                std::cout << " :: ";
+                std::cin >> input;
+            }
         }
 #endif
         c->tick();
+        pic->tick();
     }
 
+    delete pic;
     delete m;
     delete c;
     delete w;

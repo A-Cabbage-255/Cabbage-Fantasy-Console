@@ -1,6 +1,13 @@
 #pragma once
 #include "../common.h"
 
+constexpr size_t MEM_RAM_SIZE = 0x10000000;
+constexpr size_t MEM_IVT_SIZE = 0x400;
+constexpr size_t MEM_SPRMEM_SIZE = 0x1000000;
+constexpr size_t MEM_SPRFLAG_SIZE = 0x2000;
+constexpr size_t MEM_SPRDAT_SIZE = 0x8000;
+constexpr size_t MEM_PAL_SIZE = 0x300;
+
 enum class MemoryRegion {
 	General,
 	IVT,
@@ -27,12 +34,12 @@ public:
 	std::function<void(unsigned, bool)> spriteDataUpdated;
 
 	Memory() {
-		generalRAM = new Uint8[0x10000000];
-		IVT = new Uint8[0x400];
-		SpriteMem = new Uint8[0x1000000];
-		SpriteFlags = new Uint8[0x2000];
-		SpriteData = new Uint8[0x8000];
-		Palette = new Uint8[0x300];
+		generalRAM = new Uint8[MEM_RAM_SIZE];
+		IVT = new Uint8[MEM_IVT_SIZE];
+		SpriteMem = new Uint8[MEM_SPRMEM_SIZE];
+		SpriteFlags = new Uint8[MEM_SPRFLAG_SIZE];
+		SpriteData = new Uint8[MEM_SPRDAT_SIZE];
+		Palette = new Uint8[MEM_PAL_SIZE];
 	}
 
 	~Memory() {

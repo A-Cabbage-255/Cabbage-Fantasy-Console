@@ -13,7 +13,7 @@ unsigned Window::numWindows = 0;
 
 Window::Window(std::string title, int w, int h) {
 	if (numWindows == 0) {
-		safe(SDL_InitSubSystem(SDL_INIT_VIDEO));
+		safe(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS));
 	}
 	numWindows++;
 
@@ -25,7 +25,7 @@ Window::Window(std::string title, int w, int h) {
 }
 Window::Window(std::string title, int w, int h, int logicalw, int logicalh) {
 	if (numWindows == 0) {
-		safe(SDL_InitSubSystem(SDL_INIT_VIDEO));
+		safe(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS));
 	}
 	numWindows++;
 
@@ -45,7 +45,7 @@ Window::~Window() {
 
 	numWindows--;
 	if (numWindows == 0) {
-		SDL_QuitSubSystem(SDL_INIT_VIDEO);
+		SDL_QuitSubSystem(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 	}
 }
 
