@@ -57,24 +57,39 @@ UnparsedInstruction Lexer::nextInstruction() {
 		cur = t->parseToken();
 		if (cur.type == TOKEN_DOLLAR) {
 			cur = t->parseToken();
-			assert(cur.type == TOKEN_STRING);
-			ret.arguments.push_back(cur);
-			cur = t->parseToken();
-			assert(cur.type == TOKEN_COMMA);
-			cur = t->parseToken();
-			assert(cur.type == TOKEN_NUMBER);
-			ret.arguments.push_back(cur);
-			ret.type = ExpressionType::DirectImage;
-			return ret;
+			if (cur.type == TOKEN_STRING) {
+				ret.arguments.push_back(cur);
+				ret.type = ExpressionType::Include;
+				return ret;
+			} else if (cur.type == TOKEN_DOLLAR) {
+				cur = t->parseToken();
+				assert(cur.type == TOKEN_STRING);
+				ret.arguments.push_back(cur);
+				ret.type = ExpressionType::DirectFile;
+				return ret;
+			} else {
+				assert(false);
+			}
 		}
+		assert(cur.type == TOKEN_IDENTIFIER);
+		unsigned size = 
+			(cur.str == "S"s) ? 1 : (
+			(cur.str == "M"s) ? 2 : (
+			(cur.str == "L"s) ? 4 : []()->int {assert(false); return 1;}()
+		));
+		cur = t->parseToken();
+		assert(cur.type == TOKEN_COMMA);
+		cur = t->parseToken();
 		assert(cur.type == TOKEN_NUMBER);
 		ret.arguments.push_back(cur);
-		ret.arguments.push_back({TOKEN_NUMBER, 2, ""});
+		ret.arguments.push_back({TOKEN_NUMBER, size, ""});
 		ret.type = ExpressionType::Direct;
 		return ret;
 	}
 
-	assert(cur.type == TOKEN_IDENTIFIER);
+	if (cur.type != TOKEN_IDENTIFIER) {
+		assert(cur.type == TOKEN_IDENTIFIER);
+	}
 
 	ret.name = cur.str;
 
@@ -107,8 +122,12 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 	if (inst.type == ExpressionType::Direct) {
 		return new DirectDataMetaInstruction({OPC_META_DATA, inst.arguments[0].number, inst.arguments[1].number});
 	}
-	if (inst.type == ExpressionType::DirectImage) {
-		return new DirectImageMetaInstruction({OPC_META_IMAGE, inst.arguments[0].str, inst.arguments[1].number});
+	if (inst.type == ExpressionType::DirectFile) {
+		return new DirectImageMetaInstruction({OPC_META_FILE, inst.arguments[0].str, inst.arguments[1].number});
+	}
+	if (inst.type == ExpressionType::Include) {
+		t->descend(inst.arguments[0].str);
+		return nullptr;
 	}
 
 	if (inst.name == "CCF"s) {

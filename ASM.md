@@ -27,8 +27,14 @@
 
 ### Direct Data
 
-`$<number>` - Puts the inputted 16 bits directly into the output executable  
-`$$"<string>", <idx>` - Puts an image file (`string`) in palette `idx`
+`$s, <number>` - Puts the inputted 8 bits directly into the compiled file  
+`$m, <number>` - Puts the inputted 16 bits directly into the compiled file  
+`$l, <number>` - Puts the inputted 32 bits directly into the compiled file  
+`$$$"<string>"` - puts a file's binary contents into the compiled file
+
+### Include
+
+`$$"<string>"` - includes another file, effectively pastes its contents before compilation
 
 ## User Mode Instructions
 

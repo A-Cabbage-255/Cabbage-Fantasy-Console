@@ -171,6 +171,7 @@ void Compiler::outImg(DirectImageMetaInstruction* i) {
 	SDL_DestroySurface(surf);
 }
 
+
 void Compiler::outIns_Direct(Uint16 d) {
 	SDL_WriteU16BE(file, d);
 	outputtedLoc += 2;
@@ -238,12 +239,17 @@ void Compiler::outIns(BasicInstruction* i) {
 			break;
 		case OPC_META_DATA:
 			if (((DirectDataMetaInstruction*)i)->size == 2) {
-				outIns_Direct(((DirectDataMetaInstruction*)i)->value);
+				SDL_WriteU16BE(file, ((DirectDataMetaInstruction*)i)->value);
+			} else if (((DirectDataMetaInstruction*)i)->size == 1) {
+				SDL_WriteU8(file, ((DirectDataMetaInstruction*)i)->value);
+			} else if (((DirectDataMetaInstruction*)i)->size == 4) {
+				SDL_WriteU32BE(file, ((DirectDataMetaInstruction*)i)->value);
 			}
+			outputtedLoc += ((DirectDataMetaInstruction*)i)->size;
 			break;
-		case OPC_META_IMAGE:
-			outImg((DirectImageMetaInstruction*)i);
-			break;
+		//case OPC_META_IMAGE:
+		//	outImg((DirectImageMetaInstruction*)i);
+		//	break;
 		default:
 			std::cerr << "ERROR" << std::endl;
 			break;

@@ -2,6 +2,7 @@
 #include "../common.h"
 #include "SDL3/SDL.h"
 #include <map>
+#include <list>
 
 typedef enum TokenType {
 	TOKEN_NULL,
@@ -84,16 +85,19 @@ inline std::ostream& operator<<(std::ostream& s, const Token& t) {
 
 class Tokenizer {
 private:
-	char* file;
+	//char* file;
 
-	char* it;
+	//char* it;
+
+	std::list<char*> fileStack;
+	std::vector<char*> iteratorStack;
 public:
 	Tokenizer(std::string filepath);
 	~Tokenizer();
 
-	void reset() {it = file;}
+	void reset() {iteratorStack.back() = fileStack.back();}
 
-	bool eof() {return (*it == '\0');}
+	bool eof() {return (*iteratorStack.back() == '\0');}
 	bool match(char expected);
 	char get();
 	char peek();
@@ -102,4 +106,7 @@ public:
 	Token parseToken();
 	void expectToken(const Token& t);
 	bool isToken(const Token& t);
+
+	void descend(std::string path);
+	void ascend();
 };

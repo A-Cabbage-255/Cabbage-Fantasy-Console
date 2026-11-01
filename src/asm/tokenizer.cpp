@@ -1,34 +1,44 @@
 #include "tokenizer.h"
 
 Tokenizer::Tokenizer(std::string fp) {
-	file = (char*)SDL_LoadFile(fp.c_str(), NULL);
-	if (file == NULL) {
-		std::cout << "ERROR Loading Assembly File!\n\tSDL: " << SDL_GetError() << "\n" << std::flush;
-		assert(false);
-	}
-	it = file;
+	descend(fp);
 }
 
 Tokenizer::~Tokenizer() {
-	SDL_free(file);
+	ascend();
+}
+
+void Tokenizer::descend(std::string path) {
+	fileStack.push_back((char*)SDL_LoadFile(path.c_str(), NULL));
+	if (fileStack.back() == NULL) {
+		std::cout << "ERROR Loading Assembly File!\n\tSDL: " << SDL_GetError() << "\n" << std::flush;
+		assert(false);
+	}
+	iteratorStack.push_back(fileStack.back());
+}
+
+void Tokenizer::ascend() {
+	SDL_free(fileStack.back());
+	fileStack.pop_back();
+	iteratorStack.pop_back();
 }
 
 bool Tokenizer::match(char expected) {
 	if (eof()) return false;
-	if (*it == expected) {
-		it++;
+	if (*iteratorStack.back() == expected) {
+		iteratorStack.back()++;
 		return true;
 	}
 	return false;
 }
 
 char Tokenizer::get() {
-	it++;
-	return *(it-1);
+	iteratorStack.back()++;
+	return *(iteratorStack.back()-1);
 }
 
 char Tokenizer::peek() {
-	return *it;
+	return *iteratorStack.back();
 }
 
 void Tokenizer::skipWhitespace() {
@@ -50,9 +60,25 @@ void Tokenizer::skipWhitespace() {
 Token Tokenizer::parseToken() {
 	skipWhitespace();
 
-	if (eof()) return token(TOKEN_EOF);
+	if (eof()) {
+		if (iteratorStack.size() == 1) {
+			return token(TOKEN_EOF);
+		} else {
+			ascend();
+			skipWhitespace();
+		}
+	}
 
 	char c = get();
+
+	if (eof()) {
+		if (iteratorStack.size() == 1) {
+			return token(TOKEN_EOF);
+		} else {
+			ascend();
+			skipWhitespace();
+		}
+	}
 
 	switch (c) {
 	case ':':
@@ -162,10 +188,10 @@ void Tokenizer::expectToken(const Token& t) {
 }
 
 bool Tokenizer::isToken(const Token& t) {
-	auto previous = it;
+	auto previous = iteratorStack.back();
 	if (parseToken() == t) {
 		return true;
 	}
-	it = previous;
+	iteratorStack.back() = previous;
 	return false;
 }

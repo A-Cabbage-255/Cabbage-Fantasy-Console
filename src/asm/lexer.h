@@ -52,7 +52,7 @@ typedef enum OPCode {
 
 	OPC_META_ADDRCHANGE,
 	OPC_META_DATA,
-	OPC_META_IMAGE
+	OPC_META_FILE //TODO implement
 } OPCode;
 
 typedef struct BasicInstruction {
@@ -128,7 +128,8 @@ enum class ExpressionType {
 	AddressChange,
 	EndOfFile,
 	Direct,
-	DirectImage
+	DirectFile,
+	Include
 };
 
 typedef struct UnparsedInstruction {
