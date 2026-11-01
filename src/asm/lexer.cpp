@@ -27,6 +27,8 @@ void Lexer::scanLabels() {
 			curbyte += 4;
 		} else if (cur.name == "PSH"s || cur.name == "POP"s) {
 			curbyte += 8;
+		} else if (cur.name == "PSL"s || cur.name == "PPL"s) {
+			curbyte += 14;
 		} else if (cur.name == "CLS"s) {
 			curbyte += 14;
 		} else {
@@ -194,6 +196,14 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert(inst.arguments.size() == 1);
 
 		return new RAMInstruction({OPC_POP, inst.arguments[0].number});
+	} else if (inst.name == "PSL"s) {
+		assert(inst.arguments.size() == 1);
+
+		return new RAMInstruction({OPC_PUSHL, inst.arguments[0].number});
+	} else if (inst.name == "PPL"s) {
+		assert(inst.arguments.size() == 1);
+
+		return new RAMInstruction({OPC_POPL, inst.arguments[0].number});
 	} else if (inst.name == "JMP"s) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 

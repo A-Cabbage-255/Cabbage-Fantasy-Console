@@ -69,6 +69,7 @@ int main(int argc, char* argv[]) {
             std::string input;
 
             std::cin >> input;
+            //std::cout << "\n";
             while (input != "n"s) {
                 if (input == "r"s) {
                     for (int i = 0; i < 16; i++) {

@@ -36,6 +36,8 @@ typedef enum OPCode {
 
 	OPC_PUSH,
 	OPC_POP,
+	OPC_PUSHL,
+	OPC_POPL,
 
 	OPC_CALLR,
 	OPC_CALLDIR,

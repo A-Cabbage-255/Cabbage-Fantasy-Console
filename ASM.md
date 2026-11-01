@@ -68,6 +68,8 @@
 | `END ~` | Causes the console to shut down, equivalent to `INT 0x00` |
 | `PSH #r` | Pushes low 8 bits of reg #r onto stack, equivalent to `TODO` |
 | `POP #r` | Pops 8 bits off stack and puts them into #r, equivalent to `TODO` |
+| `PSL #r` | Pushes reg #r onto stack, equivalent to `TODO` |
+| `PPL #r` | Pops 16 bits off stack and puts them into #r, equivalent to `TODO` |
 | `CLS #o` | Calls a subroutine, equivalent to `TODO` |
 | `RET ~` | Returns from subroutine, equivalent to `JMP ura, lra` |
 

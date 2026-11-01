@@ -9,11 +9,11 @@ s16 r2
 imm r8, 0
 lim r1, LOOP
 LOOP:
-	psh r1
-	psh r8
+	psl r1
+	psl r8
 	cls DRAWNUM
-	pop r8
-	pop r1
+	ppl r8
+	ppl r1
 	drw ~
 	jmp zr, r1
 
@@ -77,15 +77,15 @@ DRAWNUM:
 	imm r4, 5
 
 	DRAWNUM_DIGITGEN:
-	psh URA
-	psh LRA
+	psl URA
+	psl LRA
 	cls DIVIDE10
-	pop LRA
-	pop URA
+	ppl LRA
+	ppl URA
 
 	imm r3, 0x30
 	add r2, r2, r3
-	psh r2
+	psl r2
 
 	mov r8, r1
 
@@ -99,20 +99,26 @@ DRAWNUM:
 	imm r5, 0
 
 	DRAWNUM_DRAW:
-	pop r1
+	ppl r1
 
 	imm r2, 0x30
 	sub r2, r1, r2
 
-	jnz DRAWNUM_NOSKIP, r2
-	jnz DRAWNUM_NOSKIP, r5
+	jnz DRAWNUM_NOSKIP, r2 ;if all are '0', infinitely goes down this. Also 257 crashes????????????????
+
+	imm r2, 4
+	sub r2, r5, r2
+
+	jez DRAWNUM_NOSKIP, r2
 	imm r2, 1
 	sub r4, r4, r2
+	scf ~
+	adc r5, zr, r5
 	ccf ~
 	jnc DRAWNUM_DRAW
 	DRAWNUM_NOSKIP:
 
-	imm r5, 1
+	imm r5, 4
 	set r1
 	
 	imm r2, 4

@@ -102,16 +102,36 @@ void Compiler::outIns_STACK(RAMInstruction* i) {
 		SDL_WriteU16BE(file, 0xD410 | i->reg); // set #r (except w stack as the addr)
 		SDL_WriteU16BE(file, 0x4000); // carry flag ON
 		SDL_WriteU16BE(file, 0x2BB0); // swc lsp, lsp, 0
-		SDL_WriteU16BE(file, 0x2AA0); // swc lsp, lsp, 0
+		SDL_WriteU16BE(file, 0x2AA0); // swc usp, usp, 0
 
 		outputtedLoc += 8;
 	} else if (i->code == OPC_POP) {
 		SDL_WriteU16BE(file, 0x4000); // carry flag ON
 		SDL_WriteU16BE(file, 0x1BB0); // adc lsp, lsp, 0
-		SDL_WriteU16BE(file, 0x1AA0); // adc lsp, lsp, 0
+		SDL_WriteU16BE(file, 0x1AA0); // adc usp, usp, 0
 		SDL_WriteU16BE(file, 0xD010 | i->reg); // get #r (except w stack as the addr)
 
 		outputtedLoc += 8;
+	} else if (i->code == OPC_PUSHL) {
+		SDL_WriteU16BE(file, 0xC410 | i->reg); // set #r (except w stack as the addr)
+		SDL_WriteU16BE(file, 0x4000); // carry flag ON
+		SDL_WriteU16BE(file, 0x2BB0); // swc lsp, lsp, 0
+		SDL_WriteU16BE(file, 0x2AA0); // swc usp, usp, 0
+		SDL_WriteU16BE(file, 0x4000); // carry flag ON
+		SDL_WriteU16BE(file, 0x2BB0); // swc lsp, lsp, 0
+		SDL_WriteU16BE(file, 0x2AA0); // swc usp, usp, 0
+
+		outputtedLoc += 14;
+	} else if (i->code == OPC_POPL) {
+		SDL_WriteU16BE(file, 0x4000); // carry flag ON
+		SDL_WriteU16BE(file, 0x1BB0); // adc lsp, lsp, 0
+		SDL_WriteU16BE(file, 0x1AA0); // adc usp, usp, 0
+		SDL_WriteU16BE(file, 0x4000); // carry flag ON
+		SDL_WriteU16BE(file, 0x1BB0); // adc lsp, lsp, 0
+		SDL_WriteU16BE(file, 0x1AA0); // adc usp, usp, 0
+		SDL_WriteU16BE(file, 0xC010 | i->reg); // get #r (except w stack as the addr)
+
+		outputtedLoc += 14;
 	}
 }
 
@@ -206,6 +226,8 @@ void Compiler::outIns(BasicInstruction* i) {
 			break;
 		case OPC_PUSH:
 		case OPC_POP:
+		case OPC_PUSHL:
+		case OPC_POPL:
 			outIns_STACK((RAMInstruction*)i);
 			break;
 		case OPC_CALLR:
