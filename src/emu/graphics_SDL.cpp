@@ -70,11 +70,11 @@ bool Window::tick() {
 			return false;
 		case SDL_EVENT_KEY_DOWN:
 			if (e.key.repeat == false && e.key.scancode < 0xff && e.key.scancode != 1) {
-				//sendKeyByte(e.key.scancode); //TODO REPLACE WITH QUEUE
+				//sendKeyByte(e.key.scancode);
 				Keyboard::keyDown(e.key.scancode);
 			}
 			break;
-		case SDL_EVENT_TEXT_INPUT: //TODO REPLACE FOUND CODEPOINT WITH A QUEUE
+		case SDL_EVENT_TEXT_INPUT:
 		{
 			std::string output(e.text.text);
 			Keyboard::keyType(output);

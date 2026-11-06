@@ -24,5 +24,8 @@ void Keyboard::keyType(std::string unicode) {
 }
 
 void Keyboard::tick() {
-	
+	if (!keyIntLine && keybout.size() > 0) {
+		keybout.pop_front(); //TODO SEND TO CPU??
+		keyIntLine = true;
+	}
 }

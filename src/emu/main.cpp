@@ -4,8 +4,9 @@
 #include "CPU.h"
 #include "PIC.h"
 #include <SDL3/SDL.h>
+#include "Keyboard.h"
 
-#define STEPTHROUGH
+//#define STEPTHROUGH
 
 Memory* m;
 CPU* c;
@@ -38,7 +39,7 @@ int main(int argc, char* argv[]) {
         cont = false;
         #endif
     });
-    pic->connect(0, &c->intackline);
+    pic->connect(0, &c->stallintline);
     pic->connect(1, &keyIntLine);
     //w->setIcon("assets/icon.png");
 
@@ -91,6 +92,7 @@ int main(int argc, char* argv[]) {
 #endif
         c->tick();
         pic->tick();
+        Keyboard::tick();
     }
 
     delete pic;

@@ -17,14 +17,15 @@ void InterruptController::connect(int lineid, bool* line) {
 
 void InterruptController::tick() {
 	if (checkLine(0)) {
-		*intLines[busy] = false;
+		return;
+	} else {
 		busy = 0;
 	}
-	if (busy > 0) return;
 	for (unsigned i = 1; i < numLines; i++) {
 		if (checkLine(i)) {
 			busy = i;
 			interrupt(IntID::Input_Keyboard);
+			*intLines[i] = false;
 			break;
 		}
 	}

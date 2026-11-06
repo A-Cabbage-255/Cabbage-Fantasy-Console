@@ -27,7 +27,7 @@ void CPU::interrupt(Uint8 id) {
 	default:
 		break;
 	}
-
+	stallintline = true;
 	intReturn = instPntr;
 	intWasKernel = kernelMode;
 	
@@ -38,8 +38,6 @@ void CPU::interrupt(Uint8 id) {
 }
 
 void CPU::tick() {
-	intackline = false;
-	
 	Uint16 inst = m->getter16()(instPntr);
 	instPntr += 2;
 	execIns(inst);
@@ -98,7 +96,7 @@ void CPU::execALU(Uint16 i) {
 void CPU::execJump(Uint16 i) {
 	if ((i >> 13) & 1) {
 		if ((i >> 8) & 1) {
-			intackline = true;
+			stallintline = false;
 
 			if ((i >> 12) & 1) {
 				instPntr = intReturn;

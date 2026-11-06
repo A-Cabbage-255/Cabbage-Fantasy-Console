@@ -21,7 +21,7 @@ public:
 	Uint32 intReturn = 0;
 	bool intWasKernel = false;
 
-	bool intackline = false;
+	bool stallintline = false;
 
 	bool kernelMode = true;
 
