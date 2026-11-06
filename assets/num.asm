@@ -104,7 +104,7 @@ DRAWNUM:
 	imm r2, 0x30
 	sub r2, r1, r2
 
-	jnz DRAWNUM_NOSKIP, r2 ;if all are '0', infinitely goes down this. Also 257 crashes????????????????
+	jnz DRAWNUM_NOSKIP, r2
 
 	imm r2, 4
 	sub r2, r5, r2

@@ -4,6 +4,11 @@ project(Assembler)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_PARALLEL_LEVEL 8)
+if(MSVC)
+    add_compile_options(/MP)
+endif()
+
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
@@ -15,7 +20,7 @@ add_subdirectory(vendored/SDL EXCLUDE_FROM_ALL)
 add_subdirectory(vendored/SDL_image EXCLUDE_FROM_ALL)
 add_subdirectory(vendored/SDL_ttf EXCLUDE_FROM_ALL)
  
-add_executable(Emulator src/emu/main.cpp src/emu/CPU.cpp src/emu/memorymap.cpp src/emu/screen.cpp src/emu/graphics_SDL.cpp src/emu/ALU.cpp src/emu/PIC.cpp src/emu/tests/memory.cpp src/emu/tests/cpu.cpp src/emu/tests/alu.cpp) 
+add_executable(Emulator src/emu/main.cpp src/emu/CPU.cpp src/emu/memorymap.cpp src/emu/screen.cpp src/emu/graphics_SDL.cpp src/emu/ALU.cpp src/emu/PIC.cpp src/emu/Keyboard.cpp src/emu/tests/memory.cpp src/emu/tests/cpu.cpp src/emu/tests/alu.cpp) 
 add_executable(Assembler src/asm/main.cpp src/asm/tokenizer.cpp src/asm/lexer.cpp src/asm/compiler.cpp)
  
 target_link_libraries(Emulator PRIVATE SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf) 

@@ -60,7 +60,7 @@ void Tokenizer::skipWhitespace() {
 Token Tokenizer::parseToken() {
 	skipWhitespace();
 
-	if (eof()) {
+	while (eof()) {
 		if (iteratorStack.size() == 1) {
 			return token(TOKEN_EOF);
 		} else {
@@ -70,15 +70,6 @@ Token Tokenizer::parseToken() {
 	}
 
 	char c = get();
-
-	if (eof()) {
-		if (iteratorStack.size() == 1) {
-			return token(TOKEN_EOF);
-		} else {
-			ascend();
-			skipWhitespace();
-		}
-	}
 
 	switch (c) {
 	case ':':

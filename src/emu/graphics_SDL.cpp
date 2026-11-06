@@ -1,4 +1,5 @@
 #include "graphics.h"
+#include "Keyboard.h"
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
@@ -32,6 +33,8 @@ Window::Window(std::string title, int w, int h, int logicalw, int logicalh) {
 	win = (void*)SDL_CreateWindow(title.c_str(), w, h, SDL_WINDOW_HIGH_PIXEL_DENSITY);
 	nullcheck(win);
 
+	safe(SDL_StartTextInput((SDL_Window*)win));
+
 	rend = (void*)SDL_CreateRenderer((SDL_Window*)win, NULL);
 	nullcheck(rend);
 
@@ -40,6 +43,7 @@ Window::Window(std::string title, int w, int h, int logicalw, int logicalh) {
 }
 
 Window::~Window() {
+	SDL_StopTextInput((SDL_Window*)win);
 	SDL_DestroyRenderer((SDL_Renderer*)rend);
 	SDL_DestroyWindow((SDL_Window*)win);
 
@@ -65,7 +69,46 @@ bool Window::tick() {
 		case SDL_EVENT_QUIT:
 			return false;
 		case SDL_EVENT_KEY_DOWN:
-			if (e.key.repeat == false) keyPressed();
+			if (e.key.repeat == false && e.key.scancode < 0xff && e.key.scancode != 1) {
+				//sendKeyByte(e.key.scancode); //TODO REPLACE WITH QUEUE
+				Keyboard::keyDown(e.key.scancode);
+			}
+			break;
+		case SDL_EVENT_TEXT_INPUT: //TODO REPLACE FOUND CODEPOINT WITH A QUEUE
+		{
+			std::string output(e.text.text);
+			Keyboard::keyType(output);
+			/*
+			const char* iterator = e.text.text;
+			uint64_t codepoint = -1;
+			while (*iterator != '\0') {
+				if (!(*iterator & 0x80)) {
+					if (codepoint != -1) std::cout << "found codepoint " << codepoint << "\n";
+					codepoint = (unsigned char)*iterator;
+				} else if (!(*iterator & 0x40)) {
+					codepoint <<= 6;
+					codepoint |= *iterator & 0b111111;
+				} else if (!(*iterator & 0x20)) {
+					if (codepoint != -1) std::cout << "found codepoint " << codepoint << "\n";
+					codepoint = *iterator & 0b11111;
+				} else if (!(*iterator & 0x10)) {
+					if (codepoint != -1) std::cout << "found codepoint " << codepoint << "\n";
+					codepoint = *iterator & 0b1111;
+				} else if (!(*iterator & 0x08)) {
+					if (codepoint != -1) std::cout << "found codepoint " << codepoint << "\n";
+					codepoint = *iterator & 0b111;
+				}
+
+				iterator++;
+			}
+			if (codepoint != -1) std::cout << "found codepoint " << codepoint << "\n";
+			else std::cout << "no codepoint??";*/
+		}
+			break;
+		case SDL_EVENT_KEY_UP:
+			if (e.key.scancode < 0xff && e.key.scancode != 1) {
+				Keyboard::keyUp(e.key.scancode);
+			}
 			break;
 		}
 	}

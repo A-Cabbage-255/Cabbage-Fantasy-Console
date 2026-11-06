@@ -17,6 +17,12 @@ void Lexer::scanLabels() {
 		} else if (cur.type == ExpressionType::Direct) {
 			curbyte += cur.arguments[1].number;
 			continue;
+		} else if (cur.type == ExpressionType::DirectFile) {
+			curbyte += 0; //TODO
+			continue;
+		} else if (cur.type == ExpressionType::Include) {
+			t->descend(cur.arguments[0].str);
+			continue;
 		}
 
 		if (cur.name == "LIM"s || (cur.name == "IMM"s && cur.arguments[1].number > UINT8_MAX)) {
@@ -155,7 +161,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 
 		Uint16 value = inst.arguments[1].number;
 		if (inst.arguments[1].type == TOKEN_IDENTIFIER) {
-			value = consts[inst.arguments[1].str];
+			value = consts.at(inst.arguments[1].str);
 		}
 		
 		if (inst.arguments[1].number > UINT8_MAX) {
@@ -168,7 +174,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		
 		Uint16 value = inst.arguments[1].number;
 		if (inst.arguments[1].type == TOKEN_IDENTIFIER) {
-			value = consts[inst.arguments[1].str];
+			value = consts.at(inst.arguments[1].str);
 		}
 		return new IMMInstruction({OPC_LIMM, inst.arguments[0].number, value});
 	} else if (inst.name == "QIM"s) {
@@ -176,7 +182,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		
 		Uint32 value = inst.arguments[2].number;
 		if (inst.arguments[2].type == TOKEN_IDENTIFIER) {
-			value = consts[inst.arguments[2].str];
+			value = consts.at(inst.arguments[2].str);
 		}
 		return new Q_IMMInstruction({OPC_QIMM, inst.arguments[0].number, inst.arguments[1].number, value});
 	} else if (inst.name == "INT"s) {
@@ -236,7 +242,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos;
+			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos;
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
@@ -250,7 +256,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos;
+			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos;
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
@@ -264,7 +270,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos;
+			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos;
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
@@ -278,7 +284,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos;
+			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos;
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
@@ -292,7 +298,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 2) || (inst.arguments.size() == 1));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos;
+			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos;
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
@@ -306,7 +312,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos;
+			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos;
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
@@ -320,7 +326,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos;
+			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos;
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
@@ -334,7 +340,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos;
+			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos;
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
@@ -348,7 +354,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos;
+			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos;
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
@@ -362,7 +368,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 2) || (inst.arguments.size() == 1));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos;
+			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos;
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
@@ -376,7 +382,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 2) || (inst.arguments.size() == 1));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts[inst.arguments[0].str] - (int16)nextbytepos - 10;
+			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos - 10;
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
@@ -426,6 +432,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		return new ALUInstruction({OPC_ADD, inst.arguments[0].number, inst.arguments[1].number, 0});
 	}
 
+	
 	std::cerr << "ERROR UNKNOWN INSTRUCTION: " << inst.name << "\n";
 
 	assert(false);

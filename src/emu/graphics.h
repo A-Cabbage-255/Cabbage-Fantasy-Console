@@ -2,7 +2,7 @@
 #include "../common.h"
 #include "memory.h"
 
-extern std::function<void(void)> keyPressed;
+extern std::function<void(Uint8)> sendKeyByte;
 
 typedef struct IntRect TextureRegion;
 

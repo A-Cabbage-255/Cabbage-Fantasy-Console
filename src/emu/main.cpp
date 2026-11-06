@@ -5,23 +5,24 @@
 #include "PIC.h"
 #include <SDL3/SDL.h>
 
-//#define STEPTHROUGH
+#define STEPTHROUGH
 
 Memory* m;
 CPU* c;
 Screen* w;
 InterruptController* pic;
+uint8_t intDataLine = 0xff;
 bool keyIntLine = false;
 bool windowQuit = false;
 #ifdef STEPTHROUGH
     bool cont = false;
 #endif
 
-void keyPressed_(void) {
+void sendKeyByte_(Uint8 byte) {
     //c->interrupt(IntID::Input_Keyboard);
     keyIntLine = true;
 }
-std::function<void(void)> keyPressed = keyPressed_;
+std::function<void(Uint8)> sendKeyByte = sendKeyByte_;
 
 void updWin() {
     windowQuit = !w->tick();
@@ -46,7 +47,7 @@ int main(int argc, char* argv[]) {
     };
     m->paletteUpdated = [&]() {w->reloadPalette();};
 
-    auto file = SDL_IOFromFile("assets/rom.bin", "rb");
+    auto file = SDL_IOFromFile((argc >= 2) ? argv[1] : "assets/rom.bin", "rb");
 
     unsigned idx = 0;
     while (SDL_ReadU32BE(file, &idx)) {
@@ -63,7 +64,7 @@ int main(int argc, char* argv[]) {
 
     while (!c->finished && !windowQuit) {
 #ifdef STEPTHROUGH
-        if (!cont) {
+        if (!cont && argc >= 3 && (std::string)argv[2] == "debug") {
             std::cout << ":" << c->instPntr << " - " << std::hex << m->getter16()(c->instPntr) << std::dec  << " :: ";
 
             std::string input;

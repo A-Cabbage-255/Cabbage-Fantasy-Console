@@ -8,13 +8,20 @@
 
 int main(int argc, char* argv[]) {
 	std::string fileName;
-	std::cout << "Name to compile: ";
-	std::cin >> fileName;
-	fileName = "assets/" + fileName + ".asm";
+	std::string outName = "assets/rom.bin";
+
+	if (argc == 3) {
+		fileName = argv[1];
+		outName = argv[2];
+	} else {
+		std::cout << "Name to compile: ";
+		std::cin >> fileName;
+		fileName = "assets/" + fileName + ".asm";
+	}
 
 	Tokenizer a(fileName);
 	Lexer l(&a);
-	Compiler c("assets/rom.bin");
+	Compiler c(outName.c_str());
 
 	l.scanLabels();
 
@@ -29,6 +36,6 @@ int main(int argc, char* argv[]) {
 	}
 	delete i;
 
-	std::cout << "Assembling Finished!\n" << std::endl;
+	std::cout << "Assembling Finished!" << std::endl;
 	return 0;
 }
