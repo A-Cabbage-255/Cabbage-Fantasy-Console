@@ -6,7 +6,7 @@
 #include <SDL3/SDL.h>
 #include "Keyboard.h"
 
-#define STEPTHROUGH
+//#define STEPTHROUGH
 
 Memory* m;
 CPU* c;
@@ -20,7 +20,6 @@ bool windowQuit = false;
 #endif
 
 void sendKeyByte_(Uint8 byte) {
-    //c->interrupt(IntID::Input_Keyboard);
     keyIntLine = true;
 }
 std::function<void(Uint8)> sendKeyByte = sendKeyByte_;
@@ -43,21 +42,25 @@ int main(int argc, char* argv[]) {
     pic->connect(1, &keyIntLine);
     //w->setIcon("assets/icon.png");
 
+    bool skipUpdate = false;
+
     m->spriteDataUpdated = [&](unsigned addr, bool l){
+        if (skipUpdate) return;
         w->reloadSpriteColor(((0b11 << 22) & addr) >> 22, {(int)(addr & 2047), (int)((addr & (2047 << 11)) >> 11), l ? 2 : 1, 1});
     };
     m->paletteUpdated = [&]() {
+        if (skipUpdate) return;
         w->reloadPalette();
     };
 
     auto file = SDL_IOFromFile((argc >= 2) ? argv[1] : "assets/rom.bin", "rb");
 
+    skipUpdate = true;
+
     unsigned idx = 0;
     while (SDL_ReadU32BE(file, &idx)) {
         unsigned count = 0;
         SDL_ReadU32BE(file, &count);
-
-        std::cout << std::hex << "idx " << idx << " and count " << count << "\n" << std::dec;
 
         count += idx;
 
@@ -67,6 +70,13 @@ int main(int argc, char* argv[]) {
             m->setter8(idx, v);
         }
     }
+
+    skipUpdate = false;
+    w->reloadSpriteColor(0, {0, 0, 2048, 2048});
+    w->reloadSpriteColor(1, {0, 0, 2048, 2048});
+    w->reloadSpriteColor(2, {0, 0, 2048, 2048});
+    w->reloadSpriteColor(3, {0, 0, 2048, 2048});
+    w->reloadPalette();
 
     while (!c->finished && !windowQuit) {
 #ifdef STEPTHROUGH

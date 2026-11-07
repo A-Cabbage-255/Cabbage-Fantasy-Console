@@ -62,6 +62,7 @@ void Screen::reloadSpriteColor(int i, IntRect r) {
 	cur->modify(r, [this, i](int x, int y) {
 		return getSpriteColor(y * 2048 + x + 0x400000 * i);
 	});
+	((ModifiablePalettedTexture*)spriteColorTex[i])->setPalette(*(Palette*)pal);
 }
 
 void Screen::reloadPalette() {
