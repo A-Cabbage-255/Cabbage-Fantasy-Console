@@ -38,7 +38,7 @@ void CPU::interrupt(Uint8 id) {
 }
 
 void CPU::tick() {
-	Uint16 inst = m->getter16()(instPntr);
+	Uint16 inst = m->getter16(instPntr);
 	instPntr += 2;
 	execIns(inst);
 
@@ -110,7 +110,7 @@ void CPU::execJump(Uint16 i) {
 		instPntr = ((Uint32)highWord << 16) | (Uint32)lowWord;
 	} else {
 		Uint16 toCheck = registers[(i >> 4) & 0xF];
-		Uint16 change_unsigned = m->getter16()(instPntr);
+		Uint16 change_unsigned = m->getter16(instPntr);
 		instPntr += 2;
 		int16 change = reinterpret_cast<int16&>(change_unsigned);
 
@@ -152,7 +152,7 @@ void CPU::execJump(Uint16 i) {
 void CPU::execIMM(Uint16 ins) {
 	if ((ins >> 12) & 0x1) {
 		auto dest = (ins >> 8) & 0xF;
-		auto val = m->getter16()(instPntr);
+		auto val = m->getter16(instPntr);
 		instPntr += 2;
 
 		registers[dest] = val;
@@ -173,15 +173,15 @@ void CPU::execRAM(Uint16 ins) {
 
 	if (!((ins >> 12) & 1)) {
 		if (!((ins >> 10) & 1)) {
-			registers[reg] = m->getter16()(addr);
+			registers[reg] = m->getter16(addr);
 		} else {
-			m->setter16()(addr, registers[reg]);
+			m->setter16(addr, registers[reg]);
 		}
 	} else {
 		if (!((ins >> 10) & 1)) {
-			registers[reg] = (registers[reg] & 0xFF00) | m->getter8()(addr);
+			registers[reg] = (registers[reg] & 0xFF00) | m->getter8(addr);
 		} else {
-			m->setter8()(addr, registers[reg]);
+			m->setter8(addr, registers[reg]);
 		}
 	}
 }

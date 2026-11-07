@@ -6,7 +6,7 @@
 #include <SDL3/SDL.h>
 #include "Keyboard.h"
 
-//#define STEPTHROUGH
+#define STEPTHROUGH
 
 Memory* m;
 CPU* c;
@@ -46,7 +46,9 @@ int main(int argc, char* argv[]) {
     m->spriteDataUpdated = [&](unsigned addr, bool l){
         w->reloadSpriteColor(((0b11 << 22) & addr) >> 22, {(int)(addr & 2047), (int)((addr & (2047 << 11)) >> 11), l ? 2 : 1, 1});
     };
-    m->paletteUpdated = [&]() {w->reloadPalette();};
+    m->paletteUpdated = [&]() {
+        w->reloadPalette();
+    };
 
     auto file = SDL_IOFromFile((argc >= 2) ? argv[1] : "assets/rom.bin", "rb");
 
@@ -54,19 +56,22 @@ int main(int argc, char* argv[]) {
     while (SDL_ReadU32BE(file, &idx)) {
         unsigned count = 0;
         SDL_ReadU32BE(file, &count);
+
+        std::cout << std::hex << "idx " << idx << " and count " << count << "\n" << std::dec;
+
         count += idx;
 
-        for (; idx < count; idx+=2) {
-            Uint16 v;
-            SDL_ReadU16BE(file, &v);
-            m->setter16()(idx, v);
+        for (; idx < count; idx++) {
+            Uint8 v;
+            SDL_ReadU8(file, &v);
+            m->setter8(idx, v);
         }
     }
 
     while (!c->finished && !windowQuit) {
 #ifdef STEPTHROUGH
         if (!cont && argc >= 3 && (std::string)argv[2] == "debug") {
-            std::cout << ":" << c->instPntr << " - " << std::hex << m->getter16()(c->instPntr) << std::dec  << " :: ";
+            std::cout << ":" << c->instPntr << " - " << std::hex << m->getter16(c->instPntr) << std::dec  << " :: ";
 
             std::string input;
 

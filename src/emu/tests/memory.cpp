@@ -33,7 +33,7 @@ void TEST_Memory_General(void* memObj) {
 		CONS_LogPercent(i, 10000);
 		Uint32 indx = randomIdx(gen);
 		Uint8 byte = randomByte(gen);
-		mem->setter8()(indx, byte);
+		mem->setter8(indx, byte);
 	}
 
 	gen.seed(ms);
@@ -42,7 +42,7 @@ void TEST_Memory_General(void* memObj) {
 		CONS_LogPercent(i + 5000, 10000);
 		Uint32 indx = randomIdx(gen);
 		Uint8 byte = randomByte(gen);
-		assert(mem->getter8()(indx) == byte);
+		assert(mem->getter8(indx) == byte);
 	}
 	CONS_FinishPercent();
 

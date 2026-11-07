@@ -65,7 +65,7 @@ void Screen::reloadSpriteColor(int i, IntRect r) {
 }
 
 void Screen::reloadPalette() {
-	for (int i = 0; i < 256; i++) {\
+	for (int i = 0; i < 256; i++) {
 		((Palette*)pal)->modify(i, getPalette(0 + i * 3), getPalette(1 + i * 3), getPalette(2 + i * 3));
 	}
 	for (int i = 0; i < 4; i++) {
