@@ -31,6 +31,7 @@ void Memory::setter8(Uint32 addr, Uint8 val) {
 	size_t baseIndex = 0;
 	for (int i = 0; i < std::to_underlying(MemoryRegion::MAX); i++) {
 		if (addr >= MEM_REG_START[i] && addr < MEM_REG_END[i]) {
+			if (i == std::to_underlying(MemoryRegion::ReadOnly)) assert(false);
 			if (i == std::to_underlying(MemoryRegion::Palette)) paletteUpdated();
 			if (i == std::to_underlying(MemoryRegion::Sprites)) spriteDataUpdated(addr, false);
 			data[baseIndex + (addr - MEM_REG_START[i])] = val;
@@ -46,6 +47,7 @@ void Memory::setter16(Uint32 addr, Uint16 val) {
 	size_t baseIndex = 0;
 	for (int i = 0; i < std::to_underlying(MemoryRegion::MAX); i++) {
 		if (addr >= MEM_REG_START[i] && addr < MEM_REG_END[i] - 1) {
+			if (i == std::to_underlying(MemoryRegion::ReadOnly)) assert(false);
 			if (i == std::to_underlying(MemoryRegion::Palette)) paletteUpdated();
 			if (i == std::to_underlying(MemoryRegion::Sprites)) spriteDataUpdated(addr, true);
 			Uint32 internalAddr = baseIndex + (addr - MEM_REG_START[i]);
@@ -73,6 +75,7 @@ std::function<Uint16(Uint32)> Memory::getter16(MemoryRegion region) {
 
 std::function<void(Uint32, Uint8)> Memory::setter8(MemoryRegion region) {
 	return [this, region] (Uint32 address, Uint8 val) -> void {
+		if (region == MemoryRegion::ReadOnly) assert(false);
 		if (region == MemoryRegion::Sprites) spriteDataUpdated(address, false);
 		if (region == MemoryRegion::Palette) paletteUpdated();
 		data[MEM_REG_INTERNAL_START[std::to_underlying(region)] + address] = val;
@@ -81,6 +84,7 @@ std::function<void(Uint32, Uint8)> Memory::setter8(MemoryRegion region) {
 
 std::function<void(Uint32, Uint16)> Memory::setter16(MemoryRegion region) {
 	return [this, region] (Uint32 address, Uint16 val) -> void {
+		if (region == MemoryRegion::ReadOnly) assert(false);
 		if (region == MemoryRegion::Sprites) spriteDataUpdated(address, true);
 		if (region == MemoryRegion::Palette) paletteUpdated();
 		data[MEM_REG_INTERNAL_START[std::to_underlying(region)] + address] = val >> 8;
