@@ -4,21 +4,21 @@
 
 ## Registers
 
-There are 16 registers, numbered [0, 15]\
+There are 16 registers, numbered [0, 15]
 Technically, registers 1-13 are general purpose, however:
 
-| ID      | Purpose                 |
-| ------- | ----------------------- |
-| r0/zr   | Always 0                |
-| r1      | General Purpose         |
-| *...*   | General Purpose         |
-| r9      | General Purpose         |
-| r10/usp | Upper **Stack** Pointer |
-| r11/lsp | Lower **Stack** Pointer |
-| r12/ura | Upper **Return** Addr   |
-| r13/lra | Lower **Return** Addr   |
-| r14/uma | Upper **Memory** Addr   |
-| r15/lma | Lower **Memory** Addr   |
+| ID      | Purpose                                           |
+| ------- | ------------------------------------------------- |
+| r0/zr   | Always 0                                          |
+| r1      | General Purpose                                   |
+| *...*   | General Purpose                                   |
+| r9      | General Purpose                                   |
+| r10/usp | Upper **Stack** Pointer                           |
+| r11/lsp | Lower **Stack** Pointer                           |
+| r12/ura | Upper **Return** Addr |
+| r13/lra | Lower **Return** Addr                             |
+| r14/uma | Upper **Memory** Addr                             |
+| r15/lma | Lower **Memory** Addr                             |
 
 Additionally, there is a hidden 32-bit Interrupt Return register &  
 a three-bit flags register: Carry flag, kernel mode, interrupt return kernel mode
@@ -70,5 +70,3 @@ This list is in ascending address order, starting at `0xF0000000`
 - 32-bit size of memory
 
 - 8-bit latest i/o input
-
-

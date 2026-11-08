@@ -38,46 +38,47 @@
 
 ## User Mode Instructions
 
-| Code | Operation |
-| - | - |
-| `CCF ~` | Sets the carry flag to 0, equivalent to `ADD 0, 0, 0` |
-| `SCF ~` | Sets the carry flag to 1, equivalent to `NND 0, 0, 0` |
-| `MOV #d, #a` | Copies the value from register #a to register #d, equivalent to `ADD #d, #a, 0` |
-| `ADD #d, #a, #b` | Adds the values in #a and #b and stores the result in #d |
-| `ADC #d, #a, #b` | Adds the values in #a and #b, +1 if the carry bit is set, and stores the result #d |
-| `SUB #d, #a, #b` | Subtracts the value in #b from #a and stores the result #d |
-| `SWC #d, #a, #b` | Subtracts the value in #b from #a, -1 if the carry bit is set, and stores the result #d |
-| `NND #d, #a, #b` | Bitwise NAND's the values in #a and #b and stores the result in #d |
+| Code                 | Operation                                                                                                                                                           |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CCF ~`              | Sets the carry flag to 0, equivalent to `ADD 0, 0, 0`                                                                                                               |
+| `SCF ~`              | Sets the carry flag to 1, equivalent to `NND 0, 0, 0`                                                                                                               |
+| `MOV #d, #a`         | Copies the value from register #a to register #d, equivalent to `ADD #d, #a, 0`                                                                                     |
+| `ADD #d, #a, #b`     | Adds the values in #a and #b and stores the result in #d                                                                                                            |
+| `ADC #d, #a, #b`     | Adds the values in #a and #b, +1 if the carry bit is set, and stores the result #d                                                                                  |
+| `SUB #d, #a, #b`     | Subtracts the value in #b from #a and stores the result #d                                                                                                          |
+| `SWC #d, #a, #b`     | Subtracts the value in #b from #a, -1 if the carry bit is set, and stores the result #d                                                                             |
+| `NND #d, #a, #b`     | Bitwise NAND's the values in #a and #b and stores the result in #d                                                                                                  |
 | `MUL #h, #l, #a, #b` | Multiplies #a and #b, stores the higher 16 bits in #h (only if the result requires >16 bits) and lower 16 bits in #l.<br />#h must be from 0-3, #l must be from 4-7 |
-| `SHL #d, #a, #b` | Shifts #a left by #b and stores the result #d |
-| `SHR #d, #a, #b` | Shifts #a right by #b and stores the result #d |
-| `JEZ #o, #c` | Jumps to immediate signed offset `o` if #c is equal to 0 |
-| `JGZ #o, #c` | Jumps to immediate signed offset `o` if signed #c is greater than 0 |
-| `JLZ #o, #c` | Jumps to immediate signed offset `o` if signed #c is less than 0 |
-| `JE1 #o, #c` | Jumps to immediate signed offset `o` if #c is equal to #1 |
-| `JNZ #o, #c` | Jumps to immediate signed offset `o` if #c is **not** equal to 0 |
-| `JLE #o, #c` | Jumps to immediate signed offset `o` if signed #c is less than or equals 0 |
-| `JGE #o, #c` | Jumps to immediate signed offset `o` if signed #c is greater than or equals 0 |
-| `JN1 #o, #c` | Jumps to immediate signed offset `o` if #c is **not** equal to #1 |
-| `JCF #o` | Jumps to immediate signed offset `o` if the carry flag is on |
-| `JNC #o` | Jumps to immediate signed offset `o` if the carry flag is off |
-| `JMP #h, #l` | Unconditionally jumps to #h:#l |
-| `SET #v` | Writes the lower 8 bits of #v to [#14:#15] |
-| `GET #v` | Gets the memory value at [#14:#15] and sends it to the lower 8 bits of #v |
-| `S16 #v` | Writes the upper half of #v to [#14:#15], and lower half of #v to [#14:#15+1] (big-endian) |
-| `G16 #v` | Gets the memory value at [#14:#15] & [#14:#15+1] and stores it in #v (big-endian) |
-| `IMM #r, #v` | Sets register #r to value `v` |
-| `LIM #r, #v` | Sets register #r to 16-bit value `v`, guaruntees the long version of the instruction |
-| `QIM #h, #l, #v` | Sets registers #h:#l to 32-bit value `v`, equivalent to 2 `LIM` instructions |
-| `INT #n` | For most values, a software interrupt with ID #n & changes processor to kernel mode |
-| `DRW ~` | Causes the processor to stop as the screen is rendered, equivalent to `INT 0xFE` |
-| `END ~` | Causes the console to shut down, equivalent to `INT 0x00` |
-| `PSH #r` | Pushes low 8 bits of reg #r onto stack, equivalent to `TODO` |
-| `POP #r` | Pops 8 bits off stack and puts them into #r, equivalent to `TODO` |
-| `PSL #r` | Pushes reg #r onto stack, equivalent to `TODO` |
-| `PPL #r` | Pops 16 bits off stack and puts them into #r, equivalent to `TODO` |
-| `CLS #o` | Calls a subroutine, equivalent to `TODO` |
-| `RET ~` | Returns from subroutine, equivalent to `JMP ura, lra` |
+| `SHL #d, #a, #b`     | Shifts #a left by #b and stores the result #d                                                                                                                       |
+| `SHR #d, #a, #b`     | Shifts #a right by #b and stores the result #d                                                                                                                      |
+| `JEZ #o, #c`         | Jumps to immediate signed offset `o` if #c is equal to 0                                                                                                            |
+| `JGZ #o, #c`         | Jumps to immediate signed offset `o` if signed #c is greater than 0                                                                                                 |
+| `JLZ #o, #c`         | Jumps to immediate signed offset `o` if signed #c is less than 0                                                                                                    |
+| `JE1 #o, #c`         | Jumps to immediate signed offset `o` if #c is equal to #1                                                                                                           |
+| `JNZ #o, #c`         | Jumps to immediate signed offset `o` if #c is **not** equal to 0                                                                                                    |
+| `JLE #o, #c`         | Jumps to immediate signed offset `o` if signed #c is less than or equals 0                                                                                          |
+| `JGE #o, #c`         | Jumps to immediate signed offset `o` if signed #c is greater than or equals 0                                                                                       |
+| `JN1 #o, #c`         | Jumps to immediate signed offset `o` if #c is **not** equal to #1                                                                                                   |
+| `JCF #o`             | Jumps to immediate signed offset `o` if the carry flag is on                                                                                                        |
+| `JNC #o`             | Jumps to immediate signed offset `o` if the carry flag is off                                                                                                       |
+| `JMP #h, #l`         | Unconditionally jumps to #h:#l                                                                                                                                      |
+| `SET #v`             | Writes the lower 8 bits of #v to [#14:#15]                                                                                                                          |
+| `GET #v`             | Gets the memory value at [#14:#15] and sends it to the lower 8 bits of #v                                                                                           |
+| `S16 #v`             | Writes the upper half of #v to [#14:#15], and lower half of #v to [#14:#15+1] (big-endian)                                                                          |
+| `G16 #v`             | Gets the memory value at [#14:#15] & [#14:#15+1] and stores it in #v (big-endian)                                                                                   |
+| `IMM #r, #v`         | Sets register #r to value `v`                                                                                                                                       |
+| `LIM #r, #v`         | Sets register #r to 16-bit value `v`, guaruntees the long version of the instruction                                                                                |
+| `QIM #h, #l, #v`     | Sets registers #h:#l to 32-bit value `v`, equivalent to 2 `LIM` instructions                                                                                        |
+| `INT #n`             | For most values, a software interrupt with ID #n & changes processor to kernel mode                                                                                 |
+| `DRW ~`              | Causes the processor to stop as the screen is rendered, equivalent to `INT 0xFE`                                                                                    |
+| `END ~`              | Causes the console to shut down, equivalent to `INT 0x00`                                                                                                           |
+| `PSH #r`             | Pushes low 8 bits of reg #r onto stack, equivalent to `TODO`                                                                                                        |
+| `POP #r`             | Pops 8 bits off stack and puts them into #r, equivalent to `TODO`                                                                                                   |
+| `PSL #r`             | Pushes reg #r onto stack, equivalent to `TODO`                                                                                                                      |
+| `PPL #r`             | Pops 16 bits off stack and puts them into #r, equivalent to `TODO`                                                                                                  |
+| `CLS #o`             | Call short - calls a nearby subroutine by offset, equivalent to `TODO`                                                                                              |
+| `CAL #d`             | Call (long) - calls a subroutine by direct address, equivalent to `TODO`                                                                                            |
+| `RET ~`              | Returns from subroutine, equivalent to `JMP ura, lra`                                                                                                               |
 
 > NOTE: If any write/read is attempted on addresses outside of INTE0:INTE1, cpu will `int 0xFF` instead
 
@@ -86,19 +87,20 @@
 in kernel mode, the cpu will execute user-mode instructions as well as these  
 if a kernel mode instruction is attempted in user mode, int 0xFF  
 
-| Code | Operation |
-| - | - |
-| `JEZ #o, #c, usr` | Jumps to immediate signed offset `o` if #c is equal to 0 & switches to user-mode |
-| `JGZ #o, #c, usr` | Jumps to immediate signed offset `o` if signed #c is greater than 0 & switches to user-mode |
-| `JLZ #o, #c, usr` | Jumps to immediate signed offset `o` if signed #c is less than 0 & switches to user-mode |
-| `JE1 #o, #c, usr` | Jumps to immediate signed offset `o` if #c is equal to #1 & switches to user-mode |
-| `JNZ #o, #c, usr` | Jumps to immediate signed offset `o` if #c is **not** equal to 0 & switches to user-mode |
-| `JLE #o, #c, usr` | Jumps to immediate signed offset `o` if signed #c is less than or equals 0 & switches to user-mode |
+| Code              | Operation                                                                                             |
+| ----------------- | ----------------------------------------------------------------------------------------------------- |
+| `JEZ #o, #c, usr` | Jumps to immediate signed offset `o` if #c is equal to 0 & switches to user-mode                      |
+| `JGZ #o, #c, usr` | Jumps to immediate signed offset `o` if signed #c is greater than 0 & switches to user-mode           |
+| `JLZ #o, #c, usr` | Jumps to immediate signed offset `o` if signed #c is less than 0 & switches to user-mode              |
+| `JE1 #o, #c, usr` | Jumps to immediate signed offset `o` if #c is equal to #1 & switches to user-mode                     |
+| `JNZ #o, #c, usr` | Jumps to immediate signed offset `o` if #c is **not** equal to 0 & switches to user-mode              |
+| `JLE #o, #c, usr` | Jumps to immediate signed offset `o` if signed #c is less than or equals 0 & switches to user-mode    |
 | `JGE #o, #c, usr` | Jumps to immediate signed offset `o` if signed #c is greater than or equals 0 & switches to user-mode |
-| `JN1 #o, #c, usr` | Jumps to immediate signed offset `o` if #c is **not** equal to #1 & switches to user-mode |
-| `JCF #o, usr` | Jumps to immediate signed offset `o` if the carry flag is on & switches to user-mode |
-| `JNC #o, usr` | Jumps to immediate signed offset `o` if the carry flag is off & switches to user-mode |
-| `JMP #h, #l, usr` | Unconditionally jumps to #h:#l & switches to user-mode |
-| `CLS #o, usr` | Calls a subroutine & switches to user-mode, equivalent to `TODO` |
-| `AKI ~` | Acknowledges the interrupt being processed, allowing another to occur |
-| `RTI ~` | Jumps to the 32-bit Interrupt Return register & acknowladges the interrupt being processed |
+| `JN1 #o, #c, usr` | Jumps to immediate signed offset `o` if #c is **not** equal to #1 & switches to user-mode             |
+| `JCF #o, usr`     | Jumps to immediate signed offset `o` if the carry flag is on & switches to user-mode                  |
+| `JNC #o, usr`     | Jumps to immediate signed offset `o` if the carry flag is off & switches to user-mode                 |
+| `JMP #h, #l, usr` | Unconditionally jumps to #h:#l & switches to user-mode                                                |
+| `CLS #o, usr`     | Calls a relative subroutine & switches to user-mode, equivalent to `TODO`                             |
+| `CAL #d, usr`     | Calls a direct subroutine & switches to user-mode, equivalent to `TODO`   |
+| `AKI ~`           | Acknowledges the interrupt being processed, allowing another to occur                                 |
+| `RTI ~`           | Jumps to the 32-bit Interrupt Return register & acknowladges the interrupt being processed            |
