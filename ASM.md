@@ -77,7 +77,7 @@
 | `PSL #r`             | Pushes reg #r onto stack, equivalent to `TODO`                                                                                                                      |
 | `PPL #r`             | Pops 16 bits off stack and puts them into #r, equivalent to `TODO`                                                                                                  |
 | `CLS #o`             | Call short - calls a nearby subroutine by offset, equivalent to `TODO`                                                                                              |
-| `CAL #d`             | Call (long) - calls a subroutine by direct address, equivalent to `TODO`                                                                                            |
+| `CAL #d`             | Call (long) - calls a subroutine by direct address, equivalent to `TODO`. Note that it will set the memory address regs.                                            |
 | `RET ~`              | Returns from subroutine, equivalent to `JMP ura, lra`                                                                                                               |
 
 > NOTE: If any write/read is attempted on addresses outside of INTE0:INTE1, cpu will `int 0xFF` instead
@@ -87,20 +87,20 @@
 in kernel mode, the cpu will execute user-mode instructions as well as these  
 if a kernel mode instruction is attempted in user mode, int 0xFF  
 
-| Code              | Operation                                                                                             |
-| ----------------- | ----------------------------------------------------------------------------------------------------- |
-| `JEZ #o, #c, usr` | Jumps to immediate signed offset `o` if #c is equal to 0 & switches to user-mode                      |
-| `JGZ #o, #c, usr` | Jumps to immediate signed offset `o` if signed #c is greater than 0 & switches to user-mode           |
-| `JLZ #o, #c, usr` | Jumps to immediate signed offset `o` if signed #c is less than 0 & switches to user-mode              |
-| `JE1 #o, #c, usr` | Jumps to immediate signed offset `o` if #c is equal to #1 & switches to user-mode                     |
-| `JNZ #o, #c, usr` | Jumps to immediate signed offset `o` if #c is **not** equal to 0 & switches to user-mode              |
-| `JLE #o, #c, usr` | Jumps to immediate signed offset `o` if signed #c is less than or equals 0 & switches to user-mode    |
-| `JGE #o, #c, usr` | Jumps to immediate signed offset `o` if signed #c is greater than or equals 0 & switches to user-mode |
-| `JN1 #o, #c, usr` | Jumps to immediate signed offset `o` if #c is **not** equal to #1 & switches to user-mode             |
-| `JCF #o, usr`     | Jumps to immediate signed offset `o` if the carry flag is on & switches to user-mode                  |
-| `JNC #o, usr`     | Jumps to immediate signed offset `o` if the carry flag is off & switches to user-mode                 |
-| `JMP #h, #l, usr` | Unconditionally jumps to #h:#l & switches to user-mode                                                |
-| `CLS #o, usr`     | Calls a relative subroutine & switches to user-mode, equivalent to `TODO`                             |
-| `CAL #d, usr`     | Calls a direct subroutine & switches to user-mode, equivalent to `TODO`   |
-| `AKI ~`           | Acknowledges the interrupt being processed, allowing another to occur                                 |
-| `RTI ~`           | Jumps to the 32-bit Interrupt Return register & acknowladges the interrupt being processed            |
+| Code              | Operation                                                                                                                                           |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `JEZ #o, #c, usr` | Jumps to immediate signed offset `o` if #c is equal to 0 & switches to user-mode                                                                    |
+| `JGZ #o, #c, usr` | Jumps to immediate signed offset `o` if signed #c is greater than 0 & switches to user-mode                                                         |
+| `JLZ #o, #c, usr` | Jumps to immediate signed offset `o` if signed #c is less than 0 & switches to user-mode                                                            |
+| `JE1 #o, #c, usr` | Jumps to immediate signed offset `o` if #c is equal to #1 & switches to user-mode                                                                   |
+| `JNZ #o, #c, usr` | Jumps to immediate signed offset `o` if #c is **not** equal to 0 & switches to user-mode                                                            |
+| `JLE #o, #c, usr` | Jumps to immediate signed offset `o` if signed #c is less than or equals 0 & switches to user-mode                                                  |
+| `JGE #o, #c, usr` | Jumps to immediate signed offset `o` if signed #c is greater than or equals 0 & switches to user-mode                                               |
+| `JN1 #o, #c, usr` | Jumps to immediate signed offset `o` if #c is **not** equal to #1 & switches to user-mode                                                           |
+| `JCF #o, usr`     | Jumps to immediate signed offset `o` if the carry flag is on & switches to user-mode                                                                |
+| `JNC #o, usr`     | Jumps to immediate signed offset `o` if the carry flag is off & switches to user-mode                                                               |
+| `JMP #h, #l, usr` | Unconditionally jumps to #h:#l & switches to user-mode                                                                                              |
+| `CLS #o, usr`     | Calls a relative subroutine & switches to user-mode, equivalent to `TODO`                                                                           |
+| `CAL #d, usr`     | Calls a direct subroutine & switches to user-mode, equivalent to `TODO`. Note that it will set the memory address regs. |
+| `AKI ~`           | Acknowledges the interrupt being processed, allowing another to occur                                                                               |
+| `RTI ~`           | Jumps to the 32-bit Interrupt Return register & acknowladges the interrupt being processed                                                          |

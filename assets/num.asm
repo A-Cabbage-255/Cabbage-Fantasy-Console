@@ -13,7 +13,7 @@ lim r1, LOOP
 LOOP:
 	psl r1
 	psl r8
-	cls DRAWNUM
+	cal DRAWNUM
 	ppl r8
 	ppl r1
 	drw ~
@@ -99,7 +99,7 @@ DRAWNUM:
 	DRAWNUM_DIGITGEN:
 	psl URA
 	psl LRA
-	cls DIVIDE10
+	cal DIVIDE10
 	ppl LRA
 	ppl URA
 

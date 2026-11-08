@@ -37,6 +37,8 @@ void Lexer::scanLabels() {
 			curbyte += 14;
 		} else if (cur.name == "CLS"s) {
 			curbyte += 14;
+		} else if (cur.name == "CAL"s) {
+			curbyte += 18;
 		} else {
 			curbyte += 2;
 		}
@@ -242,7 +244,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos;
+			int16 ofst = (int16)((int64)consts.at(inst.arguments[0].str) - (int64)nextbytepos);
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
@@ -256,7 +258,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos;
+			int16 ofst = (int16)((int64)consts.at(inst.arguments[0].str) - (int64)nextbytepos);
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
@@ -270,7 +272,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos;
+			int16 ofst = (int16)((int64)consts.at(inst.arguments[0].str) - (int64)nextbytepos);
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
@@ -284,7 +286,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos;
+			int16 ofst = (int16)((int64)consts.at(inst.arguments[0].str) - (int64)nextbytepos);
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
@@ -298,7 +300,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 2) || (inst.arguments.size() == 1));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos;
+			int16 ofst = (int16)((int64)consts.at(inst.arguments[0].str) - (int64)nextbytepos);
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
@@ -312,7 +314,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos;
+			int16 ofst = (int16)((int64)consts.at(inst.arguments[0].str) - (int64)nextbytepos);
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
@@ -326,7 +328,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos;
+			int16 ofst = (int16)((int64)consts.at(inst.arguments[0].str) - (int64)nextbytepos);
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
@@ -340,7 +342,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos;
+			int16 ofst = (int16)((int64)consts.at(inst.arguments[0].str) - (int64)nextbytepos);
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
@@ -354,7 +356,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 3) || (inst.arguments.size() == 2));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos;
+			int16 ofst = (int16)((int64)consts.at(inst.arguments[0].str) - (int64)nextbytepos);
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
@@ -368,7 +370,7 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 2) || (inst.arguments.size() == 1));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos;
+			int16 ofst = (int16)((int64)consts.at(inst.arguments[0].str) - (int64)nextbytepos);
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
@@ -382,15 +384,28 @@ BasicInstruction* Lexer::lex(UnparsedInstruction inst, unsigned nextbytepos) {
 		assert((inst.arguments.size() == 2) || (inst.arguments.size() == 1));
 
 		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
-			int16 ofst = (int16)consts.at(inst.arguments[0].str) - (int16)nextbytepos - 10;
+			int16 ofst = (int16)((int64)consts.at(inst.arguments[0].str) - (int64)nextbytepos - 10);
 			inst.arguments[0].number = (Uint32)*reinterpret_cast<Uint16*>(&ofst);
 		}
 
 		if (inst.arguments.size() > 1) {
 			assert(inst.arguments[1].str == "USR"s);
-			return new REL_CallInstruction({OPC_CALLR, true, inst.arguments[0].number});
+			return new CallInstruction({OPC_CALLR, true, inst.arguments[0].number});
 		} else {
-			return new REL_CallInstruction({OPC_CALLR, false, inst.arguments[0].number});
+			return new CallInstruction({OPC_CALLR, false, inst.arguments[0].number});
+		}
+	} else if (inst.name == "CAL"s) {
+		assert((inst.arguments.size() == 2) || (inst.arguments.size() == 1));
+
+		if (inst.arguments[0].type == TOKEN_IDENTIFIER) {
+			inst.arguments[0].number = consts.at(inst.arguments[0].str);
+		}
+
+		if (inst.arguments.size() > 1) {
+			assert(inst.arguments[1].str == "USR"s);
+			return new CallInstruction({OPC_CALLDIR, true, inst.arguments[0].number});
+		} else {
+			return new CallInstruction({OPC_CALLDIR, false, inst.arguments[0].number});
 		}
 	} else if (inst.name == "ADD"s) {
 		assert(inst.arguments.size() == 3);

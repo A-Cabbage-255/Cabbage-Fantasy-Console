@@ -13,7 +13,8 @@ private:
 	void outIns_QIMM(Q_IMMInstruction* i);
 	void outIns_RAM(RAMInstruction* i);
 	void outIns_STACK(RAMInstruction* i);
-	void outIns_RELCALL(REL_CallInstruction* i);
+	void outIns_RELCALL(CallInstruction* i);
+	void outIns_DIRCALL(CallInstruction* i);
 	void outIns_Direct(Uint16 word);
 
 	void outImg(DirectImageMetaInstruction* i);

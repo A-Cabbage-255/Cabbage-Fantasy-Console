@@ -135,7 +135,7 @@ void Compiler::outIns_STACK(RAMInstruction* i) {
 	}
 }
 
-void Compiler::outIns_RELCALL(REL_CallInstruction* i) {
+void Compiler::outIns_RELCALL(CallInstruction* i) {
 	Uint32 value = getPos() + 14;
 	SDL_WriteU16BE(file, 0xFC00);
 	SDL_WriteU16BE(file, value >> 16);
@@ -145,9 +145,26 @@ void Compiler::outIns_RELCALL(REL_CallInstruction* i) {
 	SDL_WriteU16BE(file, 0x4000); //scf
 
 	SDL_WriteU16BE(file, 0x8400 | (i->userMode * 0x1000)); //jcf
-	SDL_WriteU16BE(file, i->offset);
+	SDL_WriteU16BE(file, i->addr);
 
 	outputtedLoc += 14;
+}
+
+void Compiler::outIns_DIRCALL(CallInstruction* i) {
+	Uint32 value = getPos() + 18;
+	SDL_WriteU16BE(file, 0xFC00);
+	SDL_WriteU16BE(file, value >> 16);
+	SDL_WriteU16BE(file, 0xFD00);
+	SDL_WriteU16BE(file, value & 0xFFFF); //qim
+
+	SDL_WriteU16BE(file, 0xFe00);
+	SDL_WriteU16BE(file, i->addr >> 16);
+	SDL_WriteU16BE(file, 0xFf00);
+	SDL_WriteU16BE(file, i->addr & 0xFFFF); //qim
+
+	SDL_WriteU16BE(file, 0xA0ef | (i->userMode * 0x1000)); //jmp
+
+	outputtedLoc += 18;
 }
 
 void Compiler::outImg(DirectImageMetaInstruction* i) {
@@ -232,7 +249,10 @@ void Compiler::outIns(BasicInstruction* i) {
 			outIns_STACK((RAMInstruction*)i);
 			break;
 		case OPC_CALLR:
-			outIns_RELCALL((REL_CallInstruction*)i);
+			outIns_RELCALL((CallInstruction*)i);
+			break;
+		case OPC_CALLDIR:
+			outIns_DIRCALL((CallInstruction*)i);
 			break;
 		case OPC_META_ADDRCHANGE:
 			beginRegion(((ADDRChangeMetaInstruction*)i)->location);

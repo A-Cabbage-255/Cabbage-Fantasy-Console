@@ -6,7 +6,7 @@
 #include <SDL3/SDL.h>
 #include "Keyboard.h"
 
-//#define STEPTHROUGH
+#define STEPTHROUGH
 
 Memory* m;
 CPU* c;
@@ -85,7 +85,7 @@ int main(int argc, char* argv[]) {
         if (!cont && argc >= 3 && (std::string)argv[2] == "debug") {
             std::cout << ":" << c->instPntr << " - " << std::hex << m->getter16(c->instPntr) << std::dec  << " :: ";
 
-            std::string input;
+            std::string input = "n";
 
             std::cin >> input;
             //std::cout << "\n";

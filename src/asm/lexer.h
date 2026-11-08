@@ -84,10 +84,10 @@ typedef struct L_JMPInstruction : BasicInstruction {
 	unsigned low : 4;
 } L_JMPInstruction;
 
-typedef struct REL_CallInstruction : BasicInstruction {
+typedef struct CallInstruction : BasicInstruction {
 	bool userMode;
-	unsigned int offset;
-} REL_CallInstruction;
+	unsigned int addr;
+} CallInstruction;
 
 typedef struct RAMInstruction : BasicInstruction {
 	unsigned reg : 4;
