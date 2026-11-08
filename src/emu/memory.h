@@ -8,7 +8,6 @@ constexpr size_t MEM_SPRFLAG_SIZE = 0x2000;
 constexpr size_t MEM_SPRDAT_SIZE = 0x8000;
 constexpr size_t MEM_PAL_SIZE = 0x300;
 constexpr size_t MEM_INFO_SIZE = 0x5;
-
 constexpr size_t MEM_SIZE = MEM_RAM_SIZE + MEM_IVT_SIZE + MEM_SPRMEM_SIZE + MEM_SPRFLAG_SIZE + MEM_SPRDAT_SIZE + MEM_PAL_SIZE + MEM_INFO_SIZE;
 
 constexpr size_t MEM_REG_SIZES[] = {
@@ -67,6 +66,8 @@ class Memory {
 private:
 	Uint8* data;
 public:
+	Uint8* iobyte;
+
 	std::function<void(void)> paletteUpdated;
 	std::function<void(unsigned, bool)> spriteDataUpdated;
 
@@ -78,6 +79,8 @@ public:
 		data[MEM_REG_INTERNAL_START[6]+2] = 0x00;
 		data[MEM_REG_INTERNAL_START[6]+3] = 0x00;
 		data[MEM_REG_INTERNAL_START[6]+4] = 0x00;
+
+		iobyte = &data[MEM_REG_INTERNAL_START[6] + 4];
 	}
 
 	~Memory() {

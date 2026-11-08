@@ -28,38 +28,47 @@ a three-bit flags register: Carry flag, kernel mode, interrupt return kernel mod
 \* = not an interrupt; cpu doesn't jump when called but rather performs a special operation  
 ! = not an interrupt; if called, cpu will instead do int 0xFD
 
-| ID(hex) | Purpose                                                |
-| ------- | ------------------------------------------------------ |
-| 00 *    | Halt cpu/shutoff                                       |
-| 01      | Exception                                              |
-| 02      | Timer expired                                          |
-| 03      | Breakpoint                                             |
-| *...*   | reserved                                               |
-| 10      | Keyboard device connected                              |
-| *...*   | reserved                                               |
-| 20      | Keyboard device disconnected                           |
-| *...*   | reserved                                               |
-| 30      | Keyboard device input                                  |
-| *...*   | reserved                                               |
-| E0 !    | usr mem access low bound                               |
-| E1 !    | usr mem access high bound                              |
-| E2 !    | Sets the i/o input address |
-| *...*   | reserved                                               |
-| FD      | called when illegal interrupt is attempted             |
-| FE *    | instructs computer to draw next frame                  |
-| FF      | called when kernel action is attemped in usr mode      |
+| ID(hex) | Purpose                                           |
+| ------- | ------------------------------------------------- |
+| 00 *    | Halt cpu/shutoff                                  |
+| 01      | Exception                                         |
+| 02      | Timer expired                                     |
+| 03      | Breakpoint                                        |
+| *...*   | reserved                                          |
+| 10      | Keyboard device connected                         |
+| *...*   | reserved                                          |
+| 20      | Keyboard device disconnected                      |
+| *...*   | reserved                                          |
+| 30      | Keyboard device input                             |
+| *...*   | reserved                                          |
+| E0 !    | usr mem access low bound                          |
+| E1 !    | usr mem access high bound                         |
+| E2 !    | Sets the i/o input address                        |
+| *...*   | reserved                                          |
+| FD      | called when illegal interrupt is attempted        |
+| FE *    | instructs computer to draw next frame             |
+| FF      | called when kernel action is attemped in usr mode |
 
 ## Memory
 
 ### *everything in memory is big endian*
 
-| Block                       | Purpose                          |
-| --------------------------- | -------------------------------- |
-| `0x00000000` - `0x0FFFFFFF` | General purpose                  |
-| `0x10000000` - `0x100003FF` | Interrupt Table, 4 bytes per int |
-| `0x20000000` - `0x20FFFFFF` | Sprite Graphics Memory           |
-| `0x30000000` - `0x30001FFF` | Sprite Flag Data                 |
-| `0x31000000` - `0x31007FFF` | Sprites Position/Tile            |
-| `0x32000000` - `0x320002FF` | Palette (RGB888)                 |
+| Block                       | Purpose                                            |
+| --------------------------- | -------------------------------------------------- |
+| `0x00000000` - `0xDFFFFFFF` | General purpose                                    |
+| `0xE0000000` - `0xE00003FF` | Interrupt Table, 4 bytes per int                   |
+| `0xE1000000` - `0xE1FFFFFF` | Sprite Graphics Memory                             |
+| `0xE2000000` - `0xE2001FFF` | Sprite Flag Data                                   |
+| `0xE3000000` - `0xE3007FFF` | Sprites Position/Tile                              |
+| `0xE4000000` - `0xE40002FF` | Palette (RGB888)                                   |
+| `0xF0000000` - `0xFFFFFFFF` | Extra Info / Reserved (Read only) (detailed below) |
+
+### Extra Info
+
+This list is in ascending address order, starting at `0xF0000000`
+
+- 32-bit size of memory
+
+- 8-bit latest i/o input
 
 

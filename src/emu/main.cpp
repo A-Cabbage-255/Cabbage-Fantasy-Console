@@ -12,7 +12,7 @@ Memory* m;
 CPU* c;
 Screen* w;
 InterruptController* pic;
-uint8_t intDataLine = 0xff;
+uint8_t* intDataLine = nullptr;
 bool keyIntLine = false;
 bool windowQuit = false;
 #ifdef STEPTHROUGH
@@ -41,6 +41,8 @@ int main(int argc, char* argv[]) {
     pic->connect(0, &c->stallintline);
     pic->connect(1, &keyIntLine);
     //w->setIcon("assets/icon.png");
+
+    intDataLine = m->iobyte;
 
     bool skipUpdate = false;
 

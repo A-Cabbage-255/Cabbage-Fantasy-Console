@@ -1,4 +1,5 @@
 #include "memory.h"
+extern uint8_t* intDataLine;
 
 Uint8 Memory::getter8(Uint32 addr) {
 	size_t baseIndex = 0;

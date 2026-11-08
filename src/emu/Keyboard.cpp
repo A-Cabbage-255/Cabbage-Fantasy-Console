@@ -1,7 +1,7 @@
 #include "Keyboard.h"
 
 extern bool keyIntLine;
-extern uint8_t intDataLine;
+extern uint8_t* intDataLine;
 
 std::deque<uint8_t> keybout;
 
@@ -25,7 +25,8 @@ void Keyboard::keyType(std::string unicode) {
 
 void Keyboard::tick() {
 	if (!keyIntLine && keybout.size() > 0) {
-		keybout.pop_front();  //TODO SENDTO CPU??
+		*intDataLine = keybout.front();
+		keybout.pop_front();
 		keyIntLine = true;
 	}
 }
