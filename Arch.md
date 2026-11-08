@@ -7,18 +7,18 @@
 There are 16 registers, numbered [0, 15]
 Technically, registers 1-13 are general purpose, however:
 
-| ID      | Purpose                                           |
-| ------- | ------------------------------------------------- |
-| r0/zr   | Always 0                                          |
-| r1      | General Purpose                                   |
-| *...*   | General Purpose                                   |
-| r9      | General Purpose                                   |
-| r10/usp | Upper **Stack** Pointer                           |
-| r11/lsp | Lower **Stack** Pointer                           |
-| r12/ura | Upper **Return** Addr |
-| r13/lra | Lower **Return** Addr                             |
-| r14/uma | Upper **Memory** Addr                             |
-| r15/lma | Lower **Memory** Addr                             |
+| ID      | Purpose                 |
+| ------- | ----------------------- |
+| r0/zr   | Always 0                |
+| r1      | General Purpose         |
+| *...*   | General Purpose         |
+| r9      | General Purpose         |
+| r10/usp | Upper **Stack** Pointer |
+| r11/lsp | Lower **Stack** Pointer |
+| r12/ura | Upper **Return** Addr   |
+| r13/lra | Lower **Return** Addr   |
+| r14/uma | Upper **Memory** Addr   |
+| r15/lma | Lower **Memory** Addr   |
 
 Additionally, there is a hidden 32-bit Interrupt Return register &  
 a three-bit flags register: Carry flag, kernel mode, interrupt return kernel mode
@@ -28,26 +28,26 @@ a three-bit flags register: Carry flag, kernel mode, interrupt return kernel mod
 \* = not an interrupt; cpu doesn't jump when called but rather performs a special operation  
 ! = not an interrupt; if called, cpu will instead do int 0xFD
 
-| ID(hex) | Purpose                                           |
-| ------- | ------------------------------------------------- |
-| 00 *    | Halt cpu/shutoff                                  |
-| 01      | Exception                                         |
-| 02      | Timer expired                                     |
-| 03      | Breakpoint                                        |
-| *...*   | reserved                                          |
-| 10      | Keyboard device connected                         |
-| *...*   | reserved                                          |
-| 20      | Keyboard device disconnected                      |
-| *...*   | reserved                                          |
-| 30      | Keyboard device input                             |
-| *...*   | reserved                                          |
-| E0 !    | usr mem access low bound                          |
-| E1 !    | usr mem access high bound                         |
-| E2 !    | Sets the i/o input address                        |
-| *...*   | reserved                                          |
-| FD      | called when illegal interrupt is attempted        |
-| FE *    | instructs computer to draw next frame             |
-| FF      | called when kernel action is attemped in usr mode |
+| ID(hex)                        | Purpose                                           |
+| ------------------------------ | ------------------------------------------------- |
+| 00 *                           | Halt cpu/shutoff                                  |
+| 01                             | Exception                                         |
+| 02                             | Timer expired                                     |
+| 03                             | Breakpoint                                        |
+| *...*                          | reserved                                          |
+| 10                             | Keyboard device connected                         |
+| *...*                          | reserved                                          |
+| 20 | Keyboard device disconnected                      |
+| *...*                          | reserved                                          |
+| 30                             | Keyboard device input                             |
+| *...*                          | reserved                                          |
+| E0 !                           | usr mem access low bound                          |
+| E1 !                           | usr mem access high bound                         |
+| E2 !                           | Sets the i/o input address                        |
+| *...*                          | reserved                                          |
+| FD                             | called when illegal interrupt is attempted        |
+| FE *                           | instructs computer to draw next frame             |
+| FF                             | called when kernel action is attemped in usr mode |
 
 ## Memory
 
